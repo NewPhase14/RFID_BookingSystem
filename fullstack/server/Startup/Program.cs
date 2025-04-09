@@ -68,6 +68,12 @@ public class Program
 
         app.UseOpenApi(conf => { conf.Path = "openapi/v1.json"; });
 
+        app.UseSwaggerUi(settings =>
+        {
+            settings.Path = "/swagger";
+            settings.DocumentPath = "/openapi/v1.json";
+        });
+        
         var document = await app.Services.GetRequiredService<IOpenApiDocumentGenerator>().GenerateAsync("v1");
         var json = document.ToJson();
         await File.WriteAllTextAsync("openapi.json", json);
