@@ -2,8 +2,11 @@ using Api.Rest;
 using Api.Websocket;
 using Application;
 using Application.Models;
+using Core.Domain.Entities;
 using Infrastructure.Postgres;
+using Infrastructure.Postgres.Scaffolding;
 using Infrastructure.Websocket;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NSwag.Generation;
 using Startup.Documentation;
@@ -71,4 +74,6 @@ public class Program
 
         app.GenerateTypeScriptClient("/../../client/src/generated-client.ts").GetAwaiter().GetResult();
     }
+    
+    
 }

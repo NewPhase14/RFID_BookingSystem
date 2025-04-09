@@ -7,13 +7,25 @@ public partial class User
 {
     public string Id { get; set; } = null!;
 
+    public string FirstName { get; set; } = null!;
+
+    public string LastName { get; set; } = null!;
+
+    public string? Rfid { get; set; }
+
+    public string HashedPassword { get; set; } = null!;
+
     public string Email { get; set; } = null!;
 
-    public string Hash { get; set; } = null!;
+    public string RoleId { get; set; } = null!;
 
-    public string Salt { get; set; } = null!;
+    public DateTime? CreatedAt { get; set; }
 
-    public string Role { get; set; } = null!;
+    public DateTime? UpdatedAt { get; set; }
 
-    public virtual ICollection<Group> Groups { get; set; } = new List<Group>();
+    public bool? ConfirmedEmail { get; set; }
+
+    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+
+    public virtual Role Role { get; set; } = null!;
 }

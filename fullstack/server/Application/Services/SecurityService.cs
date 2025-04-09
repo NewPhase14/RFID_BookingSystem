@@ -20,14 +20,14 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IDataRe
 {
     public AuthResponseDto Login(AuthRequestDto dto)
     {
-        var player = repository.GetUserOrNull(dto.Email) ?? throw new ValidationException("Username not found");
-        VerifyPasswordOrThrow(dto.Password + player.Salt, player.Hash);
+        var user = repository.GetUserOrNull(dto.Email) ?? throw new ValidationException("Username not found");
+        VerifyPasswordOrThrow(dto.Password, user.HashedPassword);
         return new AuthResponseDto
         {
             Jwt = GenerateJwt(new JwtClaims
             {
-                Id = player.Id,
-                Role = player.Role,
+                Id = user.Id,
+                Role = user.RoleId,
                 Exp = DateTimeOffset.UtcNow.AddHours(1000)
                     .ToUnixTimeSeconds()
                     .ToString(),
@@ -42,22 +42,22 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IDataRe
         if (player is not null) throw new ValidationException("User already exists");
         var salt = GenerateSalt();
         var hash = HashPassword(dto.Password + salt);
-        var insertedPlayer = repository.AddUser(new User
+        var userRole = repository.GetRole("User");
+        var insertedUser = repository.AddUser(new User
         {
             Id = Guid.NewGuid().ToString(),
             Email = dto.Email,
-            Role = Constants.UserRole,
-            Salt = salt,
-            Hash = hash
+            Role = userRole,
+            HashedPassword = hash
         });
         return new AuthResponseDto
         {
             Jwt = GenerateJwt(new JwtClaims
             {
-                Id = insertedPlayer.Id,
-                Role = insertedPlayer.Role,
+                Id = insertedUser.Id,
+                Role = insertedUser.RoleId,
                 Exp = DateTimeOffset.UtcNow.AddHours(1000).ToUnixTimeSeconds().ToString(),
-                Email = insertedPlayer.Email
+                Email = insertedUser.Email
             })
         };
     }

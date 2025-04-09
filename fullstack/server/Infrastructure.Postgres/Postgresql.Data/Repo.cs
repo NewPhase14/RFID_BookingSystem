@@ -17,4 +17,9 @@ public class Repo(MyDbContext ctx) : IDataRepository
         ctx.SaveChanges();
         return user;
     }
+
+    public Role GetRole(string roleName)
+    {
+        return ctx.Roles.FirstOrDefault(r => r.Name == roleName);
+    }
 }
