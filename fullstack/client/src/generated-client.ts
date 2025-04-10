@@ -318,6 +318,8 @@ export interface AuthResponseDto {
 export interface AuthRequestDto {
     email: string;
     password: string;
+    firstName: string;
+    lastName: string;
 }
 
 

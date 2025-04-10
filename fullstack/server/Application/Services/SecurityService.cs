@@ -38,8 +38,8 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IDataRe
 
     public AuthResponseDto Register(AuthRequestDto dto)
     {
-        var player = repository.GetUserOrNull(dto.Email);
-        if (player is not null) throw new ValidationException("User already exists");
+        var user = repository.GetUserOrNull(dto.Email);
+        if (user is not null) throw new ValidationException("User already exists");
         var salt = GenerateSalt();
         var hash = HashPassword(dto.Password + salt);
         var userRole = repository.GetRole("User");
@@ -48,7 +48,11 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IDataRe
             Id = Guid.NewGuid().ToString(),
             Email = dto.Email,
             Role = userRole,
-            HashedPassword = hash
+            RoleId = userRole.Id,
+            HashedPassword = hash,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            
         });
         return new AuthResponseDto
         {
