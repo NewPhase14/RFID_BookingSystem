@@ -19,7 +19,7 @@ export class AuthClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    login(dto: AuthRequestDto): Promise<AuthResponseDto> {
+    login(dto: AuthLoginRequestDto): Promise<AuthResponseDto> {
         let url_ = this.baseUrl + "/api/auth/Login";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -56,7 +56,7 @@ export class AuthClient {
         return Promise.resolve<AuthResponseDto>(null as any);
     }
 
-    register(dto: AuthRequestDto): Promise<AuthResponseDto> {
+    register(dto: AuthRegisterRequestDto): Promise<AuthResponseDto> {
         let url_ = this.baseUrl + "/api/auth/Register";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -315,7 +315,12 @@ export interface AuthResponseDto {
     jwt: string;
 }
 
-export interface AuthRequestDto {
+export interface AuthLoginRequestDto {
+    email: string;
+    password: string;
+}
+
+export interface AuthRegisterRequestDto {
     email: string;
     password: string;
     firstName: string;

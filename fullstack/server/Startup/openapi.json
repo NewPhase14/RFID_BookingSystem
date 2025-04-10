@@ -17,7 +17,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AuthRequestDto"
+                "$ref": "#/components/schemas/AuthLoginRequestDto"
               }
             }
           },
@@ -49,7 +49,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/AuthRequestDto"
+                "$ref": "#/components/schemas/AuthRegisterRequestDto"
               }
             }
           },
@@ -228,7 +228,25 @@
           }
         }
       },
-      "AuthRequestDto": {
+      "AuthLoginRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "email",
+          "password"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "minLength": 3
+          },
+          "password": {
+            "type": "string",
+            "minLength": 4
+          }
+        }
+      },
+      "AuthRegisterRequestDto": {
         "type": "object",
         "additionalProperties": false,
         "required": [

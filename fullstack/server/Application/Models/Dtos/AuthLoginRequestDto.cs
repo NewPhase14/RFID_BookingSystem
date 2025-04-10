@@ -2,13 +2,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Application.Models.Dtos;
 
-public class AuthRequestDto
+public class AuthLoginRequestDto
 {
     [MinLength(3)] [Required] public string Email { get; set; } = null!;
     [MinLength(4)] [Required] public string Password { get; set; } = null!;
-    
-    [Required] public string FirstName { get; set; } = null!;
-    [Required] public string LastName { get; set; } = null!;
-    
     
 }

@@ -46,7 +46,7 @@ public class AuthTests() : ApiTestBase(new ApiTestBaseConfig
     {
         var user = MockObjects.GetUser();
         var response = await HttpClient.PostAsJsonAsync<AuthResponseDto>(AuthController.RegisterRoute,
-            new AuthRequestDto
+            new AuthLoginRequestDto
             {
                 Email = user.Email,
                 Password = "pass"
@@ -62,7 +62,7 @@ public class AuthTests() : ApiTestBase(new ApiTestBaseConfig
     {
         var client = CreateClient();
         var response = await client.PostAsJsonAsync<ProblemDetails>(
-            AuthController.RegisterRoute, new AuthRequestDto
+            AuthController.RegisterRoute, new AuthLoginRequestDto
             {
                 Email = "bob@bob.dk",
                 Password = "a"
@@ -81,7 +81,7 @@ public class AuthTests() : ApiTestBase(new ApiTestBaseConfig
         await ctx.SaveChangesAsync();
 
         var response = await HttpClient.PostAsJsonAsync<AuthResponseDto>(
-            AuthController.LoginRoute, new AuthRequestDto
+            AuthController.LoginRoute, new AuthLoginRequestDto
             {
                 Email = user.Email,
                 Password = "pass"
@@ -100,7 +100,7 @@ public class AuthTests() : ApiTestBase(new ApiTestBaseConfig
         await ctx.SaveChangesAsync();
 
         var response = await CreateClient().PostAsJsonAsync<ProblemDetails>(AuthController.LoginRoute,
-            new AuthRequestDto
+            new AuthLoginRequestDto
             {
                 Email = user.Email,
                 Password = "invalid password"
@@ -113,7 +113,7 @@ public class AuthTests() : ApiTestBase(new ApiTestBaseConfig
     public async Task Login_For_Non_Existing_User_Is_Unauthorized()
     {
         var response = await CreateClient().PostAsJsonAsync<ProblemDetails>(AuthController.LoginRoute,
-            new AuthRequestDto { Email = "bob@bob.dk", Password = "password" });
+            new AuthLoginRequestDto { Email = "bob@bob.dk", Password = "password" });
         if (HttpStatusCode.BadRequest != response.HttpResponseMessage.StatusCode)
             throw new Exception("Expected BadRequest status code");
     }
@@ -128,7 +128,7 @@ public class AuthTests() : ApiTestBase(new ApiTestBaseConfig
         await ctx.SaveChangesAsync();
 
         var response = await CreateClient().PostAsJsonAsync<ProblemDetails>(AuthController.RegisterRoute,
-            new AuthRequestDto
+            new AuthLoginRequestDto
             {
                 Email = user.Email,
                 Password = "password"

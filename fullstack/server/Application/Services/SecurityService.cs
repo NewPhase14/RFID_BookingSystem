@@ -18,7 +18,7 @@ namespace Application.Services;
 
 public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IDataRepository repository) : ISecurityService
 {
-    public AuthResponseDto Login(AuthRequestDto dto)
+    public AuthResponseDto Login(AuthLoginRequestDto dto)
     {
         var user = repository.GetUserOrNull(dto.Email) ?? throw new ValidationException("Username not found");
         VerifyPasswordOrThrow(dto.Password, user.HashedPassword);
@@ -36,7 +36,12 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IDataRe
         };
     }
 
-    public AuthResponseDto Register(AuthRequestDto dto)
+    public AuthResponseDto Register(AuthLoginRequestDto dto)
+    {
+        throw new NotImplementedException();
+    }
+
+    public AuthResponseDto Register(AuthRegisterRequestDto dto)
     {
         var user = repository.GetUserOrNull(dto.Email);
         if (user is not null) throw new ValidationException("User already exists");
