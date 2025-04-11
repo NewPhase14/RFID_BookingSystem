@@ -25,6 +25,8 @@ public partial class User
 
     public bool? ConfirmedEmail { get; set; }
 
+    public string Salt { get; set; } = null!;
+
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual Role Role { get; set; } = null!;

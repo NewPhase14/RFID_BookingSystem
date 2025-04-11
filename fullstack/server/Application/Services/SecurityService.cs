@@ -21,7 +21,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IDataRe
     public AuthResponseDto Login(AuthLoginRequestDto dto)
     {
         var user = repository.GetUserOrNull(dto.Email) ?? throw new ValidationException("Username not found");
-        VerifyPasswordOrThrow(dto.Password, user.HashedPassword);
+        VerifyPasswordOrThrow(dto.Password + user.Salt, user.HashedPassword);
         return new AuthResponseDto
         {
             Jwt = GenerateJwt(new JwtClaims
@@ -34,11 +34,6 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IDataRe
                 Email = dto.Email
             })
         };
-    }
-
-    public AuthResponseDto Register(AuthLoginRequestDto dto)
-    {
-        throw new NotImplementedException();
     }
 
     public AuthResponseDto Register(AuthRegisterRequestDto dto)
@@ -54,6 +49,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IDataRe
             Email = dto.Email,
             Role = userRole,
             RoleId = userRole.Id,
+            Salt = salt,
             HashedPassword = hash,
             FirstName = dto.FirstName,
             LastName = dto.LastName,

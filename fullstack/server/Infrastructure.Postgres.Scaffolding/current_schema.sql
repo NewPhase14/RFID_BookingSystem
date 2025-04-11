@@ -26,6 +26,7 @@ CREATE TABLE users (
     last_name character varying(100) NOT NULL,
     rfid character varying(50),
     hashed_password text NOT NULL,
+    salt text NOT NULL,
     email character varying(255) NOT NULL,
     role_id text NOT NULL,
     created_at timestamp without time zone DEFAULT (CURRENT_TIMESTAMP),

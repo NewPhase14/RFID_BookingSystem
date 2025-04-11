@@ -139,6 +139,7 @@ public partial class MyDbContext : DbContext
                 .HasMaxLength(50)
                 .HasColumnName("rfid");
             entity.Property(e => e.RoleId).HasColumnName("role_id");
+            entity.Property(e => e.Salt).HasColumnName("salt");
             entity.Property(e => e.UpdatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
