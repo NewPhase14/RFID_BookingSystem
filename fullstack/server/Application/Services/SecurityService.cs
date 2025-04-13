@@ -6,7 +6,6 @@ using Application.Interfaces;
 using Application.Interfaces.Infrastructure.Postgres;
 using Application.Models;
 using Application.Models.Dtos;
-using Application.Models.Enums;
 using Core.Domain.Entities;
 using JWT;
 using JWT.Algorithms;
@@ -16,7 +15,7 @@ using Microsoft.Extensions.Options;
 
 namespace Application.Services;
 
-public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IDataRepository repository) : ISecurityService
+public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDataRepository repository) : ISecurityService
 {
     public AuthResponseDto Login(AuthLoginRequestDto dto)
     {

@@ -4,7 +4,7 @@ using Infrastructure.Postgres.Scaffolding;
 
 namespace Infrastructure.Postgres.Postgresql.Data;
 
-public class Repo(MyDbContext ctx) : IDataRepository
+public class AuthRepo(MyDbContext ctx) : IAuthDataRepository
 {
     public User? GetUserOrNull(string email)
     {
@@ -20,6 +20,6 @@ public class Repo(MyDbContext ctx) : IDataRepository
 
     public Role GetRole(string roleName)
     {
-        return ctx.Roles.FirstOrDefault(r => r.Name == roleName);
+        return ctx.Roles.FirstOrDefault(r => r.Name == roleName) ?? throw new InvalidOperationException();
     }
 }
