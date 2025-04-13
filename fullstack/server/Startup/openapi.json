@@ -1,11 +1,5 @@
 {
   "x-generator": "NSwag v14.3.0.0 (NJsonSchema v11.2.0.0 (Newtonsoft.Json v13.0.0.0))",
-  "servers": [
-    {
-      "url": "http://localhost:5001",
-      "description": "Localhost"
-    }
-  ],
   "openapi": "3.0.0",
   "info": {
     "title": "My Title",
@@ -90,6 +84,38 @@
                 "schema": {
                   "type": "string",
                   "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/booking/CreateBooking": {
+      "post": {
+        "tags": [
+          "Booking"
+        ],
+        "operationId": "Booking_CreateBooking",
+        "requestBody": {
+          "x-name": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BookingCreateRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingResponseDto"
                 }
               }
             }
@@ -276,6 +302,54 @@
           },
           "lastName": {
             "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "BookingResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "BookingCreateRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "userId",
+          "serviceId",
+          "statusId",
+          "startTime",
+          "endTime"
+        ],
+        "properties": {
+          "userId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "serviceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "statusId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "startTime": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          },
+          "endTime": {
+            "type": "string",
+            "format": "date-time",
             "minLength": 1
           }
         }

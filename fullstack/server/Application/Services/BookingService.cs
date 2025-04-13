@@ -17,8 +17,7 @@ public class BookingService(IOptionsMonitor<AppOptions> optionsMonitor, IBooking
             UserId = dto.UserId,
             ServiceId = dto.ServiceId,
             StatusId = dto.StatusId,
-            CreatedAt = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow,
-                TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time")),
+            CreatedAt = DateTime.Now,
             StartTime = dto.StartTime,
             EndTime = dto.EndTime,
         });
