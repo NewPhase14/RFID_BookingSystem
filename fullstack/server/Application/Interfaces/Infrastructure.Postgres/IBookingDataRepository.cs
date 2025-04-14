@@ -5,4 +5,6 @@ namespace Application.Interfaces.Infrastructure.Postgres;
 public interface IBookingDataRepository
 {
     Booking AddBooking(Booking booking);
+
+    void DeleteBooking(string id);
 }

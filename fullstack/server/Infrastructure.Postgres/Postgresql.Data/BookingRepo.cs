@@ -12,4 +12,15 @@ public class BookingRepo(MyDbContext ctx) : IBookingDataRepository
         ctx.SaveChanges();
         return booking;
     }
+
+    public void DeleteBooking(string id)
+    {
+        var booking = ctx.Bookings.FirstOrDefault(b => b.Id == id);
+        if (booking == null)
+        {
+            throw new InvalidOperationException("Booking not found");
+        }
+        ctx.Bookings.Remove(booking);
+        ctx.SaveChanges();
+    }
 }

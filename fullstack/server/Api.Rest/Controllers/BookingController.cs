@@ -11,10 +11,21 @@ public class BookingController(IBookingService bookingService) : ControllerBase
     
     public const string CreateBookingRoute = ControllerRoute + nameof(CreateBooking);
     
+    public const string DeleteBookingRoute = ControllerRoute + nameof(DeleteBooking);
+
+    
     [HttpPost]
     [Route(CreateBookingRoute)]
     public ActionResult<BookingResponseDto> CreateBooking([FromBody] BookingCreateRequestDto dto)
     {
         return Ok(bookingService.CreateBooking(dto));
+    }
+    
+    [HttpDelete]
+    [Route(DeleteBookingRoute)]
+    public ActionResult<BookingResponseDto> DeleteBooking(string id)
+    {
+        Console.WriteLine(id);
+        return Ok(bookingService.DeleteBooking(id));
     }
 }

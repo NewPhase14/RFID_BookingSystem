@@ -123,6 +123,36 @@
         }
       }
     },
+    "/api/booking/DeleteBooking": {
+      "delete": {
+        "tags": [
+          "Booking"
+        ],
+        "operationId": "Booking_DeleteBooking",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BookingResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/JoinLobby": {
       "post": {
         "tags": [

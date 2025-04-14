@@ -11,7 +11,7 @@ public class BookingService(IOptionsMonitor<AppOptions> optionsMonitor, IBooking
 {
     public BookingResponseDto CreateBooking(BookingCreateRequestDto dto)
     {
-        var insertedBooking = repository.AddBooking(new Booking
+        repository.AddBooking(new Booking
         {
             Id = Guid.NewGuid().ToString(),
             UserId = dto.UserId,
@@ -24,6 +24,15 @@ public class BookingService(IOptionsMonitor<AppOptions> optionsMonitor, IBooking
         return new BookingResponseDto()
         {
             Message = "Booking created successfully",
+        };
+    }
+
+    public BookingResponseDto DeleteBooking(string id)
+    {
+        repository.DeleteBooking(id);
+        return new BookingResponseDto()
+        {
+            Message = "Booking deleted successfully",
         };
     }
 }
