@@ -356,8 +356,8 @@
           "userId",
           "serviceId",
           "statusId",
-          "startTime",
-          "endTime"
+          "slotId",
+          "bookingDate"
         ],
         "properties": {
           "userId": {
@@ -372,14 +372,13 @@
             "type": "string",
             "minLength": 1
           },
-          "startTime": {
+          "slotId": {
             "type": "string",
-            "format": "date-time",
             "minLength": 1
           },
-          "endTime": {
+          "bookingDate": {
             "type": "string",
-            "format": "date-time",
+            "format": "date",
             "minLength": 1
           }
         }

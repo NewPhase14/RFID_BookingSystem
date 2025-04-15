@@ -7,6 +7,12 @@ public class BookingCreateRequestDto
     [Required] public string UserId { get; set; } = null!;
     [Required] public string ServiceId { get; set; } = null!;
     [Required] public string StatusId { get; set; } = null!;
-    [Required] public DateTime StartTime { get; set; }
-    [Required] public DateTime EndTime { get; set; }
+    [Required] public string SlotId { get; set; } = null!;
+    [Required] public DateOnly BookingDate { get; set; }
+    
+    
+    
+    
+    
+    
 }

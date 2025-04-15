@@ -420,8 +420,8 @@ export interface BookingCreateRequestDto {
     userId: string;
     serviceId: string;
     statusId: string;
-    startTime: Date;
-    endTime: Date;
+    slotId: string;
+    bookingDate: Date;
 }
 
 

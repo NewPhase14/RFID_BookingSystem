@@ -11,17 +11,21 @@ public partial class Booking
 
     public string ServiceId { get; set; } = null!;
 
-    public string StatusId { get; set; } = null!;
+    public string? StatusId { get; set; }
+
+    public string SlotId { get; set; } = null!;
+
+    public DateOnly BookingDate { get; set; }
 
     public DateTime? CreatedAt { get; set; }
 
-    public DateTime StartTime { get; set; }
-
-    public DateTime EndTime { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     public virtual Service Service { get; set; } = null!;
 
-    public virtual BookingStatus Status { get; set; } = null!;
+    public virtual ServiceTimeSlot Slot { get; set; } = null!;
+
+    public virtual BookingStatus? Status { get; set; }
 
     public virtual User User { get; set; } = null!;
 }

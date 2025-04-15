@@ -20,7 +20,11 @@ public partial class MyDbContext : DbContext
 
     public virtual DbSet<Service> Services { get; set; }
 
+    public virtual DbSet<ServiceTimeSlot> ServiceTimeSlots { get; set; }
+
     public virtual DbSet<User> Users { get; set; }
+
+    public virtual DbSet<Weekday> Weekdays { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -30,38 +34,40 @@ public partial class MyDbContext : DbContext
 
             entity.ToTable("bookings");
 
-            entity.HasIndex(e => e.ServiceId, "idx_bookings_service_id");
-
-            entity.HasIndex(e => e.StatusId, "idx_bookings_status_id");
-
-            entity.HasIndex(e => e.UserId, "idx_bookings_user_id");
+            entity.HasIndex(e => new { e.SlotId, e.BookingDate }, "bookings_slot_id_booking_date_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.BookingDate).HasColumnName("booking_date");
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("created_at");
-            entity.Property(e => e.EndTime)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("end_time");
             entity.Property(e => e.ServiceId).HasColumnName("service_id");
-            entity.Property(e => e.StartTime)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("start_time");
+            entity.Property(e => e.SlotId).HasColumnName("slot_id");
             entity.Property(e => e.StatusId).HasColumnName("status_id");
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("updated_at");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
             entity.HasOne(d => d.Service).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.ServiceId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("bookings_service_id_fkey");
+
+            entity.HasOne(d => d.Slot).WithMany(p => p.Bookings)
+                .HasForeignKey(d => d.SlotId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("bookings_slot_id_fkey");
 
             entity.HasOne(d => d.Status).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.StatusId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("bookings_status_id_fkey");
 
             entity.HasOne(d => d.User).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("bookings_user_id_fkey");
         });
 
@@ -71,11 +77,9 @@ public partial class MyDbContext : DbContext
 
             entity.ToTable("booking_status");
 
-            entity.HasIndex(e => e.Name, "booking_status_name_key").IsUnique();
-
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Name)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .HasColumnName("name");
         });
 
@@ -85,11 +89,9 @@ public partial class MyDbContext : DbContext
 
             entity.ToTable("roles");
 
-            entity.HasIndex(e => e.Name, "roles_name_key").IsUnique();
-
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Name)
-                .HasMaxLength(100)
+                .HasMaxLength(30)
                 .HasColumnName("name");
         });
 
@@ -99,12 +101,37 @@ public partial class MyDbContext : DbContext
 
             entity.ToTable("services");
 
-            entity.HasIndex(e => e.Name, "services_name_key").IsUnique();
-
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Name)
                 .HasMaxLength(100)
                 .HasColumnName("name");
+        });
+
+        modelBuilder.Entity<ServiceTimeSlot>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("service_time_slots_pkey");
+
+            entity.ToTable("service_time_slots");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql("CURRENT_TIMESTAMP")
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("created_at");
+            entity.Property(e => e.DayOfWeek).HasColumnName("day_of_week");
+            entity.Property(e => e.EndTime).HasColumnName("end_time");
+            entity.Property(e => e.ServiceId).HasColumnName("service_id");
+            entity.Property(e => e.StartTime).HasColumnName("start_time");
+
+            entity.HasOne(d => d.DayOfWeekNavigation).WithMany(p => p.ServiceTimeSlots)
+                .HasForeignKey(d => d.DayOfWeek)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("service_time_slots_day_of_week_fkey");
+
+            entity.HasOne(d => d.Service).WithMany(p => p.ServiceTimeSlots)
+                .HasForeignKey(d => d.ServiceId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("service_time_slots_service_id_fkey");
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -112,10 +139,6 @@ public partial class MyDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("users_pkey");
 
             entity.ToTable("users");
-
-            entity.HasIndex(e => e.RoleId, "idx_users_role_id");
-
-            entity.HasIndex(e => e.Email, "users_email_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.ConfirmedEmail)
@@ -136,7 +159,7 @@ public partial class MyDbContext : DbContext
                 .HasMaxLength(100)
                 .HasColumnName("last_name");
             entity.Property(e => e.Rfid)
-                .HasMaxLength(50)
+                .HasMaxLength(100)
                 .HasColumnName("rfid");
             entity.Property(e => e.RoleId).HasColumnName("role_id");
             entity.Property(e => e.Salt).HasColumnName("salt");
@@ -147,8 +170,22 @@ public partial class MyDbContext : DbContext
 
             entity.HasOne(d => d.Role).WithMany(p => p.Users)
                 .HasForeignKey(d => d.RoleId)
-                .OnDelete(DeleteBehavior.Restrict)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("users_role_id_fkey");
+        });
+
+        modelBuilder.Entity<Weekday>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("weekdays_pkey");
+
+            entity.ToTable("weekdays");
+
+            entity.Property(e => e.Id)
+                .ValueGeneratedNever()
+                .HasColumnName("id");
+            entity.Property(e => e.Name)
+                .HasMaxLength(30)
+                .HasColumnName("name");
         });
 
         OnModelCreatingPartial(modelBuilder);

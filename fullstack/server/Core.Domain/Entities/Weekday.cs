@@ -3,13 +3,11 @@ using System.Collections.Generic;
 
 namespace Core.Domain.Entities;
 
-public partial class Service
+public partial class Weekday
 {
-    public string Id { get; set; } = null!;
+    public int Id { get; set; }
 
     public string Name { get; set; } = null!;
-
-    public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
     public virtual ICollection<ServiceTimeSlot> ServiceTimeSlots { get; set; } = new List<ServiceTimeSlot>();
 }

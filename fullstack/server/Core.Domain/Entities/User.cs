@@ -15,17 +15,17 @@ public partial class User
 
     public string HashedPassword { get; set; } = null!;
 
+    public string Salt { get; set; } = null!;
+
     public string Email { get; set; } = null!;
 
     public string RoleId { get; set; } = null!;
 
+    public bool? ConfirmedEmail { get; set; }
+
     public DateTime? CreatedAt { get; set; }
 
     public DateTime? UpdatedAt { get; set; }
-
-    public bool? ConfirmedEmail { get; set; }
-
-    public string Salt { get; set; } = null!;
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 

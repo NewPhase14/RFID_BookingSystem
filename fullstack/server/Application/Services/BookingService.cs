@@ -17,9 +17,10 @@ public class BookingService(IOptionsMonitor<AppOptions> optionsMonitor, IBooking
             UserId = dto.UserId,
             ServiceId = dto.ServiceId,
             StatusId = dto.StatusId,
+            SlotId = dto.SlotId,
+            BookingDate = dto.BookingDate,
             CreatedAt = DateTime.Now,
-            StartTime = dto.StartTime,
-            EndTime = dto.EndTime,
+            
         });
         return new BookingResponseDto()
         {
