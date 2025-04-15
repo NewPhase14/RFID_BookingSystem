@@ -21,12 +21,15 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
     {
         var user = repository.GetUserOrNull(dto.Email) ?? throw new ValidationException("Username not found");
         VerifyPasswordOrThrow(dto.Password + user.Salt, user.HashedPassword);
+
+        var userRole = user.Role.Name;
+        
         return new AuthResponseDto
         {
             Jwt = GenerateJwt(new JwtClaims
             {
                 Id = user.Id,
-                Role = user.RoleId,
+                Role = userRole,
                 Exp = DateTimeOffset.UtcNow.AddHours(1000)
                     .ToUnixTimeSeconds()
                     .ToString(),
@@ -59,7 +62,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
             Jwt = GenerateJwt(new JwtClaims
             {
                 Id = insertedUser.Id,
-                Role = insertedUser.RoleId,
+                Role = insertedUser.Role.Name,
                 Exp = DateTimeOffset.UtcNow.AddHours(1000).ToUnixTimeSeconds().ToString(),
                 Email = insertedUser.Email
             })
