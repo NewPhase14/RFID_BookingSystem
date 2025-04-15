@@ -9,7 +9,7 @@ public partial class ServiceTimeSlot
 
     public string ServiceId { get; set; } = null!;
 
-    public int DayOfWeek { get; set; }
+    public string DayOfWeek { get; set; } = null!;
 
     public TimeOnly StartTime { get; set; }
 

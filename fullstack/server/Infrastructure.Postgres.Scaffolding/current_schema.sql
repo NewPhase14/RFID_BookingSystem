@@ -29,14 +29,14 @@ CREATE TABLE booking_status (
 
 
 CREATE TABLE weekdays (
-                          id INT PRIMARY KEY CHECK(id BETWEEN 1 AND 7),
+                          id TEXT PRIMARY KEY,
                           name VARCHAR(30) NOT NULL
 );
 
 CREATE TABLE service_time_slots (
                                     id TEXT PRIMARY KEY,
                                     service_id TEXT NOT NULL REFERENCES services(id),
-                                    day_of_week INT NOT NULL REFERENCES weekdays(id),
+                                    day_of_week TEXT NOT NULL REFERENCES weekdays(id),
                                     start_time TIME NOT NULL,
                                     end_time TIME NOT NULL,
                                     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -55,14 +55,14 @@ CREATE TABLE bookings (
 );
 
 insert into weekdays (id, name) values
-(1, 'Monday'),
-(2, 'Tuesday'),
-(3, 'Wednesday'),
-(4, 'Thursday'),
-(5, 'Friday'),
-(6, 'Saturday'),
-(7, 'Sunday');
+                                    (1, 'Monday'),
+                                    (2, 'Tuesday'),
+                                    (3, 'Wednesday'),
+                                    (4, 'Thursday'),
+                                    (5, 'Friday'),
+                                    (6, 'Saturday'),
+                                    (7, 'Sunday');
 
-insert into roles (id, name) values 
-(1, 'User'),
-(2, 'Admin');
+insert into roles (id, name) values
+                                 (1, 'User'),
+                                 (2, 'Admin');

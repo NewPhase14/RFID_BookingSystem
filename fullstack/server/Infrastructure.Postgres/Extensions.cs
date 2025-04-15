@@ -21,6 +21,7 @@ public static class Extensions
 
         services.AddScoped<IAuthDataRepository, AuthRepo>();
         services.AddScoped<IBookingDataRepository, BookingRepo>();
+        services.AddScoped<ITimeSlotRepository, TimeSlotRepo>();
         services.AddScoped<Seeder>();
 
         return services;

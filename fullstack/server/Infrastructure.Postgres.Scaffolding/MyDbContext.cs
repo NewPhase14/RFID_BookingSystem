@@ -180,9 +180,7 @@ public partial class MyDbContext : DbContext
 
             entity.ToTable("weekdays");
 
-            entity.Property(e => e.Id)
-                .ValueGeneratedNever()
-                .HasColumnName("id");
+            entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.Name)
                 .HasMaxLength(30)
                 .HasColumnName("name");
