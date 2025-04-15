@@ -5,14 +5,14 @@ CREATE TABLE roles (
 
 CREATE TABLE users (
                        id TEXT PRIMARY KEY,
-                       first_name VARCHAR(100),
-                       last_name VARCHAR(100),
+                       first_name VARCHAR(100) not null ,
+                       last_name VARCHAR(100) not null ,
                        rfid VARCHAR(100),
-                       hashed_password TEXT,
-                       salt TEXT,
-                       email VARCHAR(255),
-                       role_id TEXT REFERENCES roles(id),
-                       confirmed_email BOOLEAN,
+                       hashed_password TEXT not null ,
+                       salt TEXT not null ,
+                       email VARCHAR(255) not null ,
+                       role_id TEXT REFERENCES roles(id) not null,
+                       confirmed_email BOOLEAN default false,
                        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -29,7 +29,7 @@ CREATE TABLE booking_status (
 
 
 CREATE TABLE weekdays (
-                          id INT PRIMARY KEY CHECK(id BETWEEN 0 AND 6),
+                          id INT PRIMARY KEY CHECK(id BETWEEN 1 AND 7),
                           name VARCHAR(30) NOT NULL
 );
 
@@ -54,3 +54,15 @@ CREATE TABLE bookings (
                           UNIQUE(slot_id, booking_date)
 );
 
+insert into weekdays (id, name) values
+(1, 'Monday'),
+(2, 'Tuesday'),
+(3, 'Wednesday'),
+(4, 'Thursday'),
+(5, 'Friday'),
+(6, 'Saturday'),
+(7, 'Sunday');
+
+insert into roles (id, name) values 
+(1, 'User'),
+(2, 'Admin');
