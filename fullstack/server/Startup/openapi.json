@@ -91,6 +91,38 @@
         }
       }
     },
+    "/api/availability/CreateAvailability": {
+      "post": {
+        "tags": [
+          "Availability"
+        ],
+        "operationId": "Availability_CreateAvailability",
+        "requestBody": {
+          "x-name": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AvailabilityCreateRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/booking/CreateBooking": {
       "post": {
         "tags": [
@@ -146,38 +178,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BookingResponseDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/timeSlot/CreateTimeSlot": {
-      "post": {
-        "tags": [
-          "TimeSlot"
-        ],
-        "operationId": "TimeSlot_CreateTimeSlot",
-        "requestBody": {
-          "x-name": "dto",
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/TimeSlotCreateRequestDto"
-              }
-            }
-          },
-          "required": true,
-          "x-position": 1
-        },
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthResponseDto"
                 }
               }
             }
@@ -368,6 +368,36 @@
           }
         }
       },
+      "AvailabilityCreateRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "serviceId",
+          "dayOfWeek",
+          "availableFrom",
+          "availableTo"
+        ],
+        "properties": {
+          "serviceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "dayOfWeek": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "availableFrom": {
+            "type": "string",
+            "format": "time",
+            "minLength": 1
+          },
+          "availableTo": {
+            "type": "string",
+            "format": "time",
+            "minLength": 1
+          }
+        }
+      },
       "BookingResponseDto": {
         "type": "object",
         "additionalProperties": false,
@@ -387,9 +417,8 @@
         "required": [
           "userId",
           "serviceId",
-          "statusId",
-          "slotId",
-          "bookingDate"
+          "startTime",
+          "endTime"
         ],
         "properties": {
           "userId": {
@@ -400,47 +429,14 @@
             "type": "string",
             "minLength": 1
           },
-          "statusId": {
-            "type": "string",
-            "minLength": 1
-          },
-          "slotId": {
-            "type": "string",
-            "minLength": 1
-          },
-          "bookingDate": {
-            "type": "string",
-            "format": "date",
-            "minLength": 1
-          }
-        }
-      },
-      "TimeSlotCreateRequestDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "serviceId",
-          "weekdayId",
-          "startTime",
-          "endTime"
-        ],
-        "properties": {
-          "serviceId": {
-            "type": "string",
-            "minLength": 1
-          },
-          "weekdayId": {
-            "type": "string",
-            "minLength": 1
-          },
           "startTime": {
             "type": "string",
-            "format": "time",
+            "format": "date-time",
             "minLength": 1
           },
           "endTime": {
             "type": "string",
-            "format": "time",
+            "format": "date-time",
             "minLength": 1
           }
         }

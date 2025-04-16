@@ -4,7 +4,9 @@ namespace Application.Interfaces.Infrastructure.Postgres;
 
 public interface IBookingDataRepository
 {
-    Booking AddBooking(Booking booking);
+    void AddBooking(Booking booking);
 
     void DeleteBooking(string id);
+    
+    bool BookingOverlapping(Booking booking);
 }

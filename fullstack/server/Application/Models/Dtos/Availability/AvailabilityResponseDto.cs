@@ -1,8 +1,8 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Application.Models.Dtos.TimeSlot;
+namespace Application.Models.Dtos.Availability;
 
-public class TimeSlotResponseDto
+public class AvailabilityResponseDto
 {
     [Required] public string Message { get; set; } = null!;
 }

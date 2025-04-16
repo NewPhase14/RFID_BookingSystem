@@ -25,7 +25,7 @@ CREATE TABLE services (
 CREATE TABLE service_availability (
                         id TEXT PRIMARY KEY,
                         service_id TEXT NOT NULL REFERENCES services(id),
-                        day_of_week SMALLINT NOT NULL,
+                        day_of_week INT NOT NULL,
                         available_from TIME NOT NULL,
                         available_to TIME NOT NULL,
                         created_at TIMESTAMP NOT NULL,

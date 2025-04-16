@@ -55,7 +55,8 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
             HashedPassword = hash,
             FirstName = dto.FirstName,
             LastName = dto.LastName,
-            
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
         });
         return new AuthResponseDto
         {

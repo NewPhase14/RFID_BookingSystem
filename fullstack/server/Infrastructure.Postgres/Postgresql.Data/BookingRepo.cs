@@ -1,16 +1,16 @@
 using Application.Interfaces.Infrastructure.Postgres;
 using Core.Domain.Entities;
 using Infrastructure.Postgres.Scaffolding;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Postgres.Postgresql.Data;
 
 public class BookingRepo(MyDbContext ctx) : IBookingDataRepository
 {
-    public Booking AddBooking(Booking booking)
+    public void AddBooking(Booking booking)
     {
         ctx.Bookings.Add(booking);
         ctx.SaveChanges();
-        return booking;
     }
 
     public void DeleteBooking(string id)
@@ -23,4 +23,14 @@ public class BookingRepo(MyDbContext ctx) : IBookingDataRepository
         ctx.Bookings.Remove(booking);
         ctx.SaveChanges();
     }
+
+    public bool BookingOverlapping(Booking booking)
+    {
+        return  ctx.Bookings.Any(b =>
+            b.ServiceId == booking.ServiceId &&
+            b.StartTime < booking.EndTime &&
+            booking.StartTime < b.EndTime
+        );
+    }
+    
 }

@@ -9,7 +9,7 @@ public partial class ServiceAvailability
 
     public string ServiceId { get; set; } = null!;
 
-    public short DayOfWeek { get; set; }
+    public int DayOfWeek { get; set; }
 
     public TimeOnly AvailableFrom { get; set; }
 
