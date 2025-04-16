@@ -14,17 +14,13 @@ public partial class MyDbContext : DbContext
 
     public virtual DbSet<Booking> Bookings { get; set; }
 
-    public virtual DbSet<BookingStatus> BookingStatuses { get; set; }
-
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<Service> Services { get; set; }
 
-    public virtual DbSet<ServiceTimeSlot> ServiceTimeSlots { get; set; }
+    public virtual DbSet<ServiceAvailability> ServiceAvailabilities { get; set; }
 
     public virtual DbSet<User> Users { get; set; }
-
-    public virtual DbSet<Weekday> Weekdays { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -34,19 +30,18 @@ public partial class MyDbContext : DbContext
 
             entity.ToTable("bookings");
 
-            entity.HasIndex(e => new { e.SlotId, e.BookingDate }, "bookings_slot_id_booking_date_key").IsUnique();
-
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.BookingDate).HasColumnName("booking_date");
             entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("created_at");
+            entity.Property(e => e.EndTime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("end_time");
             entity.Property(e => e.ServiceId).HasColumnName("service_id");
-            entity.Property(e => e.SlotId).HasColumnName("slot_id");
-            entity.Property(e => e.StatusId).HasColumnName("status_id");
+            entity.Property(e => e.StartTime)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("start_time");
             entity.Property(e => e.UpdatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("updated_at");
             entity.Property(e => e.UserId).HasColumnName("user_id");
@@ -56,31 +51,10 @@ public partial class MyDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("bookings_service_id_fkey");
 
-            entity.HasOne(d => d.Slot).WithMany(p => p.Bookings)
-                .HasForeignKey(d => d.SlotId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("bookings_slot_id_fkey");
-
-            entity.HasOne(d => d.Status).WithMany(p => p.Bookings)
-                .HasForeignKey(d => d.StatusId)
-                .HasConstraintName("bookings_status_id_fkey");
-
             entity.HasOne(d => d.User).WithMany(p => p.Bookings)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("bookings_user_id_fkey");
-        });
-
-        modelBuilder.Entity<BookingStatus>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("booking_status_pkey");
-
-            entity.ToTable("booking_status");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Name)
-                .HasMaxLength(100)
-                .HasColumnName("name");
         });
 
         modelBuilder.Entity<Role>(entity =>
@@ -107,31 +81,30 @@ public partial class MyDbContext : DbContext
                 .HasColumnName("name");
         });
 
-        modelBuilder.Entity<ServiceTimeSlot>(entity =>
+        modelBuilder.Entity<ServiceAvailability>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("service_time_slots_pkey");
+            entity.HasKey(e => e.Id).HasName("service_availability_pkey");
 
-            entity.ToTable("service_time_slots");
+            entity.ToTable("service_availability");
+
+            entity.HasIndex(e => new { e.ServiceId, e.DayOfWeek }, "service_availability_service_id_day_of_week_key").IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AvailableFrom).HasColumnName("available_from");
+            entity.Property(e => e.AvailableTo).HasColumnName("available_to");
             entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("created_at");
             entity.Property(e => e.DayOfWeek).HasColumnName("day_of_week");
-            entity.Property(e => e.EndTime).HasColumnName("end_time");
             entity.Property(e => e.ServiceId).HasColumnName("service_id");
-            entity.Property(e => e.StartTime).HasColumnName("start_time");
+            entity.Property(e => e.UpdatedAt)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("updated_at");
 
-            entity.HasOne(d => d.DayOfWeekNavigation).WithMany(p => p.ServiceTimeSlots)
-                .HasForeignKey(d => d.DayOfWeek)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("service_time_slots_day_of_week_fkey");
-
-            entity.HasOne(d => d.Service).WithMany(p => p.ServiceTimeSlots)
+            entity.HasOne(d => d.Service).WithMany(p => p.ServiceAvailabilities)
                 .HasForeignKey(d => d.ServiceId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("service_time_slots_service_id_fkey");
+                .HasConstraintName("service_availability_service_id_fkey");
         });
 
         modelBuilder.Entity<User>(entity =>
@@ -145,7 +118,6 @@ public partial class MyDbContext : DbContext
                 .HasDefaultValue(false)
                 .HasColumnName("confirmed_email");
             entity.Property(e => e.CreatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("created_at");
             entity.Property(e => e.Email)
@@ -164,7 +136,6 @@ public partial class MyDbContext : DbContext
             entity.Property(e => e.RoleId).HasColumnName("role_id");
             entity.Property(e => e.Salt).HasColumnName("salt");
             entity.Property(e => e.UpdatedAt)
-                .HasDefaultValueSql("CURRENT_TIMESTAMP")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("updated_at");
 
@@ -172,18 +143,6 @@ public partial class MyDbContext : DbContext
                 .HasForeignKey(d => d.RoleId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("users_role_id_fkey");
-        });
-
-        modelBuilder.Entity<Weekday>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("weekdays_pkey");
-
-            entity.ToTable("weekdays");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.Name)
-                .HasMaxLength(30)
-                .HasColumnName("name");
         });
 
         OnModelCreatingPartial(modelBuilder);

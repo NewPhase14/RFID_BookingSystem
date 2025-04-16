@@ -11,5 +11,5 @@ public partial class Service
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-    public virtual ICollection<ServiceTimeSlot> ServiceTimeSlots { get; set; } = new List<ServiceTimeSlot>();
+    public virtual ICollection<ServiceAvailability> ServiceAvailabilities { get; set; } = new List<ServiceAvailability>();
 }
