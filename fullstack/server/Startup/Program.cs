@@ -1,8 +1,11 @@
 using Api.Rest;
 using Api.Websocket;
 using Application;
+using Application.Interfaces;
+using Application.Interfaces.Infrastructure.MQTT;
 using Application.Models;
 using Core.Domain.Entities;
+using Infrastructure.MQTT;
 using Infrastructure.Postgres;
 using Infrastructure.Postgres.Scaffolding;
 using Infrastructure.Websocket;
@@ -36,6 +39,18 @@ public class Program
 
         services.RegisterWebsocketApiServices();
         services.RegisterRestApiServices();
+        
+        if (!string.IsNullOrEmpty(appOptions.MQTT_BROKER_HOST))
+        {
+            services.RegisterMqttInfrastructure();
+        }
+        else
+        {
+            Console.WriteLine("Skipping MQTT service registration: Making sure there is an available mock publisher");
+            services.AddSingleton<IMqttPublisher, MockMqttPublisher>();
+        }
+
+        
         services.AddOpenApiDocument(conf =>
         {
             conf.DocumentProcessors.Add(new AddAllDerivedTypesProcessor());
@@ -62,7 +77,6 @@ public class Program
 
         app.ConfigureRestApi();
         await app.ConfigureWebsocketApi(appOptions.WS_PORT);
-
 
         app.MapGet("Acceptance", () => "Accepted");
 

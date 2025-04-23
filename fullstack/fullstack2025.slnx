@@ -9,10 +9,6 @@
     <Project Path="server\Infrastructure.Postgres.Scaffolding\Infrastructure.Postgres.Scaffolding.csproj" Type="Classic C#" />
     <Project Path="server\Infrastructure.Postgres\Infrastructure.Postgres.csproj" Type="Classic C#" />
     <Project Path="server\Infrastructure.Websocket\Infrastructure.Websocket.csproj" Type="Classic C#" />
-    <File Path="server\Infrastructure.MQTT\SubscriptionEventHandlers\DeviceLogEventHandler.cs" />
-    <File Path="server\Infrastructure.MQTT\MqttExtensions.cs" />
-    <File Path="server\Infrastructure.MQTT\Infrastructure.MQTT.csproj" />
-    <File Path="server\Infrastructure.MQTT\MqttPublisher.cs" />
-    <File Path="server\Infrastructure.MQTT\IMqttMessageHandler.cs" />
   </Folder>
+  <Project Path="server\Infrastructure.MQTT\Infrastructure.MQTT.csproj" Type="Classic C#" />
 </Solution>
