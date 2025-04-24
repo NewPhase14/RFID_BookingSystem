@@ -12,6 +12,7 @@ public static class Extensions
         services.AddScoped<IBookingService, BookingService>();
         services.AddScoped<IServiceLogic, ServiceLogic>();
         services.AddScoped<IAvailabilityService, AvailabilityService>();
+        services.AddScoped<ICheckingService, CheckingService>();
         return services;
     }
 }

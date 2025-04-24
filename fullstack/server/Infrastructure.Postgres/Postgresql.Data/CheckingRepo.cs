@@ -11,9 +11,7 @@ public class CheckingRepo(MyDbContext ctx) : ICheckingRepository
     {
         bool isValid = false;
 
-        var user = ctx.Users
-            .Include(u => u.Bookings)
-            .ThenInclude(b => b.ServiceId)
+        var user = ctx.Users.Include(user => user.Bookings)
             .FirstOrDefault(u => u.Rfid == rfid);
 
         if (user == null)
