@@ -4,6 +4,7 @@
 #include <PubSubClient.h>
 #include <SPI.h>
 #include <MFRC522.h>
+#include <ArduinoJson.h>
 
 #define SS_PIN 21
 #define RST_PIN 22
@@ -11,8 +12,6 @@
 #define redPin 4
 MFRC522 rfid(SS_PIN, RST_PIN);
 byte nuidPICC[4];
-
-// Wi-Fi credentials
 
 // Create instances
 WiFiClientSecure wifiClient;
@@ -93,7 +92,6 @@ void loop() {
     rfid.uid.uidByte[2] != nuidPICC[2] || 
     rfid.uid.uidByte[3] != nuidPICC[3] ) {
     Serial.println(F("A new card has been detected."));
-    mqttClient.publish("access", "Access Granted");
 
     digitalWrite(greenPin, HIGH);
     delay(1000);
@@ -103,13 +101,13 @@ void loop() {
       nuidPICC[i] = rfid.uid.uidByte[i];
     }
 
-    Serial.println(F("The NUID tag is:"));
-    Serial.print(F("In hex: "));
-    printHex(rfid.uid.uidByte, rfid.uid.size);
-    Serial.println();
-    Serial.print(F("In dec: "));
-    printDec(rfid.uid.uidByte, rfid.uid.size);
-    Serial.println();
+    JsonDocument doc;
+    String rfidToDec = String(rfid.uid.uidByte[0]) + " " + String(rfid.uid.uidByte[1]) + " " + String(rfid.uid.uidByte[2]) + " " + String(rfid.uid.uidByte[3]);
+    doc["rfid"] = rfidToDec;
+    doc["roomid"] = 5;
+    char buffer[256];
+    serializeJson(doc, buffer);
+    mqttClient.publish("access", buffer);
   }
   else {
     mqttClient.publish("access", "Access Denied");
