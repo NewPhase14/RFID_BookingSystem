@@ -76,6 +76,10 @@ public class Program
             .StartProxyServer(appOptions.PORT, appOptions.REST_PORT, appOptions.WS_PORT);
 
         app.ConfigureRestApi();
+        if (!string.IsNullOrEmpty(appOptions.MQTT_BROKER_HOST))
+            await app.ConfigureMqtt();
+        else
+            Console.WriteLine("Skipping MQTT service configuration");
         await app.ConfigureWebsocketApi(appOptions.WS_PORT);
 
         app.MapGet("Acceptance", () => "Accepted");
