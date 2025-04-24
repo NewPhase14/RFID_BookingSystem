@@ -185,6 +185,38 @@
         }
       }
     },
+    "/api/checking/CheckBookingRequest": {
+      "post": {
+        "tags": [
+          "Checking"
+        ],
+        "operationId": "Checking_CheckBookingRequest",
+        "requestBody": {
+          "x-name": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CheckBookingRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CheckingResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/JoinLobby": {
       "post": {
         "tags": [
@@ -437,6 +469,37 @@
           "endTime": {
             "type": "string",
             "format": "date-time",
+            "minLength": 1
+          }
+        }
+      },
+      "CheckingResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "CheckBookingRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rfid",
+          "serviceId"
+        ],
+        "properties": {
+          "rfid": {
+            "type": "string",
+            "minLength": 1
+          },
+          "serviceId": {
+            "type": "string",
             "minLength": 1
           }
         }
