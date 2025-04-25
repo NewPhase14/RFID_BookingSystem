@@ -8,7 +8,7 @@ using HiveMQtt.MQTT5.Types;
 
 namespace Infrastructure.MQTT.EventHandlers;
 
-public class CheckingEventHandler(ICheckingService checkingService) : IMqttMessageHandler
+public class CheckingEventHandler(ICheckingService checkingService, IMqttPublisher publisher) : IMqttMessageHandler
 {
     public string TopicFilter => "access";
     public QualityOfService QoS => QualityOfService.AtLeastOnceDelivery;
@@ -32,6 +32,7 @@ public class CheckingEventHandler(ICheckingService checkingService) : IMqttMessa
         
         var response = checkingService.CheckIfValid(check);
         
-        Console.WriteLine(response.Message);
+        
+        publisher.Publish(response, "access/response");
     }
 }

@@ -16,6 +16,7 @@ public class CheckingRepo(MyDbContext ctx) : ICheckingRepository
 
         if (user == null)
         {
+            // throw exception 
             return isValid;
         }
         

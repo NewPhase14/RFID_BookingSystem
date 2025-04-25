@@ -9,7 +9,13 @@ public class MqttPublisher(HiveMQClient client) : IMqttPublisher
 {
     public async Task Publish(object dto, string topic)
     {
-        await client.PublishAsync(topic, JsonSerializer.Serialize(dto, new JsonSerializerOptions
-            { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }), QualityOfService.AtLeastOnceDelivery);
+        
+          JsonSerializerOptions options = new(JsonSerializerDefaults.General)
+            {
+                
+                WriteIndented = false
+            };
+
+        await client.PublishAsync(topic, JsonSerializer.Serialize(dto,options), QualityOfService.AtLeastOnceDelivery);
     }
 }
