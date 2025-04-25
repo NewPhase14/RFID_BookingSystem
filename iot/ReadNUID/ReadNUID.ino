@@ -11,7 +11,6 @@
 #define greenPin 12
 #define redPin 4
 MFRC522 rfid(SS_PIN, RST_PIN);
-byte nuidPICC[4];
 
 // Create instances
 WiFiClientSecure wifiClient;
@@ -19,6 +18,7 @@ PubSubClient mqttClient(wifiClient);
 
 void setupMQTT() {
   mqttClient.setServer(mqtt_broker, mqtt_port);
+  mqttClient.setCallback(callback);
 }
 
 void reconnect() {
@@ -30,6 +30,7 @@ void reconnect() {
     
     if (mqttClient.connect(clientId.c_str(), mqtt_username, mqtt_password)) {
       Serial.println("Connected to MQTT Broker.");
+      mqttClient.subscribe("access/response");
     } else {
       Serial.print("Failed, rc=");
       Serial.print(mqttClient.state());
@@ -58,7 +59,37 @@ void setup() {
   SPI.begin(); // Init SPI bus
   rfid.PCD_Init(); // Init MFRC522 
   pinMode(greenPin, OUTPUT);
-  pinMode(redPin, OUTPUT); // Set IR sensor pin as input
+  pinMode(redPin, OUTPUT); 
+}
+
+void callback(char* topic, byte* message, unsigned int length) {
+  Serial.print("Message arrived on topic: ");
+  Serial.print(topic);
+  Serial.print(". Message: ");
+  String messageTemp;
+  
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)message[i]);
+    messageTemp += (char)message[i];
+  }
+
+  StaticJsonDocument<200> doc;
+  deserializeJson(doc, messageTemp);
+  String msg = doc["message"];
+  Serial.println(msg);
+
+  if(msg == "Valid"){
+    Serial.println("on");
+    digitalWrite(greenPin, HIGH);
+    delay(1000);
+    digitalWrite(greenPin, LOW);
+  }
+  else if(msg == "Invalid"){
+    Serial.println("off");
+    digitalWrite(redPin, HIGH);
+    delay(1000);
+    digitalWrite(redPin, LOW);
+  }
 }
 
 void loop() {
@@ -75,9 +106,7 @@ void loop() {
   if ( ! rfid.PICC_ReadCardSerial())
     return;
 
-  Serial.print(F("PICC type: "));
   MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak);
-  Serial.println(rfid.PICC_GetTypeName(piccType));
 
   // Check is the PICC of Classic MIFARE type
   if (piccType != MFRC522::PICC_TYPE_MIFARE_MINI &&  
@@ -86,36 +115,14 @@ void loop() {
     Serial.println(F("Your tag is not of type MIFARE Classic."));
     return;
   }
-
-  if (rfid.uid.uidByte[0] != nuidPICC[0] || 
-    rfid.uid.uidByte[1] != nuidPICC[1] || 
-    rfid.uid.uidByte[2] != nuidPICC[2] || 
-    rfid.uid.uidByte[3] != nuidPICC[3] ) {
-    Serial.println(F("A new card has been detected."));
-
-    digitalWrite(greenPin, HIGH);
-    delay(1000);
-    digitalWrite(greenPin, LOW);
-    // Store NUID into nuidPICC array
-    for (byte i = 0; i < 4; i++) {
-      nuidPICC[i] = rfid.uid.uidByte[i];
-    }
-
     JsonDocument doc;
     String rfidToDec = String(rfid.uid.uidByte[0]) + " " + String(rfid.uid.uidByte[1]) + " " + String(rfid.uid.uidByte[2]) + " " + String(rfid.uid.uidByte[3]);
     doc["rfid"] = rfidToDec;
-    doc["roomid"] = 5;
+    doc["serviceId"] = "1";
     char buffer[256];
     serializeJson(doc, buffer);
     mqttClient.publish("access", buffer);
-  }
-  else {
-    mqttClient.publish("access", "Access Denied");
-    Serial.println(F("Card read previously."));
-    digitalWrite(redPin, HIGH);
-    delay(1000);
-    digitalWrite(redPin, LOW);
-  }
+  
   // Halt PICC
   rfid.PICC_HaltA();
 
@@ -123,23 +130,3 @@ void loop() {
   rfid.PCD_StopCrypto1();
 }
 
-
-/**
- * Helper routine to dump a byte array as hex values to Serial. 
- */
-void printHex(byte *buffer, byte bufferSize) {
-  for (byte i = 0; i < bufferSize; i++) {
-    Serial.print(buffer[i] < 0x10 ? " 0" : " ");
-    Serial.print(buffer[i], HEX);
-  }
-}
-
-/**
- * Helper routine to dump a byte array as dec values to Serial.
- */
-void printDec(byte *buffer, byte bufferSize) {
-  for (byte i = 0; i < bufferSize; i++) {
-    Serial.print(' ');
-    Serial.print(buffer[i], DEC);
-  }
-}

@@ -10,9 +10,8 @@ public class MqttPublisher(HiveMQClient client) : IMqttPublisher
     public async Task Publish(object dto, string topic)
     {
         
-          JsonSerializerOptions options = new(JsonSerializerDefaults.General)
+          JsonSerializerOptions options = new(JsonSerializerDefaults.Web)
             {
-                
                 WriteIndented = false
             };
 
