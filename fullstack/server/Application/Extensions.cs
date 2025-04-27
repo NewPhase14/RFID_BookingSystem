@@ -10,9 +10,9 @@ public static class Extensions
     {
         services.AddScoped<ISecurityService, SecurityService>();
         services.AddScoped<IBookingService, BookingService>();
-        services.AddScoped<IServiceLogic, ServiceLogic>();
         services.AddScoped<IAvailabilityService, AvailabilityService>();
         services.AddScoped<ICheckingService, CheckingService>();
+        services.AddScoped<IServiceService, ServiceService>();
         return services;
     }
 }

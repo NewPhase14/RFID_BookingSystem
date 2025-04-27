@@ -25,7 +25,6 @@ public class BookingController(IBookingService bookingService) : ControllerBase
     [Route(DeleteBookingRoute)]
     public ActionResult<BookingResponseDto> DeleteBooking(string id)
     {
-        Console.WriteLine(id);
         return Ok(bookingService.DeleteBooking(id));
     }
 }

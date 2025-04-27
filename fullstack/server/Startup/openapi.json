@@ -217,6 +217,68 @@
         }
       }
     },
+    "/api/service/CreateService": {
+      "post": {
+        "tags": [
+          "Service"
+        ],
+        "operationId": "Service_CreateService",
+        "requestBody": {
+          "x-name": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ServiceCreateRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/service/DeleteService": {
+      "delete": {
+        "tags": [
+          "Service"
+        ],
+        "operationId": "Service_DeleteService",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/JoinLobby": {
       "post": {
         "tags": [
@@ -499,6 +561,32 @@
             "minLength": 1
           },
           "serviceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "ServiceResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "ServiceCreateRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
             "type": "string",
             "minLength": 1
           }

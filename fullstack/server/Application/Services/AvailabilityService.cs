@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace Application.Services;
 
-public class AvailabilityService(IOptionsMonitor<AppOptions> optionsMonitor, IAvailabilityRepository repository) : IAvailabilityService
+public class AvailabilityService(IAvailabilityRepository repository) : IAvailabilityService
 {
     public AvailabilityResponseDto CreateAvailability(AvailabilityCreateRequestDto dto)
     {

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Rest.Controllers;
 
+[ApiController]
 public class CheckingController(ICheckingService checkingService) : ControllerBase
 {
     public const string ControllerRoute = "api/checking/";

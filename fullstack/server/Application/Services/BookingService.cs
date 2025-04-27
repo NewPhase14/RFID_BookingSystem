@@ -7,7 +7,7 @@ using Microsoft.Extensions.Options;
 
 namespace Application.Services;
 
-public class BookingService(IOptionsMonitor<AppOptions> optionsMonitor, IBookingDataRepository bookingRepository, IAvailabilityRepository availabilityRepository) : IBookingService
+public class BookingService(IBookingDataRepository bookingRepository, IAvailabilityRepository availabilityRepository) : IBookingService
 {
     public BookingResponseDto CreateBooking(BookingCreateRequestDto dto)
     {
@@ -25,15 +25,19 @@ public class BookingService(IOptionsMonitor<AppOptions> optionsMonitor, IBooking
         if (CanCreateBooking(booking))
         {
             bookingRepository.AddBooking(booking);
+            return new BookingResponseDto()
+            {
+                Message = "Booking created successfully",
+            };
         }
-
+        
         return new BookingResponseDto()
         {
-            Message = "Booking created successfully",
+            Message = "Booking creation failed",
         };
     }
-    
-    public bool CanCreateBooking(Booking newBooking)
+
+    private bool CanCreateBooking(Booking newBooking)
     {
         var bookingDay = (int)newBooking.StartTime.DayOfWeek;
 
