@@ -45,6 +45,15 @@ CREATE TABLE bookings (
                           
 );
 
+
+CREATE TABLE email_verification_token (
+                        id TEXT PRIMARY KEY,
+                        user_id TEXT NOT NULL REFERENCES users(id),
+                        created_at TIMESTAMP NOT NULL,
+                        expires_at TIMESTAMP NOT NULL
+);
+
 insert into roles (id, name) values
                         (1, 'User'),
                         (2, 'Admin');
+

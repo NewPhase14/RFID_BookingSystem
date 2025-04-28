@@ -6,7 +6,9 @@ using Application.Interfaces;
 using Application.Interfaces.Infrastructure.Postgres;
 using Application.Models;
 using Application.Models.Dtos;
+using Application.Models.Dtos.Auth;
 using Core.Domain.Entities;
+using FluentEmail.Core;
 using JWT;
 using JWT.Algorithms;
 using JWT.Builder;
@@ -15,7 +17,7 @@ using Microsoft.Extensions.Options;
 
 namespace Application.Services;
 
-public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDataRepository repository) : ISecurityService
+public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDataRepository repository, IFluentEmail fluentEmail) : ISecurityService
 {
     public AuthResponseDto Login(AuthLoginRequestDto dto)
     {
@@ -38,14 +40,18 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
         };
     }
 
-    public AuthResponseDto Register(AuthRegisterRequestDto dto)
+    public async Task<AuthResponseDto> Register(AuthRegisterRequestDto dto)
     {
-        var user = repository.GetUserOrNull(dto.Email);
-        if (user is not null) throw new ValidationException("User already exists");
+        var existingUser = repository.GetUserOrNull(dto.Email);
+        if (existingUser is not null) throw new ValidationException("User already exists");
+        
         var salt = GenerateSalt();
         var hash = HashPassword(dto.Password + salt);
+        
         var userRole = repository.GetRole("User");
-        var insertedUser = repository.AddUser(new User
+        if (userRole is null) throw new ValidationException("User role not found");
+        
+        var newUser = new User
         {
             Id = Guid.NewGuid().ToString(),
             Email = dto.Email,
@@ -57,18 +63,57 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
             LastName = dto.LastName,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
+        };
+
+        try
+        {
+            newUser = repository.AddUser(newUser);
+        }
+        catch (Exception e)
+        {
+            throw new ApplicationException("Failed to insert user into database", e);
+        }
+
+        var verificationToken = repository.AddEmailVerificationToken(new EmailVerificationToken
+        {
+            Id = Guid.NewGuid().ToString(),
+            UserId = newUser.Id,
+            CreatedAt = DateTime.Now,
+            ExpiresAt = DateTime.Now.AddDays(1)
         });
+
+        //Insert real address when it's ready
+        var verificationLink = $"localhost:5001/verify-email?token={verificationToken.Id}";
+        
+        var email = fluentEmail
+            .To(newUser.Email, $"{newUser.FirstName} {newUser.LastName}")
+            .Subject("Email verification for bookit")
+            .Body($"Hello {newUser.FirstName}, thank you for registering at bookit. <br> To verify you email address <a href='{verificationLink}'>click here</a>", true);
+
+        var response = await email.SendAsync();
+
+        if (!response.Successful)
+        {
+            Console.WriteLine("Failed to send email.");
+        }
+
         return new AuthResponseDto
         {
             Jwt = GenerateJwt(new JwtClaims
             {
-                Id = insertedUser.Id,
-                Role = insertedUser.Role.Name,
+                Id = newUser.Id,
+                Role = newUser.Role.Name,
                 Exp = DateTimeOffset.UtcNow.AddHours(1000).ToUnixTimeSeconds().ToString(),
-                Email = insertedUser.Email
+                Email = newUser.Email
             })
         };
     }
+
+    public async Task<VerifyEmailResponseDto> VerifyEmail(VerifyEmailRequestDto dto)
+    {
+        return await repository.VerifyEmail(dto);
+    }
+
 
     /// <summary>
     ///     Gives hex representation of SHA512 hash

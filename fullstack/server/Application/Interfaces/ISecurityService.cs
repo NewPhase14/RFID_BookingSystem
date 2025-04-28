@@ -1,5 +1,6 @@
 using Application.Models;
 using Application.Models.Dtos;
+using Application.Models.Dtos.Auth;
 
 namespace Application.Interfaces;
 
@@ -10,6 +11,7 @@ public interface ISecurityService
     public string GenerateSalt();
     public string GenerateJwt(JwtClaims claims);
     public AuthResponseDto Login(AuthLoginRequestDto dto);
-    public AuthResponseDto Register(AuthRegisterRequestDto dto);
+    public Task<AuthResponseDto> Register(AuthRegisterRequestDto dto);
+    public Task<VerifyEmailResponseDto> VerifyEmail(VerifyEmailRequestDto dto);
     public JwtClaims VerifyJwtOrThrow(string jwt);
 }

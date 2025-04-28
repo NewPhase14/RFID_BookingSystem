@@ -70,6 +70,38 @@
         }
       }
     },
+    "/api/auth/VerifyEmail": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_VerifyEmail",
+        "requestBody": {
+          "x-name": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VerifyEmailRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/VerifyEmailResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/Secured": {
       "get": {
         "tags": [
@@ -457,6 +489,32 @@
             "minLength": 1
           },
           "lastName": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "VerifyEmailResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "VerifyEmailRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "tokenId"
+        ],
+        "properties": {
+          "tokenId": {
             "type": "string",
             "minLength": 1
           }

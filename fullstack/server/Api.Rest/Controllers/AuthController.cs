@@ -1,6 +1,7 @@
 using Api.Rest.Extensions;
 using Application.Interfaces;
 using Application.Models.Dtos;
+using Application.Models.Dtos.Auth;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Rest.Controllers;
@@ -14,8 +15,9 @@ public class AuthController(ISecurityService securityService) : ControllerBase
 
 
     public const string RegisterRoute = ControllerRoute + nameof(Register);
-
-
+    
+    public const string VerifyEmailRoute = ControllerRoute + nameof(VerifyEmail);
+    
     public const string SecuredRoute = ControllerRoute + nameof(Secured);
 
 
@@ -28,9 +30,16 @@ public class AuthController(ISecurityService securityService) : ControllerBase
 
     [Route(RegisterRoute)]
     [HttpPost]
-    public ActionResult<AuthResponseDto> Register([FromBody] AuthRegisterRequestDto dto)
+    public async Task<ActionResult<AuthResponseDto>> Register([FromBody] AuthRegisterRequestDto dto)
     {
-        return Ok(securityService.Register(dto));
+        return Ok(await securityService.Register(dto));
+    }
+
+    [HttpPost]
+    [Route(VerifyEmailRoute)]
+    public async Task<ActionResult<VerifyEmailResponseDto>> VerifyEmail([FromBody] VerifyEmailRequestDto dto)
+    {
+        return Ok(await securityService.VerifyEmail(dto));
     }
 
     [HttpGet]

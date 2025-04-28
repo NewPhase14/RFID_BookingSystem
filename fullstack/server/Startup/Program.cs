@@ -34,6 +34,8 @@ public class Program
 
         services.RegisterApplicationServices();
 
+        services.AddEmailOptions(configuration);
+
         services.AddDataSourceAndRepositories();
         services.AddWebsocketInfrastructure();
 
