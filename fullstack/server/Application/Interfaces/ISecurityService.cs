@@ -13,5 +13,6 @@ public interface ISecurityService
     public AuthResponseDto Login(AuthLoginRequestDto dto);
     public Task<AuthResponseDto> Register(AuthRegisterRequestDto dto);
     public Task<VerifyEmailResponseDto> VerifyEmail(VerifyEmailRequestDto dto);
+    public Task<ResendVerificationEmailResponseDto> ResendVerificationEmail(ResendVerificationEmailRequestDto dto);
     public JwtClaims VerifyJwtOrThrow(string jwt);
 }

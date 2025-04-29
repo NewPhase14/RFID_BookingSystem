@@ -9,6 +9,9 @@ public interface IAuthDataRepository
     User? GetUserOrNull(string email);
     User AddUser(User user);
     Role GetRole(string roleName);
-    EmailVerificationToken AddEmailVerificationToken(EmailVerificationToken token); 
+    Task<EmailVerificationToken> AddEmailVerificationToken(EmailVerificationToken token); 
     Task<VerifyEmailResponseDto> VerifyEmail(VerifyEmailRequestDto dto);
+    PasswordResetToken AddPasswordResetToken(PasswordResetToken token);
+    Task<CheckEmailVerificationResponseDto> IsEmailVerified(CheckEmilVerificationRequestDto dto);
+    Task RemoveExpiredEmailVerificationToken(string userId);
 }

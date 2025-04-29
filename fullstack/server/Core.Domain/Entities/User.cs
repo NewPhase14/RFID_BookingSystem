@@ -31,5 +31,7 @@ public partial class User
 
     public virtual ICollection<EmailVerificationToken> EmailVerificationTokens { get; set; } = new List<EmailVerificationToken>();
 
+    public virtual ICollection<PasswordResetToken> PasswordResetTokens { get; set; } = new List<PasswordResetToken>();
+
     public virtual Role Role { get; set; } = null!;
 }

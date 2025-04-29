@@ -26,10 +26,10 @@ public class AuthRepo(MyDbContext ctx) : IAuthDataRepository
         return ctx.Roles.FirstOrDefault(r => r.Name == roleName) ?? throw new InvalidOperationException();
     }
     
-    public EmailVerificationToken AddEmailVerificationToken(EmailVerificationToken token)
+    public async Task<EmailVerificationToken> AddEmailVerificationToken(EmailVerificationToken token)
     {
         ctx.EmailVerificationTokens.Add(token);
-        ctx.SaveChanges();
+        await ctx.SaveChangesAsync();
         return token;
     }
 
@@ -55,5 +55,31 @@ public class AuthRepo(MyDbContext ctx) : IAuthDataRepository
         {
             Message = "Email verified successfully."
         };
+    }
+
+    public PasswordResetToken AddPasswordResetToken(PasswordResetToken token)
+    {
+        throw new NotImplementedException();
+    }
+
+    public async Task<CheckEmailVerificationResponseDto> IsEmailVerified(CheckEmilVerificationRequestDto dto)
+    {
+        var user = await ctx.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
+
+        if (user is null) 
+            throw new InvalidOperationException("User not found.");
+
+        return new CheckEmailVerificationResponseDto
+        {
+            IsConfirmed = user.ConfirmedEmail
+        };
+    }
+
+    public async Task RemoveExpiredEmailVerificationToken(string userId)
+    {
+        var existingToken = ctx.EmailVerificationTokens.FirstOrDefault(e => e.UserId == userId);
+        if (existingToken != null) ctx.EmailVerificationTokens.Remove(existingToken);
+        
+        await ctx.SaveChangesAsync();
     }
 }

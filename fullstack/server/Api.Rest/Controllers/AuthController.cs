@@ -18,6 +18,8 @@ public class AuthController(ISecurityService securityService) : ControllerBase
     
     public const string VerifyEmailRoute = ControllerRoute + nameof(VerifyEmail);
     
+    public const string ResendVerificationEmailRoute = ControllerRoute + nameof(ResendVerificationEmail);
+    
     public const string SecuredRoute = ControllerRoute + nameof(Secured);
 
 
@@ -40,6 +42,14 @@ public class AuthController(ISecurityService securityService) : ControllerBase
     public async Task<ActionResult<VerifyEmailResponseDto>> VerifyEmail([FromBody] VerifyEmailRequestDto dto)
     {
         return Ok(await securityService.VerifyEmail(dto));
+    }
+
+    [HttpPost]
+    [Route(ResendVerificationEmailRoute)]
+    public async Task<ActionResult<ResendVerificationEmailResponseDto>> ResendVerificationEmail(
+        [FromBody] ResendVerificationEmailRequestDto dto)
+    {
+        return Ok(await securityService.ResendVerificationEmail(dto));
     }
 
     [HttpGet]

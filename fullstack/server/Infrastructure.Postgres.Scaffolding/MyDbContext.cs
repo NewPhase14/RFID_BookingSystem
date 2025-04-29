@@ -16,6 +16,8 @@ public partial class MyDbContext : DbContext
 
     public virtual DbSet<EmailVerificationToken> EmailVerificationTokens { get; set; }
 
+    public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
+
     public virtual DbSet<Role> Roles { get; set; }
 
     public virtual DbSet<Service> Services { get; set; }
@@ -78,6 +80,27 @@ public partial class MyDbContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("email_verification_token_user_id_fkey");
+        });
+
+        modelBuilder.Entity<PasswordResetToken>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("password_reset_token_pkey");
+
+            entity.ToTable("password_reset_token");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.CreatedAt)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("created_at");
+            entity.Property(e => e.ExpiresAt)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("expires_at");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.User).WithMany(p => p.PasswordResetTokens)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("password_reset_token_user_id_fkey");
         });
 
         modelBuilder.Entity<Role>(entity =>

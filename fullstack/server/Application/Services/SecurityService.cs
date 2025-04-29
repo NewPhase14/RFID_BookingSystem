@@ -114,6 +114,42 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
         return await repository.VerifyEmail(dto);
     }
 
+    public async Task<ResendVerificationEmailResponseDto> ResendVerificationEmail(ResendVerificationEmailRequestDto dto)
+    {
+        var user = repository.GetUserOrNull(dto.Email);
+        if (user is null) throw new ValidationException("User not found");
+        
+        if (user.ConfirmedEmail == true) throw new ValidationException("User already verified");
+
+        await repository.RemoveExpiredEmailVerificationToken(user.Id);
+
+        var token = new EmailVerificationToken
+        {
+            Id = Guid.NewGuid().ToString(),
+            UserId = user.Id,
+            CreatedAt = DateTime.Now,
+            ExpiresAt = DateTime.Now.AddDays(1)
+        };
+
+        await repository.AddEmailVerificationToken(token);
+        
+        var verificationLink = $"localhost:5001/verify-email?token={token.Id}";
+
+        var email = fluentEmail
+            .To(user.Email, $"{user.FirstName} {user.LastName}")
+            .Subject("New email verification for bookit")
+            .Body($"Hello {user.FirstName}, thank you for registering at bookit. <br> To verify you email address <a href='{verificationLink}'>click here</a>", true);
+        
+        var response = await email.SendAsync();
+        
+        if (!response.Successful) throw new ApplicationException("Failed to send email.");
+        
+        return new ResendVerificationEmailResponseDto()
+        {
+            Message = "Verification email sent successfully."
+        };
+    }
+
 
     /// <summary>
     ///     Gives hex representation of SHA512 hash

@@ -102,6 +102,38 @@
         }
       }
     },
+    "/api/auth/ResendVerificationEmail": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_ResendVerificationEmail",
+        "requestBody": {
+          "x-name": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResendVerificationEmailRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResendVerificationEmailResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/Secured": {
       "get": {
         "tags": [
@@ -515,6 +547,31 @@
         ],
         "properties": {
           "tokenId": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "ResendVerificationEmailResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "ResendVerificationEmailRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "email"
+        ],
+        "properties": {
+          "email": {
             "type": "string",
             "minLength": 1
           }
