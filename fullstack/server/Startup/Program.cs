@@ -98,7 +98,7 @@ public class Program
         var json = document.ToJson();
         await File.WriteAllTextAsync("openapi.json", json);
 
-        app.GenerateTypeScriptClient("/../../client/src/generated-client.ts").GetAwaiter().GetResult();
+        app.GenerateTypeScriptClient("/../../client/src/models/generated-client.ts").GetAwaiter().GetResult();
     }
     
     

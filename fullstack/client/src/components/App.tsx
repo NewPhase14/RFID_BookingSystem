@@ -1,6 +1,6 @@
 import {WsClientProvider} from 'ws-request-hook';
 import {useEffect, useState} from "react";
-import SuperSimpleKahootCloneGui from "./SuperSimpleKahootCloneGui.tsx";
+import Login from "./login/Login.tsx";
 const baseUrl = import.meta.env.VITE_API_BASE_URL
 const prod = import.meta.env.PROD
 
@@ -22,7 +22,7 @@ setUrl(finalUrl);
 
             <div className="flex flex-col">
                 <div>
-                    { !prod && <SuperSimpleKahootCloneGui /> }
+                    { !prod && <Login /> }
                 </div>
 
             </div>
