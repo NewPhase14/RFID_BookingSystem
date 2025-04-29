@@ -11,7 +11,7 @@ public interface IAuthDataRepository
     Role GetRole(string roleName);
     Task<EmailVerificationToken> AddEmailVerificationToken(EmailVerificationToken token); 
     Task<VerifyEmailResponseDto> VerifyEmail(VerifyEmailRequestDto dto);
-    PasswordResetToken AddPasswordResetToken(PasswordResetToken token);
+    Task<PasswordResetToken> AddPasswordResetToken(PasswordResetToken token);
     Task<CheckEmailVerificationResponseDto> IsEmailVerified(CheckEmilVerificationRequestDto dto);
     Task RemoveExpiredEmailVerificationToken(string userId);
 }

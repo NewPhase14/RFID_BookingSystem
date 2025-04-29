@@ -57,9 +57,11 @@ public class AuthRepo(MyDbContext ctx) : IAuthDataRepository
         };
     }
 
-    public PasswordResetToken AddPasswordResetToken(PasswordResetToken token)
+    public async Task<PasswordResetToken> AddPasswordResetToken(PasswordResetToken token)
     {
-        throw new NotImplementedException();
+        ctx.PasswordResetTokens.Add(token);
+        await ctx.SaveChangesAsync();
+        return token;
     }
 
     public async Task<CheckEmailVerificationResponseDto> IsEmailVerified(CheckEmilVerificationRequestDto dto)
