@@ -134,6 +134,70 @@
         }
       }
     },
+    "/api/auth/ForgotPassword": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_ForgotPassword",
+        "requestBody": {
+          "x-name": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ForgotPasswordRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ForgotPasswordResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/ResetPassword": {
+      "post": {
+        "tags": [
+          "Auth"
+        ],
+        "operationId": "Auth_ResetPassword",
+        "requestBody": {
+          "x-name": "dto",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordRequestDto"
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResetPasswordResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/Secured": {
       "get": {
         "tags": [
@@ -529,13 +593,9 @@
       "VerifyEmailResponseDto": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "message"
-        ],
         "properties": {
           "message": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
           }
         }
       },
@@ -556,9 +616,6 @@
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "success": {
-            "type": "boolean"
-          },
           "message": {
             "type": "string"
           }
@@ -572,6 +629,55 @@
         ],
         "properties": {
           "email": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "ForgotPasswordResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "ForgotPasswordRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "email"
+        ],
+        "properties": {
+          "email": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "ResetPasswordResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "ResetPasswordRequestDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "tokenId",
+          "password"
+        ],
+        "properties": {
+          "tokenId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
             "type": "string",
             "minLength": 1
           }

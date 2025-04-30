@@ -2,6 +2,8 @@ using Api.Rest.Extensions;
 using Application.Interfaces;
 using Application.Models.Dtos;
 using Application.Models.Dtos.Auth;
+using Application.Models.Dtos.Auth.Email;
+using Application.Models.Dtos.Auth.Password;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Rest.Controllers;
@@ -12,13 +14,16 @@ public class AuthController(ISecurityService securityService) : ControllerBase
     public const string ControllerRoute = "api/auth/";
 
     public const string LoginRoute = ControllerRoute + nameof(Login);
-
-
+    
     public const string RegisterRoute = ControllerRoute + nameof(Register);
     
     public const string VerifyEmailRoute = ControllerRoute + nameof(VerifyEmail);
     
     public const string ResendVerificationEmailRoute = ControllerRoute + nameof(ResendVerificationEmail);
+
+    public const string ForgotPasswordRoute = ControllerRoute + nameof(ForgotPassword);
+    
+    public const string ResetPasswordRoute = ControllerRoute + nameof(ResetPassword);
     
     public const string SecuredRoute = ControllerRoute + nameof(Secured);
 
@@ -52,6 +57,20 @@ public class AuthController(ISecurityService securityService) : ControllerBase
         return Ok(await securityService.ResendVerificationEmail(dto));
     }
 
+    [HttpPost]
+    [Route(ForgotPasswordRoute)]
+    public async Task<ActionResult<ForgotPasswordResponseDto>> ForgotPassword([FromBody] ForgotPasswordRequestDto dto)
+    {
+        return Ok(await securityService.ForgotPassword(dto));
+    }
+    
+    [HttpPost]
+    [Route (ResetPasswordRoute)]
+    public async Task<ActionResult<ResetPasswordResponseDto>> ResetPassword([FromBody] ResetPasswordRequestDto dto)
+    {
+        return Ok(await securityService.ResetPassword(dto));
+    }
+    
     [HttpGet]
     [Route(SecuredRoute)]
     public ActionResult Secured()

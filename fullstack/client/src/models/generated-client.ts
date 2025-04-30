@@ -167,6 +167,80 @@ export class AuthClient {
         return Promise.resolve<ResendVerificationEmailResponseDto>(null as any);
     }
 
+    forgotPassword(dto: ForgotPasswordRequestDto): Promise<ForgotPasswordResponseDto> {
+        let url_ = this.baseUrl + "/api/auth/ForgotPassword";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processForgotPassword(_response);
+        });
+    }
+
+    protected processForgotPassword(response: Response): Promise<ForgotPasswordResponseDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ForgotPasswordResponseDto;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ForgotPasswordResponseDto>(null as any);
+    }
+
+    resetPassword(dto: ResetPasswordRequestDto): Promise<ResetPasswordResponseDto> {
+        let url_ = this.baseUrl + "/api/auth/ResetPassword";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processResetPassword(_response);
+        });
+    }
+
+    protected processResetPassword(response: Response): Promise<ResetPasswordResponseDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ResetPasswordResponseDto;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ResetPasswordResponseDto>(null as any);
+    }
+
     secured(): Promise<FileResponse> {
         let url_ = this.baseUrl + "/api/auth/Secured";
         url_ = url_.replace(/[?&]$/, "");
@@ -668,7 +742,7 @@ export interface AuthRegisterRequestDto {
 }
 
 export interface VerifyEmailResponseDto {
-    message: string;
+    message?: string;
 }
 
 export interface VerifyEmailRequestDto {
@@ -676,12 +750,28 @@ export interface VerifyEmailRequestDto {
 }
 
 export interface ResendVerificationEmailResponseDto {
-    success?: boolean;
     message?: string;
 }
 
 export interface ResendVerificationEmailRequestDto {
     email: string;
+}
+
+export interface ForgotPasswordResponseDto {
+    message?: string;
+}
+
+export interface ForgotPasswordRequestDto {
+    email: string;
+}
+
+export interface ResetPasswordResponseDto {
+    message?: string;
+}
+
+export interface ResetPasswordRequestDto {
+    tokenId: string;
+    password: string;
 }
 
 export interface AvailabilityCreateRequestDto {

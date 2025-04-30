@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Application.Models.Dtos.Auth;
+namespace Application.Models.Dtos.Auth.Email;
 
 public class ResendVerificationEmailRequestDto
 {

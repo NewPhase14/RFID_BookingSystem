@@ -7,6 +7,8 @@ using Application.Interfaces.Infrastructure.Postgres;
 using Application.Models;
 using Application.Models.Dtos;
 using Application.Models.Dtos.Auth;
+using Application.Models.Dtos.Auth.Email;
+using Application.Models.Dtos.Auth.Password;
 using Core.Domain.Entities;
 using FluentEmail.Core;
 using JWT;
@@ -23,7 +25,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
     {
         var user = repository.GetUserOrNull(dto.Email) ?? throw new ValidationException("Username not found");
         VerifyPasswordOrThrow(dto.Password + user.Salt, user.HashedPassword);
-
+        
         var userRole = user.Role.Name;
         
         return new AuthResponseDto
@@ -148,6 +150,79 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
         {
             Message = "Verification email sent successfully."
         };
+    }
+
+    public async Task<ForgotPasswordResponseDto> ForgotPassword(ForgotPasswordRequestDto dto)
+    {
+        var user = repository.GetUserOrNull(dto.Email);
+        if (user is null) throw new ValidationException("User not found");
+        
+        if (user.ConfirmedEmail == false) throw new ValidationException("Email must be confirmed before resetting password");
+        
+        //Delete previous tokens if they exist, no matter if they are expired or not
+        await repository.RemoveExpiredPasswordResetToken(user.Id);
+
+        var token = new PasswordResetToken()
+        {
+            Id = Guid.NewGuid().ToString(),
+            UserId = user.Id,
+            CreatedAt = DateTime.Now,
+            ExpiresAt = DateTime.Now.AddDays(1)
+        };
+
+        await repository.AddPasswordResetToken(token);
+        
+        var verificationLink = $"localhost:5001/password-reset?token={token.Id}";
+        
+        var email = fluentEmail
+            .To(dto.Email, $"{user.FirstName} {user.LastName}")
+            .Subject("Reset password for bookit")
+            .Body($"Hello {user.FirstName}, <br> To reset your password <a href='{verificationLink}'>click here</a>", true);
+
+        var response = await email.SendAsync();
+
+        if (!response.Successful)
+        {
+            Console.WriteLine("Failed to send email.");
+        }
+
+        return new ForgotPasswordResponseDto()
+        {
+            Message = "Reset password email sent successfully."
+        };
+    }
+
+    public async Task<ResetPasswordResponseDto> ResetPassword(ResetPasswordRequestDto dto)
+    {
+
+        await repository.VerifyPasswordToken(new VerifyPasswordTokenRequestDto()
+        {
+            TokenId = dto.TokenId
+        });
+        
+        Console.WriteLine("Token ID: " + dto.TokenId);
+        
+        var user = await repository.GetUserOrNullByTokenId(dto.TokenId);
+        
+        if (user is null) throw new ValidationException("User not found");
+
+        var salt = GenerateSalt();
+        var hash = HashPassword(dto.Password + salt);
+        
+        user.HashedPassword = hash;
+        user.Salt = salt;
+        user.UpdatedAt = DateTime.Now;
+
+        repository.UpdateUser(user);
+        
+        await repository.RemovePasswordResetToken(dto.TokenId);
+
+        return new ResetPasswordResponseDto()
+        {
+            Message = "Password reset successfully."
+        };
+        
+        
     }
 
 
