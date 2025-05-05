@@ -1,6 +1,7 @@
 import {WsClientProvider} from 'ws-request-hook';
 import {useEffect, useState} from "react";
-import Login from "./login/Login.tsx";
+import Login from "./Login.tsx";
+import Home from "./Home.tsx";
 const baseUrl = import.meta.env.VITE_API_BASE_URL
 const prod = import.meta.env.PROD
 
@@ -22,7 +23,7 @@ setUrl(finalUrl);
 
             <div className="flex flex-col">
                 <div>
-                    { !prod && <Login /> }
+                    { !prod && <Home /> }
                 </div>
 
             </div>

@@ -25,6 +25,6 @@ public class AdminWantsToJoinDashboardHandler : BaseEventHandler<AdminWantsToJoi
         });
         
         
-
+        return Task.CompletedTask;
     }
 }

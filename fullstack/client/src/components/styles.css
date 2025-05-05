@@ -9,3 +9,10 @@
     --color-text-baby-blue: #26BBFF;
     --color-button-grey: #444448;
 }
+
+.sx-react-calendar-wrapper {
+    width: 1200px;
+    max-width: 80vw;
+    height: 800px;
+    max-height: 90vh;
+}

@@ -406,127 +406,6 @@
           }
         }
       }
-    },
-    "/JoinLobby": {
-      "post": {
-        "tags": [
-          "VerySimplyKahootWithInMemoryDb"
-        ],
-        "operationId": "VerySimplyKahootWithInMemoryDb_JoinLobby",
-        "parameters": [
-          {
-            "name": "clientId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/StartGame": {
-      "post": {
-        "tags": [
-          "VerySimplyKahootWithInMemoryDb"
-        ],
-        "operationId": "VerySimplyKahootWithInMemoryDb_StartGame",
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/PlayThroughRounds": {
-      "post": {
-        "tags": [
-          "VerySimplyKahootWithInMemoryDb"
-        ],
-        "operationId": "VerySimplyKahootWithInMemoryDb_PlayThroughRounds",
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/SubmitAnswer": {
-      "post": {
-        "tags": [
-          "VerySimplyKahootWithInMemoryDb"
-        ],
-        "operationId": "VerySimplyKahootWithInMemoryDb_SubmitAnswer",
-        "parameters": [
-          {
-            "name": "player",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
-          },
-          {
-            "name": "answer",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 2
-          },
-          {
-            "name": "questionId",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            },
-            "x-position": 3
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/octet-stream": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary"
-                }
-              }
-            }
-          }
-        }
-      }
     }
   },
   "components": {
@@ -914,6 +793,126 @@
           }
         ]
       },
+      "AdminWantsToJoinDashboardDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "clientId": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "ServerResponseToJoinDashboard": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "ClientWantsToBookServiceDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "clientId": {
+                "type": "string"
+              },
+              "serviceId": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "ServerResponseToBookService": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "serviceId": {
+                "type": "string"
+              },
+              "clientId": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "ClientWantsToOpenServiceDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "serviceId": {
+                "type": "string"
+              },
+              "clientId": {
+                "type": "string"
+              },
+              "rfid": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "ServerResponseToOpenService": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "message": {
+                "type": "string"
+              },
+              "serviceId": {
+                "type": "string"
+              },
+              "clientId": {
+                "type": "string"
+              },
+              "rfid": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
       "StringConstants": {
         "type": "string",
         "description": "Available eventType constants",
@@ -923,7 +922,13 @@
           "ExampleServerResponse",
           "Ping",
           "Pong",
-          "ServerSendsErrorMessage"
+          "ServerSendsErrorMessage",
+          "AdminWantsToJoinDashboardDto",
+          "ServerResponseToJoinDashboard",
+          "ClientWantsToBookServiceDto",
+          "ServerResponseToBookService",
+          "ClientWantsToOpenServiceDto",
+          "ServerResponseToOpenService"
         ]
       }
     }

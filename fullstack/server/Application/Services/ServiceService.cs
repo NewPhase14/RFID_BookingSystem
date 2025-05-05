@@ -29,4 +29,10 @@ public class ServiceService(IServiceRepository serviceRepository) : IServiceServ
             Message = "Service deleted successfully"
         };
     }
+
+    public ServiceResponseDto UpdateService(string id)
+    {
+        // TODO: Implement update service logic
+        throw new NotImplementedException("Update service logic is not implemented yet.");
+    }
 }
