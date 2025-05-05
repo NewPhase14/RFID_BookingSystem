@@ -70,18 +70,18 @@
         }
       }
     },
-    "/api/auth/VerifyEmail": {
+    "/api/auth/AccountActivation": {
       "post": {
         "tags": [
           "Auth"
         ],
-        "operationId": "Auth_VerifyEmail",
+        "operationId": "Auth_AccountActivation",
         "requestBody": {
           "x-name": "dto",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/VerifyEmailRequestDto"
+                "$ref": "#/components/schemas/AccountActivationRequestDto"
               }
             }
           },
@@ -94,7 +94,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/VerifyEmailResponseDto"
+                  "$ref": "#/components/schemas/AccountActivationResponseDto"
                 }
               }
             }
@@ -102,18 +102,18 @@
         }
       }
     },
-    "/api/auth/ResendVerificationEmail": {
+    "/api/auth/ResendInviteEmail": {
       "post": {
         "tags": [
           "Auth"
         ],
-        "operationId": "Auth_ResendVerificationEmail",
+        "operationId": "Auth_ResendInviteEmail",
         "requestBody": {
           "x-name": "dto",
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ResendVerificationEmailRequestDto"
+                "$ref": "#/components/schemas/ResendInviteEmailRequestDto"
               }
             }
           },
@@ -126,7 +126,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ResendVerificationEmailResponseDto"
+                  "$ref": "#/components/schemas/ResendInviteEmailResponseDto"
                 }
               }
             }
@@ -469,7 +469,7 @@
           }
         }
       },
-      "VerifyEmailResponseDto": {
+      "AccountActivationResponseDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -478,20 +478,19 @@
           }
         }
       },
-      "VerifyEmailRequestDto": {
+      "AccountActivationRequestDto": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "tokenId"
-        ],
         "properties": {
           "tokenId": {
-            "type": "string",
-            "minLength": 1
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
           }
         }
       },
-      "ResendVerificationEmailResponseDto": {
+      "ResendInviteEmailResponseDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -500,7 +499,7 @@
           }
         }
       },
-      "ResendVerificationEmailRequestDto": {
+      "ResendInviteEmailRequestDto": {
         "type": "object",
         "additionalProperties": false,
         "required": [

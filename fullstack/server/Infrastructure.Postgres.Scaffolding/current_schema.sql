@@ -46,7 +46,7 @@ CREATE TABLE bookings (
 );
 
 
-CREATE TABLE email_verification_token (
+CREATE TABLE invite_token (
                                           id TEXT PRIMARY KEY,
                                           user_id TEXT NOT NULL REFERENCES users(id),
                                           created_at TIMESTAMP NOT NULL,

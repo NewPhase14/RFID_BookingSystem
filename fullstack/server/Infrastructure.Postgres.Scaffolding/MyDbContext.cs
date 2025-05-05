@@ -16,7 +16,7 @@ public partial class MyDbContext : DbContext
 
     public virtual DbSet<BookingLog> BookingLogs { get; set; }
 
-    public virtual DbSet<EmailVerificationToken> EmailVerificationTokens { get; set; }
+    public virtual DbSet<InviteToken> InviteTokens { get; set; }
 
     public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
 
@@ -87,11 +87,11 @@ public partial class MyDbContext : DbContext
                 .HasConstraintName("booking_logs_user_id_fkey");
         });
 
-        modelBuilder.Entity<EmailVerificationToken>(entity =>
+        modelBuilder.Entity<InviteToken>(entity =>
         {
-            entity.HasKey(e => e.Id).HasName("email_verification_token_pkey");
+            entity.HasKey(e => e.Id).HasName("invite_token_pkey");
 
-            entity.ToTable("email_verification_token");
+            entity.ToTable("invite_token");
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.CreatedAt)
@@ -102,10 +102,10 @@ public partial class MyDbContext : DbContext
                 .HasColumnName("expires_at");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
-            entity.HasOne(d => d.User).WithMany(p => p.EmailVerificationTokens)
+            entity.HasOne(d => d.User).WithMany(p => p.InviteTokens)
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("email_verification_token_user_id_fkey");
+                .HasConstraintName("invite_token_user_id_fkey");
         });
 
         modelBuilder.Entity<PasswordResetToken>(entity =>

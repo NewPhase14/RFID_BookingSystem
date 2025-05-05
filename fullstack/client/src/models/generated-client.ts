@@ -93,8 +93,8 @@ export class AuthClient {
         return Promise.resolve<AuthResponseDto>(null as any);
     }
 
-    verifyEmail(dto: VerifyEmailRequestDto): Promise<VerifyEmailResponseDto> {
-        let url_ = this.baseUrl + "/api/auth/VerifyEmail";
+    accountActivation(dto: AccountActivationRequestDto): Promise<AccountActivationResponseDto> {
+        let url_ = this.baseUrl + "/api/auth/AccountActivation";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(dto);
@@ -109,17 +109,17 @@ export class AuthClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processVerifyEmail(_response);
+            return this.processAccountActivation(_response);
         });
     }
 
-    protected processVerifyEmail(response: Response): Promise<VerifyEmailResponseDto> {
+    protected processAccountActivation(response: Response): Promise<AccountActivationResponseDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as VerifyEmailResponseDto;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as AccountActivationResponseDto;
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -127,11 +127,11 @@ export class AuthClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<VerifyEmailResponseDto>(null as any);
+        return Promise.resolve<AccountActivationResponseDto>(null as any);
     }
 
-    resendVerificationEmail(dto: ResendVerificationEmailRequestDto): Promise<ResendVerificationEmailResponseDto> {
-        let url_ = this.baseUrl + "/api/auth/ResendVerificationEmail";
+    resendInviteEmail(dto: ResendInviteEmailRequestDto): Promise<ResendInviteEmailResponseDto> {
+        let url_ = this.baseUrl + "/api/auth/ResendInviteEmail";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(dto);
@@ -146,17 +146,17 @@ export class AuthClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processResendVerificationEmail(_response);
+            return this.processResendInviteEmail(_response);
         });
     }
 
-    protected processResendVerificationEmail(response: Response): Promise<ResendVerificationEmailResponseDto> {
+    protected processResendInviteEmail(response: Response): Promise<ResendInviteEmailResponseDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ResendVerificationEmailResponseDto;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ResendInviteEmailResponseDto;
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -164,7 +164,7 @@ export class AuthClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<ResendVerificationEmailResponseDto>(null as any);
+        return Promise.resolve<ResendInviteEmailResponseDto>(null as any);
     }
 
     forgotPassword(dto: ForgotPasswordRequestDto): Promise<ForgotPasswordResponseDto> {
@@ -562,19 +562,20 @@ export interface AuthRegisterRequestDto {
     lastName: string;
 }
 
-export interface VerifyEmailResponseDto {
+export interface AccountActivationResponseDto {
     message?: string;
 }
 
-export interface VerifyEmailRequestDto {
-    tokenId: string;
+export interface AccountActivationRequestDto {
+    tokenId?: string;
+    password?: string;
 }
 
-export interface ResendVerificationEmailResponseDto {
+export interface ResendInviteEmailResponseDto {
     message?: string;
 }
 
-export interface ResendVerificationEmailRequestDto {
+export interface ResendInviteEmailRequestDto {
     email: string;
 }
 

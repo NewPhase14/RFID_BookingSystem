@@ -2,7 +2,7 @@ using Api.Rest.Extensions;
 using Application.Interfaces;
 using Application.Models.Dtos;
 using Application.Models.Dtos.Auth;
-using Application.Models.Dtos.Auth.Email;
+using Application.Models.Dtos.Auth.Invite;
 using Application.Models.Dtos.Auth.Password;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,9 +17,9 @@ public class AuthController(ISecurityService securityService) : ControllerBase
     
     public const string RegisterRoute = ControllerRoute + nameof(Register);
     
-    public const string VerifyEmailRoute = ControllerRoute + nameof(VerifyEmail);
+    public const string AccountActivationRoute = ControllerRoute + nameof(AccountActivation);
     
-    public const string ResendVerificationEmailRoute = ControllerRoute + nameof(ResendVerificationEmail);
+    public const string ResendInviteEmailRoute = ControllerRoute + nameof(ResendInviteEmail);
 
     public const string ForgotPasswordRoute = ControllerRoute + nameof(ForgotPassword);
     
@@ -43,18 +43,18 @@ public class AuthController(ISecurityService securityService) : ControllerBase
     }
 
     [HttpPost]
-    [Route(VerifyEmailRoute)]
-    public async Task<ActionResult<VerifyEmailResponseDto>> VerifyEmail([FromBody] VerifyEmailRequestDto dto)
+    [Route(AccountActivationRoute)]
+    public async Task<ActionResult<AccountActivationResponseDto>> AccountActivation([FromBody] AccountActivationRequestDto dto)
     {
-        return Ok(await securityService.VerifyEmail(dto));
+        return Ok(await securityService.AccountActivation(dto));
     }
 
     [HttpPost]
-    [Route(ResendVerificationEmailRoute)]
-    public async Task<ActionResult<ResendVerificationEmailResponseDto>> ResendVerificationEmail(
-        [FromBody] ResendVerificationEmailRequestDto dto)
+    [Route(ResendInviteEmailRoute)]
+    public async Task<ActionResult<ResendInviteEmailResponseDto>> ResendInviteEmail(
+        [FromBody] ResendInviteEmailRequestDto dto)
     {
-        return Ok(await securityService.ResendVerificationEmail(dto));
+        return Ok(await securityService.ResendInviteEmail(dto));
     }
 
     [HttpPost]

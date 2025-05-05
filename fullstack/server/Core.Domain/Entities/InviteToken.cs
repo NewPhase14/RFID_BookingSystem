@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Core.Domain.Entities;
 
-public partial class EmailVerificationToken
+public partial class InviteToken
 {
     public string Id { get; set; } = null!;
 

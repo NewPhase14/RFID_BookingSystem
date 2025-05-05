@@ -7,7 +7,7 @@ using Application.Interfaces.Infrastructure.Postgres;
 using Application.Models;
 using Application.Models.Dtos;
 using Application.Models.Dtos.Auth;
-using Application.Models.Dtos.Auth.Email;
+using Application.Models.Dtos.Auth.Invite;
 using Application.Models.Dtos.Auth.Password;
 using Core.Domain.Entities;
 using FluentEmail.Core;
@@ -79,7 +79,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
             throw new ApplicationException("Failed to insert user into database", e);
         }
 
-        var verificationToken = repository.AddEmailVerificationToken(new EmailVerificationToken
+        var inviteToken = repository.AddInviteToken(new InviteToken()
         {
             Id = Guid.NewGuid().ToString(),
             UserId = newUser.Id,
@@ -88,12 +88,12 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
         });
 
         //Insert real address when it's ready
-        var verificationLink = $"localhost:5001/verify-email?token={verificationToken.Id}";
+        var verificationLink = $"localhost:5001/activate?token={inviteToken.Id}";
         
         var email = fluentEmail
             .To(newUser.Email, $"{newUser.FirstName} {newUser.LastName}")
-            .Subject("Email verification for bookit")
-            .Body($"Hello {newUser.FirstName}, thank you for registering at bookit. <br> To verify you email address <a href='{verificationLink}'>click here</a>", true);
+            .Subject("Account activation for bookit")
+            .Body($"Hello {newUser.FirstName}, thank you for registering at bookit. <br> To activate your account <a href='{verificationLink}'>click here</a>", true);
 
         var response = await email.SendAsync();
 
@@ -114,21 +114,49 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
         };
     }
 
-    public async Task<VerifyEmailResponseDto> VerifyEmail(VerifyEmailRequestDto dto)
+    public async Task<AccountActivationResponseDto> AccountActivation(AccountActivationRequestDto dto)
     {
-        return await repository.VerifyEmail(dto);
+        await repository.VerifyInviteToken(new VerifyInviteEmailRequestDto()
+        {
+            TokenId = dto.TokenId
+        });
+        
+        Console.WriteLine("Token ID: " + dto.TokenId);
+      
+        var user = await repository.GetUserOrNullByInviteTokenId(dto.TokenId);
+        
+        if (user is null) throw new ValidationException("User not found");
+        
+        user.ConfirmedEmail = true;
+        
+        var salt = GenerateSalt();
+        var hash = HashPassword(dto.Password + salt);
+        
+        user.HashedPassword = hash;
+        user.Salt = salt;
+        user.UpdatedAt = DateTime.Now;
+
+        repository.UpdateUser(user);
+        
+        await repository.RemoveInviteToken(dto.TokenId);
+        
+        return new AccountActivationResponseDto()
+        {
+            Message = "Account was activated successfully."
+        };
     }
 
-    public async Task<ResendVerificationEmailResponseDto> ResendVerificationEmail(ResendVerificationEmailRequestDto dto)
+    public async Task<ResendInviteEmailResponseDto> ResendInviteEmail(ResendInviteEmailRequestDto dto)
     {
         var user = repository.GetUserOrNull(dto.Email);
         if (user is null) throw new ValidationException("User not found");
         
-        if (user.ConfirmedEmail == true) throw new ValidationException("User already verified");
+        if (user.ConfirmedEmail == true) throw new ValidationException("Account already activated");
 
-        await repository.RemoveExpiredEmailVerificationToken(user.Id);
+        //Delete previous tokens if they exist, no matter if they are expired or not
+        await repository.RemovePreviousInviteToken(user.Id);
 
-        var token = new EmailVerificationToken
+        var token = new InviteToken()
         {
             Id = Guid.NewGuid().ToString(),
             UserId = user.Id,
@@ -136,22 +164,23 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
             ExpiresAt = DateTime.Now.AddDays(1)
         };
 
-        await repository.AddEmailVerificationToken(token);
+        await repository.AddInviteToken(token);
         
-        var verificationLink = $"localhost:5001/verify-email?token={token.Id}";
+        var verificationLink = $"localhost:5001/activate?token={token.Id}";
 
         var email = fluentEmail
             .To(user.Email, $"{user.FirstName} {user.LastName}")
-            .Subject("New email verification for bookit")
-            .Body($"Hello {user.FirstName}, thank you for registering at bookit. <br> To verify you email address <a href='{verificationLink}'>click here</a>", true);
+            .Subject("(Resend) Account activation for bookit")
+            .Body($"Hello {user.FirstName}, thank you for registering at bookit. <br> To activate your account <a href='{verificationLink}'>click here</a>", true);
+
         
         var response = await email.SendAsync();
         
         if (!response.Successful) throw new ApplicationException("Failed to send email.");
         
-        return new ResendVerificationEmailResponseDto()
+        return new ResendInviteEmailResponseDto()
         {
-            Message = "Verification email sent successfully."
+            Message = "Activation email sent successfully."
         };
     }
 
@@ -160,10 +189,10 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
         var user = repository.GetUserOrNull(dto.Email);
         if (user is null) throw new ValidationException("User not found");
         
-        if (user.ConfirmedEmail == false) throw new ValidationException("Email must be confirmed before resetting password");
+        if (user.ConfirmedEmail == false) throw new ValidationException("Account must be activated before resetting password");
         
         //Delete previous tokens if they exist, no matter if they are expired or not
-        await repository.RemoveExpiredPasswordResetToken(user.Id);
+        await repository.RemovePreviousPasswordResetToken(user.Id);
 
         var token = new PasswordResetToken()
         {
@@ -191,7 +220,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
 
         return new ForgotPasswordResponseDto()
         {
-            Message = "Reset password email sent successfully."
+            Message = "Reset password email was sent successfully."
         };
     }
 
@@ -203,9 +232,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
             TokenId = dto.TokenId
         });
         
-        Console.WriteLine("Token ID: " + dto.TokenId);
-        
-        var user = await repository.GetUserOrNullByTokenId(dto.TokenId);
+        var user = await repository.GetUserOrNullByPasswordResetTokenId(dto.TokenId);
         
         if (user is null) throw new ValidationException("User not found");
 

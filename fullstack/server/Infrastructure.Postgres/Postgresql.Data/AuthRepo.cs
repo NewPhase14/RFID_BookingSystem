@@ -1,7 +1,7 @@
 ﻿using Application.Interfaces.Infrastructure.Postgres;
 using Application.Models.Dtos;
 using Application.Models.Dtos.Auth;
-using Application.Models.Dtos.Auth.Email;
+using Application.Models.Dtos.Auth.Invite;
 using Application.Models.Dtos.Auth.Password;
 using Core.Domain.Entities;
 using Infrastructure.Postgres.Scaffolding;
@@ -16,11 +16,20 @@ public class AuthRepo(MyDbContext ctx) : IAuthDataRepository
         return ctx.Users.Include(u => u.Role).FirstOrDefault(u => u.Email == email);
     }
 
-    public async Task<User?> GetUserOrNullByTokenId(string tokenId)
+    public async Task<User?> GetUserOrNullByPasswordResetTokenId(string tokenId)
     {
         var token = await ctx.PasswordResetTokens
-            .Include(e => e.User)
-            .FirstOrDefaultAsync(e => e.Id == tokenId);
+            .Include(p => p.User)
+            .FirstOrDefaultAsync(p => p.Id == tokenId);
+        
+        return token?.User;
+    }
+
+    public async Task<User?> GetUserOrNullByInviteTokenId(string tokenId)
+    {
+        var token = await ctx.InviteTokens
+            .Include(i => i.User)
+            .FirstOrDefaultAsync(i => i.Id == tokenId);
         
         return token?.User;
     }
@@ -43,34 +52,30 @@ public class AuthRepo(MyDbContext ctx) : IAuthDataRepository
         return ctx.Roles.FirstOrDefault(r => r.Name == roleName) ?? throw new InvalidOperationException();
     }
     
-    public async Task<EmailVerificationToken> AddEmailVerificationToken(EmailVerificationToken token)
+    public async Task<InviteToken> AddInviteToken(InviteToken token)
     {
-        ctx.EmailVerificationTokens.Add(token);
+        ctx.InviteTokens.Add(token);
         await ctx.SaveChangesAsync();
         return token;
     }
 
-    public async Task<VerifyEmailResponseDto> VerifyEmail(VerifyEmailRequestDto dto)
+    public async Task<VerifyInviteEmailResponseDto> VerifyInviteToken(VerifyInviteEmailRequestDto dto)
     {
-        var token = await ctx.EmailVerificationTokens
+        var token = await ctx.InviteTokens
             .Include(e => e.User)
             .FirstOrDefaultAsync(e => e.Id == dto.TokenId);
 
         if (token is null || token.ExpiresAt < DateTime.Now)
         {
-            return new VerifyEmailResponseDto()
+            return new VerifyInviteEmailResponseDto()
             {
                 Message = "Token is invalid or expired."
             };
         }
 
-        token.User.ConfirmedEmail = true;
-        ctx.EmailVerificationTokens.Remove(token);
-        await ctx.SaveChangesAsync();
-
-        return new VerifyEmailResponseDto()
+        return new VerifyInviteEmailResponseDto()
         {
-            Message = "Email verified successfully."
+            Message = "invite token is valid.",
         };
     }
 
@@ -95,8 +100,6 @@ public class AuthRepo(MyDbContext ctx) : IAuthDataRepository
                 Message = "Token is invalid or expired."
             };
         }
-        
-        await ctx.SaveChangesAsync();
 
         return new VerifyPasswordTokenResponseDto()
         {
@@ -105,27 +108,14 @@ public class AuthRepo(MyDbContext ctx) : IAuthDataRepository
         };
     }
 
-    public async Task<CheckEmailVerificationResponseDto> IsEmailVerified(CheckEmailVerificationRequestDto dto)
+    public async Task RemovePreviousInviteToken(string userId)
     {
-        var user = await ctx.Users.FirstOrDefaultAsync(u => u.Email == dto.Email);
-
-        if (user is null) 
-            throw new InvalidOperationException("User not found.");
-
-        return new CheckEmailVerificationResponseDto
-        {
-            IsConfirmed = user.ConfirmedEmail
-        };
-    }
-
-    public async Task RemoveExpiredEmailVerificationToken(string userId)
-    {
-        var existingToken = ctx.EmailVerificationTokens.FirstOrDefault(e => e.UserId == userId);
-        if (existingToken != null) ctx.EmailVerificationTokens.Remove(existingToken);
+        var existingToken = ctx.InviteTokens.FirstOrDefault(e => e.UserId == userId);
+        if (existingToken != null) ctx.InviteTokens.Remove(existingToken);
         await ctx.SaveChangesAsync();
     }
 
-    public async Task RemoveExpiredPasswordResetToken(string userId)
+    public async Task RemovePreviousPasswordResetToken(string userId)
     {
         var existingToken = ctx.PasswordResetTokens.FirstOrDefault(e => e.UserId == userId);
         if (existingToken != null) ctx.PasswordResetTokens.Remove(existingToken);
@@ -138,6 +128,16 @@ public class AuthRepo(MyDbContext ctx) : IAuthDataRepository
         if (token != null)
         {
             ctx.PasswordResetTokens.Remove(token);
+            await ctx.SaveChangesAsync();
+        }
+    }
+
+    public async Task RemoveInviteToken(string tokenId)
+    {
+        var token = await ctx.InviteTokens.FirstOrDefaultAsync(e => e.Id == tokenId);
+        if (token != null)
+        {
+            ctx.InviteTokens.Remove(token);
             await ctx.SaveChangesAsync();
         }
     }

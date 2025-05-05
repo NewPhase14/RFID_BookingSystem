@@ -1,8 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Application.Models.Dtos.Auth.Email;
+namespace Application.Models.Dtos.Auth.Invite;
 
-public class VerifyEmailRequestDto
+public class VerifyInviteEmailRequestDto
 {
     [Required] public string TokenId { get; set; } = null!;
+    
 }

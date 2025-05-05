@@ -31,7 +31,7 @@ public partial class User
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-    public virtual ICollection<EmailVerificationToken> EmailVerificationTokens { get; set; } = new List<EmailVerificationToken>();
+    public virtual ICollection<InviteToken> InviteTokens { get; set; } = new List<InviteToken>();
 
     public virtual ICollection<PasswordResetToken> PasswordResetTokens { get; set; } = new List<PasswordResetToken>();
 
