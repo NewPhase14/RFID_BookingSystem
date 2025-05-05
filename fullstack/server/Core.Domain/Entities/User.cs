@@ -11,7 +11,7 @@ public partial class User
 
     public string LastName { get; set; } = null!;
 
-    public string? Rfid { get; set; }
+    public string Rfid { get; set; } = null!;
 
     public string HashedPassword { get; set; } = null!;
 
@@ -26,6 +26,8 @@ public partial class User
     public DateTime CreatedAt { get; set; }
 
     public DateTime UpdatedAt { get; set; }
+
+    public virtual ICollection<BookingLog> BookingLogs { get; set; } = new List<BookingLog>();
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 

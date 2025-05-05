@@ -47,8 +47,10 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
         var existingUser = repository.GetUserOrNull(dto.Email);
         if (existingUser is not null) throw new ValidationException("User already exists");
         
+        var randomPassword = Guid.NewGuid().ToString();
+        
         var salt = GenerateSalt();
-        var hash = HashPassword(dto.Password + salt);
+        var hash = HashPassword(randomPassword + salt);
         
         var userRole = repository.GetRole("User");
         if (userRole is null) throw new ValidationException("User role not found");
@@ -56,6 +58,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
         var newUser = new User
         {
             Id = Guid.NewGuid().ToString(),
+            Rfid = dto.Rfid,
             Email = dto.Email,
             Role = userRole,
             RoleId = userRole.Id,

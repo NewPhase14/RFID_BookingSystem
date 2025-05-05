@@ -14,6 +14,8 @@ public partial class MyDbContext : DbContext
 
     public virtual DbSet<Booking> Bookings { get; set; }
 
+    public virtual DbSet<BookingLog> BookingLogs { get; set; }
+
     public virtual DbSet<EmailVerificationToken> EmailVerificationTokens { get; set; }
 
     public virtual DbSet<PasswordResetToken> PasswordResetTokens { get; set; }
@@ -59,6 +61,30 @@ public partial class MyDbContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("bookings_user_id_fkey");
+        });
+
+        modelBuilder.Entity<BookingLog>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("booking_logs_pkey");
+
+            entity.ToTable("booking_logs");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.BookingId).HasColumnName("booking_id");
+            entity.Property(e => e.EnteredAt)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("entered_at");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.Booking).WithMany(p => p.BookingLogs)
+                .HasForeignKey(d => d.BookingId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("booking_logs_booking_id_fkey");
+
+            entity.HasOne(d => d.User).WithMany(p => p.BookingLogs)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("booking_logs_user_id_fkey");
         });
 
         modelBuilder.Entity<EmailVerificationToken>(entity =>

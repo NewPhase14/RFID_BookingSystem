@@ -556,8 +556,8 @@ export interface AuthLoginRequestDto {
 }
 
 export interface AuthRegisterRequestDto {
+    rfid: string;
     email: string;
-    password: string;
     firstName: string;
     lastName: string;
 }

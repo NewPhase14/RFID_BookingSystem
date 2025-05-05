@@ -19,6 +19,8 @@ public partial class Booking
 
     public DateTime UpdatedAt { get; set; }
 
+    public virtual ICollection<BookingLog> BookingLogs { get; set; } = new List<BookingLog>();
+
     public virtual Service Service { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;

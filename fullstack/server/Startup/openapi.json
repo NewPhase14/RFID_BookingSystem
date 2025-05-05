@@ -445,19 +445,19 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
+          "rfid",
           "email",
-          "password",
           "firstName",
           "lastName"
         ],
         "properties": {
+          "rfid": {
+            "type": "string",
+            "minLength": 1
+          },
           "email": {
             "type": "string",
-            "minLength": 3
-          },
-          "password": {
-            "type": "string",
-            "minLength": 4
+            "minLength": 1
           },
           "firstName": {
             "type": "string",
