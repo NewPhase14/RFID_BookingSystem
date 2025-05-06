@@ -22,4 +22,18 @@ public class ServiceRepo(MyDbContext ctx) : IServiceRepository
         ctx.Services.Remove(service);
         ctx.SaveChanges();
     }
+
+    public void UpdateService(Service service)
+    {
+        var existingService = ctx.Services.FirstOrDefault(s => s.Id == service.Id);
+        if (existingService == null)
+        {
+            throw new InvalidOperationException("Service not found");
+        }
+        existingService.Name = service.Name;
+        existingService.Description = service.Description;
+        existingService.ImageUrl = service.ImageUrl;
+        ctx.Services.Update(existingService);
+        ctx.SaveChanges();
+    }
 }

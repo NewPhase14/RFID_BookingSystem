@@ -290,7 +290,7 @@ export class AvailabilityClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    createAvailability(dto: AvailabilityCreateRequestDto): Promise<AuthResponseDto> {
+    createAvailability(dto: AvailabilityCreateRequestDto): Promise<AvailabilityResponseDto> {
         let url_ = this.baseUrl + "/api/availability/CreateAvailability";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -310,13 +310,13 @@ export class AvailabilityClient {
         });
     }
 
-    protected processCreateAvailability(response: Response): Promise<AuthResponseDto> {
+    protected processCreateAvailability(response: Response): Promise<AvailabilityResponseDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as AuthResponseDto;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as AvailabilityResponseDto;
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -324,7 +324,81 @@ export class AvailabilityClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<AuthResponseDto>(null as any);
+        return Promise.resolve<AvailabilityResponseDto>(null as any);
+    }
+
+    deleteAvailability(id: string | undefined): Promise<AvailabilityResponseDto> {
+        let url_ = this.baseUrl + "/api/availability/DeleteAvailability?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "DELETE",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processDeleteAvailability(_response);
+        });
+    }
+
+    protected processDeleteAvailability(response: Response): Promise<AvailabilityResponseDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as AvailabilityResponseDto;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<AvailabilityResponseDto>(null as any);
+    }
+
+    updateAvailability(dto: AvailabilityUpdateRequestDto): Promise<AvailabilityResponseDto> {
+        let url_ = this.baseUrl + "/api/availability/UpdateAvailability";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateAvailability(_response);
+        });
+    }
+
+    protected processUpdateAvailability(response: Response): Promise<AvailabilityResponseDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as AvailabilityResponseDto;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<AvailabilityResponseDto>(null as any);
     }
 }
 
@@ -544,6 +618,43 @@ export class ServiceClient {
         }
         return Promise.resolve<ServiceResponseDto>(null as any);
     }
+
+    updateService(dto: ServiceUpdateRequestDto): Promise<ServiceResponseDto> {
+        let url_ = this.baseUrl + "/api/service/UpdateService";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateService(_response);
+        });
+    }
+
+    protected processUpdateService(response: Response): Promise<ServiceResponseDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ServiceResponseDto;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ServiceResponseDto>(null as any);
+    }
 }
 
 export interface AuthResponseDto {
@@ -597,11 +708,25 @@ export interface ResetPasswordRequestDto {
     password: string;
 }
 
+export interface AvailabilityResponseDto {
+    message: string;
+}
+
 export interface AvailabilityCreateRequestDto {
     serviceId: string;
     dayOfWeek: number;
     availableFrom: string;
     availableTo: string;
+}
+
+export interface AvailabilityUpdateRequestDto {
+    id?: string;
+    serviceId?: string;
+    availableFrom?: string;
+    availableTo?: string;
+    dayOfWeek?: number;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export interface BookingResponseDto {
@@ -630,6 +755,15 @@ export interface ServiceResponseDto {
 
 export interface ServiceCreateRequestDto {
     name: string;
+    description: string;
+    imageUrl: string;
+}
+
+export interface ServiceUpdateRequestDto {
+    id: string;
+    name: string;
+    description: string;
+    imageUrl: string;
 }
 
 

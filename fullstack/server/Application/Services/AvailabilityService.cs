@@ -27,4 +27,32 @@ public class AvailabilityService(IAvailabilityRepository repository) : IAvailabi
             Message = "Service availability created successfully",
         };
     }
+
+    public AvailabilityResponseDto DeleteAvailability(string id)
+    {
+        repository.DeleteAvailability(id);
+        return new AvailabilityResponseDto()
+        {
+            Message = "Service availability deleted successfully"
+        };
+    }
+
+    public AvailabilityResponseDto UpdateAvailability(AvailabilityUpdateRequestDto dto)
+    {
+        var availability = new ServiceAvailability()
+        {
+            Id = dto.Id,
+            ServiceId = dto.ServiceId,
+            DayOfWeek = dto.DayOfWeek,
+            AvailableFrom = dto.AvailableFrom,
+            AvailableTo = dto.AvailableTo,
+            UpdatedAt = dto.UpdatedAt,
+            CreatedAt = dto.CreatedAt
+        };
+        repository.UpdateAvailability(availability);
+        return new AvailabilityResponseDto()
+        {
+            Message = "Service availability updated successfully"
+        };
+    }
 }

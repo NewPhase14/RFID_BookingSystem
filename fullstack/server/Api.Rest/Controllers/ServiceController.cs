@@ -12,7 +12,9 @@ public class ServiceController(IServiceService serviceService) : ControllerBase
     private const string CreateServiceRoute = ControllerRoute + nameof(CreateService);
 
     private const string DeleteServiceRoute = ControllerRoute + nameof(DeleteService);
-    
+
+    private const string UpdateServiceRoute = ControllerRoute + nameof(UpdateService);
+
     [HttpPost]
     [Route(CreateServiceRoute)]
     public ActionResult<ServiceResponseDto> CreateService([FromBody] ServiceCreateRequestDto dto)
@@ -25,5 +27,12 @@ public class ServiceController(IServiceService serviceService) : ControllerBase
     public ActionResult<ServiceResponseDto> DeleteService(string id)
     {
         return Ok(serviceService.DeleteService(id));
+    }
+    
+    [HttpPut]
+    [Route(UpdateServiceRoute)]
+    public ActionResult<ServiceResponseDto> UpdateService([FromBody] ServiceUpdateRequestDto dto)
+    {
+        return Ok(serviceService.UpdateService(dto));
     }
 }

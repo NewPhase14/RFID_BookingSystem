@@ -9,4 +9,7 @@ public interface IAvailabilityRepository
     
     ServiceAvailability GetAvailability(Booking booking, int bookingDay);
     
+    void UpdateAvailability(ServiceAvailability availability);
+    
+    void DeleteAvailability(string id);     
 }

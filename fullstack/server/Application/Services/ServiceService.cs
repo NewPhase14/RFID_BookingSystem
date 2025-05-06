@@ -12,7 +12,9 @@ public class ServiceService(IServiceRepository serviceRepository) : IServiceServ
         var service = new Service()
         {
             Id = Guid.NewGuid().ToString(),
-            Name = dto.Name
+            Name = dto.Name,
+            Description = dto.Description,
+            ImageUrl = dto.ImageUrl
         };
         serviceRepository.AddService(service);
         return new ServiceResponseDto()
@@ -30,9 +32,19 @@ public class ServiceService(IServiceRepository serviceRepository) : IServiceServ
         };
     }
 
-    public ServiceResponseDto UpdateService(string id)
+    public ServiceResponseDto UpdateService(ServiceUpdateRequestDto dto)
     {
-        // TODO: Implement update service logic
-        throw new NotImplementedException("Update service logic is not implemented yet.");
+        var service = new Service()
+        {
+            Id = dto.Id,
+            Name = dto.Name,
+            Description = dto.Description,
+            ImageUrl = dto.ImageUrl
+        };
+        serviceRepository.UpdateService(service);
+        return new ServiceResponseDto()
+        {
+            Message = "Service updated successfully"
+        };
     }
 }
