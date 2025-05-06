@@ -560,6 +560,7 @@ export interface AuthRegisterRequestDto {
     email: string;
     firstName: string;
     lastName: string;
+    role: string;
 }
 
 export interface AccountActivationResponseDto {

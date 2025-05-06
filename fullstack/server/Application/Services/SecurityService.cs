@@ -52,7 +52,8 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
         var salt = GenerateSalt();
         var hash = HashPassword(randomPassword + salt);
         
-        var userRole = repository.GetRole("User");
+        var userRole = repository.GetRole(dto.Role);
+        
         if (userRole is null) throw new ValidationException("User role not found");
         
         var newUser = new User

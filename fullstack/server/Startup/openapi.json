@@ -448,7 +448,8 @@
           "rfid",
           "email",
           "firstName",
-          "lastName"
+          "lastName",
+          "role"
         ],
         "properties": {
           "rfid": {
@@ -464,6 +465,10 @@
             "minLength": 1
           },
           "lastName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
             "type": "string",
             "minLength": 1
           }

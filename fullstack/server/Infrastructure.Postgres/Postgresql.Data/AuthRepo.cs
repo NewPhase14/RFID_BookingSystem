@@ -49,7 +49,7 @@ public class AuthRepo(MyDbContext ctx) : IAuthDataRepository
 
     public Role GetRole(string roleName)
     {
-        return ctx.Roles.FirstOrDefault(r => r.Name == roleName) ?? throw new InvalidOperationException();
+        return ctx.Roles.FirstOrDefault(r => r.Name == roleName) ?? throw new InvalidOperationException("Role not found");
     }
     
     public async Task<InviteToken> AddInviteToken(InviteToken token)
