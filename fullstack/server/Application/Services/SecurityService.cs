@@ -24,6 +24,9 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
     public AuthResponseDto Login(AuthLoginRequestDto dto)
     {
         var user = repository.GetUserOrNull(dto.Email) ?? throw new ValidationException("Username not found");
+        
+        if (user.ConfirmedEmail == false) throw new ValidationException("Account must be activated before logging in");
+        
         VerifyPasswordOrThrow(dto.Password + user.Salt, user.HashedPassword);
         
         var userRole = user.Role.Name;
