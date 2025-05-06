@@ -19,7 +19,9 @@ CREATE TABLE users (
 
 CREATE TABLE services (
                           id TEXT PRIMARY KEY,
-                          name VARCHAR(100) NOT NULL
+                          name VARCHAR(100) NOT NULL,
+                          description TEXT NOT NULL,
+                          image_url TEXT NOT NULL
 );
 
 CREATE TABLE service_availability (
