@@ -1,5 +1,5 @@
 export const Users = () => {
     return (
-        <div>Users</div>
+        <div className="bg-background-grey rounded-lg pb-4 shadow h-[200vh]">Users</div>
     )
 }
