@@ -24,8 +24,8 @@ jobs:
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v2
         with:
-          service: oniontemplate
-          region: europe-north1
+          service: bookit-rfid
+          region: europe-west1
           source: .
           flags: --allow-unauthenticated
           env_vars: |
