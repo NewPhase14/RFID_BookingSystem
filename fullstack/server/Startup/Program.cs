@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Api.Rest;
 using Api.Websocket;
 using Application;
@@ -9,6 +10,7 @@ using Infrastructure.MQTT;
 using Infrastructure.Postgres;
 using Infrastructure.Postgres.Scaffolding;
 using Infrastructure.Websocket;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NSwag.Generation;
@@ -22,8 +24,19 @@ public class Program
     public static async Task Main()
     {
         var builder = WebApplication.CreateBuilder();
+        
+        var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+        var url = $"http://0.0.0.0:{port}";
+
+        
         ConfigureServices(builder.Services, builder.Configuration);
         var app = builder.Build();
+        
+        Console.WriteLine(JsonSerializer.Serialize(Environment.GetEnvironmentVariables()));
+        
+        app.Urls.Clear();
+        app.Urls.Add(url);
+        
         await ConfigureMiddleware(app);
         await app.RunAsync();
     }
