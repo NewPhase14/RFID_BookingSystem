@@ -11,7 +11,7 @@ export default function App() {
     
     const [url, setUrl] = useState<string | undefined>(undefined)
     useEffect(() => {
-        const finalUrl = prod ? 'wss://' + baseUrl + '?id=' + randomUid : 'ws://' + baseUrl + '?id=' + randomUid;
+        const finalUrl = prod ? 'ws://' + baseUrl + '?id=' + randomUid : 'ws://' + baseUrl + '?id=' + randomUid;
 setUrl(finalUrl);
     }, [prod, baseUrl]);
     

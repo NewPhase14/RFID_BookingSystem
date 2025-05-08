@@ -70,10 +70,11 @@ public partial class MyDbContext : DbContext
             entity.ToTable("booking_logs");
 
             entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.BookingId).HasColumnName("booking_id");
-            entity.Property(e => e.EnteredAt)
+            entity.Property(e => e.AttemptedAt)
                 .HasColumnType("timestamp without time zone")
-                .HasColumnName("entered_at");
+                .HasColumnName("attempted_at");
+            entity.Property(e => e.BookingId).HasColumnName("booking_id");
+            entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
             entity.HasOne(d => d.Booking).WithMany(p => p.BookingLogs)

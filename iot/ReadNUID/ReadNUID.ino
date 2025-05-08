@@ -5,6 +5,7 @@
 #include <SPI.h>
 #include <MFRC522.h>
 #include <ArduinoJson.h>
+#include "credentials.h"
 
 #define SS_PIN 21
 #define RST_PIN 22
@@ -79,13 +80,13 @@ void callback(char* topic, byte* message, unsigned int length) {
   Serial.println(msg);
 
   if(msg == "Valid"){
-    Serial.println("on");
+    Serial.println("access");
     digitalWrite(greenPin, HIGH);
     delay(1000);
     digitalWrite(greenPin, LOW);
   }
   else if(msg == "Invalid"){
-    Serial.println("off");
+    Serial.println("denied");
     digitalWrite(redPin, HIGH);
     delay(1000);
     digitalWrite(redPin, LOW);
@@ -118,7 +119,7 @@ void loop() {
     JsonDocument doc;
     String rfidToDec = String(rfid.uid.uidByte[0]) + " " + String(rfid.uid.uidByte[1]) + " " + String(rfid.uid.uidByte[2]) + " " + String(rfid.uid.uidByte[3]);
     doc["rfid"] = rfidToDec;
-    doc["serviceId"] = "1";
+    doc["serviceId"] = serviceid;
     char buffer[256];
     serializeJson(doc, buffer);
     mqttClient.publish("access", buffer);

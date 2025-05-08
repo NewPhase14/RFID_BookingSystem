@@ -9,9 +9,11 @@ public partial class BookingLog
 
     public string BookingId { get; set; } = null!;
 
-    public DateTime EnteredAt { get; set; }
+    public DateTime AttemptedAt { get; set; }
 
     public string UserId { get; set; } = null!;
+
+    public string Status { get; set; } = null!;
 
     public virtual Booking Booking { get; set; } = null!;
 

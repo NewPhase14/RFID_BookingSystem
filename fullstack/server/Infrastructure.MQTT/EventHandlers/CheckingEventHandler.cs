@@ -32,7 +32,8 @@ public class CheckingEventHandler(ICheckingService checkingService, IMqttPublish
         
         var response = checkingService.CheckIfValid(check);
         
-        
         publisher.Publish(response, "access/response");
+        
+        
     }
 }

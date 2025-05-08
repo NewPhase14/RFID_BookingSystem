@@ -66,8 +66,9 @@ CREATE  TABLE password_reset_token (
 CREATE TABLE booking_logs (
                               id TEXT PRIMARY KEY,
                               booking_id TEXT NOT NULL REFERENCES bookings(id),
-                              entered_at TIMESTAMP NOT NULL,
-                              user_id TEXT NOT NULL REFERENCES users(id)
+                              attempted_at TIMESTAMP NOT NULL,
+                              user_id TEXT NOT NULL REFERENCES users(id),
+                              status TEXT NOT NULL    
 );
 
 insert into roles (id, name) values
