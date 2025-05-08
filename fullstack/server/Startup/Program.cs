@@ -25,20 +25,14 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder();
         
-        var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
+        var port = Environment.GetEnvironmentVariable("PORT") ?? "5001"; 
         var url = $"http://0.0.0.0:{port}";
-
         
         ConfigureServices(builder.Services, builder.Configuration);
         var app = builder.Build();
         
-        Console.WriteLine(JsonSerializer.Serialize(Environment.GetEnvironmentVariables()));
-        
-        app.Urls.Clear();
-        app.Urls.Add(url);
-        
         await ConfigureMiddleware(app);
-        await app.RunAsync();
+        await app.RunAsync(url);
     }
 
     public static void ConfigureServices(IServiceCollection services, IConfiguration configuration)
@@ -84,9 +78,6 @@ public class Program
                 await scope.ServiceProvider.GetRequiredService<Seeder>().Seed();
         }
 
-
-        app.Urls.Clear();
-        app.Urls.Add($"http://0.0.0.0:{appOptions.REST_PORT}");
         app.Services.GetRequiredService<IProxyConfig>()
             .StartProxyServer(appOptions.PORT, appOptions.REST_PORT, appOptions.WS_PORT);
 
