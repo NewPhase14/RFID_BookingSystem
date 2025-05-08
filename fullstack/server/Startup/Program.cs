@@ -78,6 +78,9 @@ public class Program
                 await scope.ServiceProvider.GetRequiredService<Seeder>().Seed();
         }
 
+        //app.Urls.Clear();
+        //app.Urls.Add($"http://0.0.0.0:{appOptions.REST_PORT}");
+        
         app.Services.GetRequiredService<IProxyConfig>()
             .StartProxyServer(appOptions.PORT, appOptions.REST_PORT, appOptions.WS_PORT);
 
