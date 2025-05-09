@@ -13,14 +13,14 @@ jobs:
       - name: Deploy and Configure Fly
         run: |
           # Set scale to 1 before deployment to ensure we never exceed 1 machine
-           flyctl scale count 1 --yes
+          # flyctl scale count 1 --yes
           # Set secrets
-          flyctl secrets set \
-            APPOPTIONS__DbConnectionString=${{ secrets.DBCONNECTIONSTRING }} \
-            APPOPTIONS__JwtSecret=${{secrets.JWT_SECRET}} \
-            APPOPTIONS__MQTT_BROKER_HOST=${{secrets.MQTT_BROKER_HOST}} \
-            APPOPTIONS__MQTT_USERNAME=${{secrets.MQTT_USERNAME}} \
-            APPOPTIONS__MQTT_PASSWORD=${{secrets.MQTT_PASSWORD}}
+          #flyctl secrets set \
+          #  APPOPTIONS__DbConnectionString=${{ secrets.DBCONNECTIONSTRING }} \
+          #  APPOPTIONS__JwtSecret=${{secrets.JWT_SECRET}} \
+          #  APPOPTIONS__MQTT_BROKER_HOST=${{secrets.MQTT_BROKER_HOST}} \
+          #  APPOPTIONS__MQTT_USERNAME=${{secrets.MQTT_USERNAME}} \
+          #  APPOPTIONS__MQTT_PASSWORD=${{secrets.MQTT_PASSWORD}}
           # Deploy
           flyctl deploy --ha=false
         env:
