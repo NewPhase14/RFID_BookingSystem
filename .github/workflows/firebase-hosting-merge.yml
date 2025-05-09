@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: cd client && npm ci && npm run build
+      - run: cd fullstack/client && npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           entryPoint: 'client'
