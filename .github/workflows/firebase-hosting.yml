@@ -12,6 +12,6 @@ jobs:
         with:
           entryPoint: 'fullstack/client'
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BOOKIT }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BOOKIT_RFID }}
           channelId: live
           projectId: bookit-rfid
