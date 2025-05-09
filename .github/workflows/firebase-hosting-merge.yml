@@ -12,6 +12,6 @@ jobs:
         with:
           entryPoint: 'client'
           repoToken: ${{ secrets.GITHUB_TOKEN }}
-          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_ONIONTEMPLATE }}
+          firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BOOKIT }}
           channelId: live
-          projectId: oniontemplate
+          projectId: bookit-rfid
