@@ -23,7 +23,7 @@ setUrl(finalUrl);
 
             <div className="flex flex-col">
                 <div>
-                    { <Home /> }
+                    { !prod ? <Home/> : <Login/> }
                 </div>
 
             </div>
