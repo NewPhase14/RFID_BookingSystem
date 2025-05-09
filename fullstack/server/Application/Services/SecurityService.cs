@@ -92,7 +92,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
         });
 
         //Insert real address when it's ready
-        var verificationLink = $"localhost:5001/activate?token={inviteToken.Id}";
+        var verificationLink = $"https://bookit-rfid.web.app/activate?token={inviteToken.Id}";
         
         var email = fluentEmail
             .To(newUser.Email, $"{newUser.FirstName} {newUser.LastName}")
@@ -170,7 +170,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
 
         await repository.AddInviteToken(token);
         
-        var verificationLink = $"localhost:5001/activate?token={token.Id}";
+        var verificationLink = $"https://bookit-rfid.web.app/activate?token={token.Id}";
 
         var email = fluentEmail
             .To(user.Email, $"{user.FirstName} {user.LastName}")

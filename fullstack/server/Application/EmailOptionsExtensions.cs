@@ -9,10 +9,19 @@ public static class EmailOptionsExtensions
     public static IServiceCollection AddEmailOptions(this IServiceCollection services, IConfiguration configuration)
     {
         services.Configure<EmailOptions>(configuration.GetSection("EmailOptions"));
+
+        var emailOptions = configuration.GetSection("EmailOptions").Get<EmailOptions>();
+
         services
-            .AddFluentEmail(configuration["EmailOptions:SenderEmail"], configuration["EmailOptions:SenderName"])
-            .AddSmtpSender(configuration["EmailOptions:Host"], configuration.GetValue<int>("EmailOptions:Port"));
-        
+            .AddFluentEmail(emailOptions.SenderEmail, emailOptions.SenderName)
+            .AddSmtpSender(new System.Net.Mail.SmtpClient
+            {
+                Host = emailOptions.Host,
+                Port = emailOptions.Port,
+                Credentials = new System.Net.NetworkCredential(emailOptions.Username, emailOptions.Password),
+                EnableSsl = true
+            });
+
         return services;
     }
     
