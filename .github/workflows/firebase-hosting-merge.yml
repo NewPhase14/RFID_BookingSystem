@@ -10,7 +10,7 @@ jobs:
       - run: cd fullstack/client && npm ci && npm run build
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
-          entryPoint: 'client'
+          entryPoint: 'fullstack/client'
           repoToken: ${{ secrets.GITHUB_TOKEN }}
           firebaseServiceAccount: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_BOOKIT }}
           channelId: live
