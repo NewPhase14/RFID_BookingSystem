@@ -5,13 +5,15 @@
 #include <SPI.h>
 #include <MFRC522.h>
 #include <ArduinoJson.h>
+#include <LiquidCrystal_I2C.h>
 #include "credentialsdev.h"
 
-#define SS_PIN 21
+#define SS_PIN 4
 #define RST_PIN 22
-#define greenPin 12
-#define redPin 4
+#define relay 26
+
 MFRC522 rfid(SS_PIN, RST_PIN);
+LiquidCrystal_I2C lcd(0x27, 16, 2);
 
 // Create instances
 WiFiClientSecure wifiClient;
@@ -59,8 +61,17 @@ void setup() {
 
   SPI.begin(); // Init SPI bus
   rfid.PCD_Init(); // Init MFRC522 
-  pinMode(greenPin, OUTPUT);
-  pinMode(redPin, OUTPUT); 
+  lcd.init();
+  lcd.backlight();
+  pinMode(relay, OUTPUT);
+  digitalWrite(relay, HIGH);
+}
+
+void welcome() {
+  lcd.setCursor(4, 0);
+  lcd.print("Welcome");
+  lcd.setCursor(1, 1);
+  lcd.print("Set your card");
 }
 
 void callback(char* topic, byte* message, unsigned int length) {
@@ -81,15 +92,23 @@ void callback(char* topic, byte* message, unsigned int length) {
 
   if(msg == "Valid"){
     Serial.println("access");
-    digitalWrite(greenPin, HIGH);
-    delay(1000);
-    digitalWrite(greenPin, LOW);
+    digitalWrite(relay, LOW);
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Access granted");
+    delay(5000);
+    digitalWrite(relay, HIGH);
+    lcd.clear();
+    welcome();
   }
   else if(msg == "Invalid"){
     Serial.println("denied");
-    digitalWrite(redPin, HIGH);
+    lcd.clear();
+    lcd.setCursor(0, 0);
+    lcd.print("Access denied");
     delay(1000);
-    digitalWrite(redPin, LOW);
+    lcd.clear();
+    welcome();
   }
 }
 
@@ -98,6 +117,7 @@ void loop() {
     reconnect();
   }
   mqttClient.loop();
+  welcome();
 
   // Reset the loop if no new card present on the sensor/reader. This saves the entire process when idle.
   if ( ! rfid.PICC_IsNewCardPresent())
@@ -130,4 +150,3 @@ void loop() {
   // Stop encryption on PCD
   rfid.PCD_StopCrypto1();
 }
-
