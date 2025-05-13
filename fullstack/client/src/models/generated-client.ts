@@ -412,7 +412,7 @@ export class BookingClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    createBooking(dto: BookingCreateRequestDto): Promise<BookingResponseDto> {
+    createBooking(dto: BookingCreateRequestDto, authorization: string | undefined): Promise<BookingResponseDto> {
         let url_ = this.baseUrl + "/api/booking/CreateBooking";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -422,6 +422,7 @@ export class BookingClient {
             body: content_,
             method: "POST",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             }
@@ -449,7 +450,7 @@ export class BookingClient {
         return Promise.resolve<BookingResponseDto>(null as any);
     }
 
-    deleteBooking(id: string | undefined): Promise<BookingResponseDto> {
+    deleteBooking(id: string | undefined, authorization: string | undefined): Promise<BookingResponseDto> {
         let url_ = this.baseUrl + "/api/booking/DeleteBooking?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -460,6 +461,7 @@ export class BookingClient {
         let options_: RequestInit = {
             method: "DELETE",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Accept": "application/json"
             }
         };
@@ -545,7 +547,7 @@ export class ServiceClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    createService(dto: ServiceCreateRequestDto): Promise<ServiceResponseDto> {
+    createService(dto: ServiceCreateRequestDto, authorization: string | undefined): Promise<ServiceResponseDto> {
         let url_ = this.baseUrl + "/api/service/CreateService";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -555,6 +557,7 @@ export class ServiceClient {
             body: content_,
             method: "POST",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             }
@@ -664,6 +667,7 @@ export interface AuthResponseDto {
 export interface AuthLoginRequestDto {
     email: string;
     password: string;
+    clientId: string;
 }
 
 export interface AuthRegisterRequestDto {
@@ -790,14 +794,6 @@ export interface ServerSendsErrorMessage extends BaseDto {
     message?: string;
 }
 
-export interface AdminWantsToJoinDashboardDto extends BaseDto {
-    clientId?: string;
-}
-
-export interface ServerResponseToJoinDashboard extends BaseDto {
-    message?: string;
-}
-
 export interface ClientWantsToBookServiceDto extends BaseDto {
     clientId?: string;
     serviceId?: string;
@@ -807,6 +803,14 @@ export interface ServerResponseToBookService extends BaseDto {
     message?: string;
     serviceId?: string;
     clientId?: string;
+}
+
+export interface ClientWantsToEnterDashboardDto extends BaseDto {
+    jwt?: string;
+}
+
+export interface ServerConfirmsAdditionToDashboard extends BaseDto {
+    message?: string;
 }
 
 export interface ClientWantsToOpenServiceDto extends BaseDto {
@@ -830,10 +834,10 @@ export enum StringConstants {
     Ping = "Ping",
     Pong = "Pong",
     ServerSendsErrorMessage = "ServerSendsErrorMessage",
-    AdminWantsToJoinDashboardDto = "AdminWantsToJoinDashboardDto",
-    ServerResponseToJoinDashboard = "ServerResponseToJoinDashboard",
     ClientWantsToBookServiceDto = "ClientWantsToBookServiceDto",
     ServerResponseToBookService = "ServerResponseToBookService",
+    ClientWantsToEnterDashboardDto = "ClientWantsToEnterDashboardDto",
+    ServerConfirmsAdditionToDashboard = "ServerConfirmsAdditionToDashboard",
     ClientWantsToOpenServiceDto = "ClientWantsToOpenServiceDto",
     ServerResponseToOpenService = "ServerResponseToOpenService",
 }

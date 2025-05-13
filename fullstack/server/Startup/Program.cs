@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NSwag.Generation;
+using Scalar.AspNetCore;
 using Startup.Documentation;
 using Startup.Proxy;
 
@@ -104,6 +105,7 @@ public class Program
         var document = await app.Services.GetRequiredService<IOpenApiDocumentGenerator>().GenerateAsync("v1");
         var json = document.ToJson();
         await File.WriteAllTextAsync("openapi.json", json);
+        app.MapScalarApiReference();
 
         app.GenerateTypeScriptClient("/../../client/src/models/generated-client.ts").GetAwaiter().GetResult();
     }

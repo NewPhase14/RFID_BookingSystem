@@ -6,5 +6,6 @@ public class AuthLoginRequestDto
 {
     [MinLength(3)] [Required] public string Email { get; set; } = null!;
     [MinLength(4)] [Required] public string Password { get; set; } = null!;
+    [Required] public string ClientId { get; set; } = null!;
     
 }

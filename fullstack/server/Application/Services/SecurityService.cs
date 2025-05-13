@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using System.Text;
 using Application.Interfaces;
 using Application.Interfaces.Infrastructure.Postgres;
+using Application.Interfaces.Infrastructure.Websocket;
 using Application.Models;
 using Application.Models.Dtos;
 using Application.Models.Dtos.Auth;
@@ -19,7 +20,7 @@ using Microsoft.Extensions.Options;
 
 namespace Application.Services;
 
-public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDataRepository repository, IFluentEmail fluentEmail) : ISecurityService
+public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDataRepository repository, IFluentEmail fluentEmail, IConnectionManager connectionManager) : ISecurityService
 {
     public AuthResponseDto Login(AuthLoginRequestDto dto)
     {
@@ -30,7 +31,12 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
         VerifyPasswordOrThrow(dto.Password + user.Salt, user.HashedPassword);
         
         var userRole = user.Role.Name;
-        
+
+        if (userRole == "Admin")
+        {
+            connectionManager.AddToTopic("dashboard", dto.ClientId);
+        }
+
         return new AuthResponseDto
         {
             Jwt = GenerateJwt(new JwtClaims

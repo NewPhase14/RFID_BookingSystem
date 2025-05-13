@@ -319,6 +319,16 @@
           "Booking"
         ],
         "operationId": "Booking_CreateBooking",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
         "requestBody": {
           "x-name": "dto",
           "content": {
@@ -359,6 +369,14 @@
               "type": "string"
             },
             "x-position": 1
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
           }
         ],
         "responses": {
@@ -413,6 +431,16 @@
           "Service"
         ],
         "operationId": "Service_CreateService",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
         "requestBody": {
           "x-name": "dto",
           "content": {
@@ -522,7 +550,8 @@
         "additionalProperties": false,
         "required": [
           "email",
-          "password"
+          "password",
+          "clientId"
         ],
         "properties": {
           "email": {
@@ -532,6 +561,10 @@
           "password": {
             "type": "string",
             "minLength": 4
+          },
+          "clientId": {
+            "type": "string",
+            "minLength": 1
           }
         }
       },
@@ -974,38 +1007,6 @@
           }
         ]
       },
-      "AdminWantsToJoinDashboardDto": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseDto"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "clientId": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
-      "ServerResponseToJoinDashboard": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseDto"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "message": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
       "ClientWantsToBookServiceDto": {
         "allOf": [
           {
@@ -1041,6 +1042,38 @@
                 "type": "string"
               },
               "clientId": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "ClientWantsToEnterDashboardDto": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "jwt": {
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
+      "ServerConfirmsAdditionToDashboard": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/BaseDto"
+          },
+          {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+              "message": {
                 "type": "string"
               }
             }
@@ -1104,10 +1137,10 @@
           "Ping",
           "Pong",
           "ServerSendsErrorMessage",
-          "AdminWantsToJoinDashboardDto",
-          "ServerResponseToJoinDashboard",
           "ClientWantsToBookServiceDto",
           "ServerResponseToBookService",
+          "ClientWantsToEnterDashboardDto",
+          "ServerConfirmsAdditionToDashboard",
           "ClientWantsToOpenServiceDto",
           "ServerResponseToOpenService"
         ]

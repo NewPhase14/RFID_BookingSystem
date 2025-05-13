@@ -14,6 +14,7 @@ public class AvailabilityController(IAvailabilityService availabilityService) : 
     public const string CreateTimeSlotRoute = ControllerRoute + nameof(CreateAvailability);
     
     public const string DeleteTimeSlotRoute = ControllerRoute + nameof(DeleteAvailability);
+    
     public const string UpdateTimeSlotRoute = ControllerRoute + nameof(UpdateAvailability);
 
 

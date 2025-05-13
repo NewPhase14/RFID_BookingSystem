@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Rest.Controllers;
 
 [ApiController]
-public class ServiceController(IServiceService serviceService) : ControllerBase
+public class ServiceController(IServiceService serviceService, ISecurityService security) : ControllerBase
 {
     private const string ControllerRoute = "api/service/";
 
@@ -17,8 +17,13 @@ public class ServiceController(IServiceService serviceService) : ControllerBase
 
     [HttpPost]
     [Route(CreateServiceRoute)]
-    public ActionResult<ServiceResponseDto> CreateService([FromBody] ServiceCreateRequestDto dto)
+    public ActionResult<ServiceResponseDto> CreateService([FromBody] ServiceCreateRequestDto dto, [FromHeader] string authorization)
     {
+        var jwt = security.VerifyJwtOrThrow(authorization);
+        if (jwt.Role != "Admin")
+        {
+            return Unauthorized();
+        }
         return Ok(serviceService.CreateService(dto));
     }
     
