@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_guid/flutter_guid.dart';
+import '../models/login.dart';
 import 'login_cubit.dart';
 import 'login_state.dart';
 
@@ -59,10 +61,13 @@ class _LoginFormState extends State<LoginForm> {
                   isLoading
                       ? null
                       : () {
-                        context.read<LoginCubit>().login(
+                        final loginData = Login(
                           email: _emailController.text.trim(),
                           password: _passwordController.text,
+                          clientId: Guid.newGuid.toString(),
                         );
+
+                        context.read<LoginCubit>().login(loginData);
                       },
               child:
                   isLoading

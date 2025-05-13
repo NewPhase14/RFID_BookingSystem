@@ -1,5 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/booking_service.dart';
+import '../models/login.dart';
 import 'login_state.dart';
 
 class LoginCubit extends Cubit<LoginState> {
@@ -7,10 +8,10 @@ class LoginCubit extends Cubit<LoginState> {
 
   LoginCubit(this.service) : super(LoginReady());
 
-  Future<void> login({required String email, required String password}) async {
+  Future<void> login(Login loginData) async {
     emit(LoginLoading());
     try {
-      await service.login(email: email, password: password);
+      await service.login(loginData);
       emit(LoggedIn());
     } catch (error) {
       final message = error.toString();
