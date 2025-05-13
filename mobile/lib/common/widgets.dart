@@ -12,28 +12,33 @@ class BottomNavBar extends StatefulWidget {
   BottomNavBarState createState() => BottomNavBarState();
 }
 
+/// List of pages that correspond to each item in the BottomNavigationBar.
+/// These widgets are displayed in the main content area of the app.
 class BottomNavBarState extends State<BottomNavBar> {
   int _currentIndex = 0;
-  final List<Widget> _children = [
+  final List<Widget> _pages = [
     HomePage(),
     RoomsPage(),
     BookingPage(),
     ProfilePage(),
   ];
 
+  /// Callback function to update the selected index when a tab is tapped.
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;
     });
   }
 
+  ///scaffold with a body and a bottom navigation bar.
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _children[_currentIndex],
+      // Show the page corresponding to the selected index.
+      body: _pages[_currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        onTap: onTabTapped,
-        currentIndex: _currentIndex,
+        onTap: onTabTapped, // Called when a tab is tapped.
+        currentIndex: _currentIndex, // Highlights the selected tab.
         items: [
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
