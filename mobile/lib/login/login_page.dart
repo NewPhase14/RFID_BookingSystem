@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../common/widgets.dart';
 import 'login_cubit.dart';
 import 'login_form.dart';
 import 'login_state.dart';
@@ -20,7 +21,9 @@ class LoginPage extends StatelessWidget {
       child: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoggedIn) {
-            Navigator.of(context).pushReplacementNamed('/home');
+            Navigator.of(context).pushReplacement(
+              MaterialPageRoute(builder: (_) => const BottomNavBar()),
+            );
           } else if (state is LoginError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(

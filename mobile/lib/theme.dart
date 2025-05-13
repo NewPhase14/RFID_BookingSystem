@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 const Color primaryBlue = Color(0xFF26BBFF);
 const Color backgroundDark = Color(0xFF101014);
+const Color navbarBackground = Color(0xFF181818);
 
 final ThemeData appTheme = ThemeData(
   // Setting the brightness to dark mode.
@@ -51,4 +52,19 @@ final ThemeData appTheme = ThemeData(
       textStyle: TextStyle(fontWeight: FontWeight.bold),
     ),
   ),
+
+  // Custom styling for bottom navigation bar
+  bottomNavigationBarTheme: BottomNavigationBarThemeData(
+    type: BottomNavigationBarType.fixed,
+    backgroundColor: navbarBackground,
+    selectedItemColor: primaryBlue,
+    unselectedItemColor: Colors.white70,
+    showSelectedLabels: true,
+    elevation: 8,
+  ),
+
+  //Remove ripple/splash effect for navbar
+  splashFactory: NoSplash.splashFactory,
+  splashColor: Colors.transparent,
+  highlightColor: Colors.transparent,
 );
