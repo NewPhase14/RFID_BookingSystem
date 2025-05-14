@@ -69,13 +69,13 @@ public class AuthRepo(MyDbContext ctx) : IAuthDataRepository
         {
             return new VerifyInviteEmailResponseDto()
             {
-                Message = "Token is invalid or expired."
+                IsExpired = true
             };
         }
 
         return new VerifyInviteEmailResponseDto()
         {
-            Message = "invite token is valid.",
+            IsExpired = false
         };
     }
 
@@ -96,15 +96,13 @@ public class AuthRepo(MyDbContext ctx) : IAuthDataRepository
         {
             return new VerifyPasswordTokenResponseDto()
             {
-                IsValid = false,
-                Message = "Token is invalid or expired."
+                IsExpired = true,
             };
         }
 
         return new VerifyPasswordTokenResponseDto()
         {
-            IsValid = true,
-            Message = "Password has been reset successfully.",
+            IsExpired = false,
         };
     }
 

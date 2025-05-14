@@ -126,11 +126,16 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
 
     public async Task<AccountActivationResponseDto> AccountActivation(AccountActivationRequestDto dto)
     {
-        await repository.VerifyInviteToken(new VerifyInviteEmailRequestDto()
+       var response = await repository.VerifyInviteToken(new VerifyInviteEmailRequestDto()
         {
             TokenId = dto.TokenId
         });
-        
+
+        if (response.IsExpired)
+        {
+            throw new ValidationException("Token is invalid or expired");
+        }
+
         Console.WriteLine("Token ID: " + dto.TokenId);
       
         var user = await repository.GetUserOrNullByInviteTokenId(dto.TokenId);
@@ -237,11 +242,16 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
     public async Task<ResetPasswordResponseDto> ResetPassword(ResetPasswordRequestDto dto)
     {
 
-        await repository.VerifyPasswordToken(new VerifyPasswordTokenRequestDto()
+       var response = await repository.VerifyPasswordToken(new VerifyPasswordTokenRequestDto()
         {
             TokenId = dto.TokenId
         });
-        
+
+        if (response.IsExpired)
+        {
+            throw new ValidationException("Token is invalid or expired");
+        }
+
         var user = await repository.GetUserOrNullByPasswordResetTokenId(dto.TokenId);
         
         if (user is null) throw new ValidationException("User not found");
