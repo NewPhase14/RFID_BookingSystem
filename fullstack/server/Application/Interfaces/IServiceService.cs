@@ -9,4 +9,6 @@ public interface IServiceService
     public ServiceResponseDto DeleteService(string id);
     
     public ServiceResponseDto UpdateService(ServiceUpdateRequestDto dto);
+    
+    public List<GetAllServiceResponseDto> GetAllServices();
 }

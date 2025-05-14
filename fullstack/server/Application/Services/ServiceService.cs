@@ -47,4 +47,18 @@ public class ServiceService(IServiceRepository serviceRepository) : IServiceServ
             Message = "Service updated successfully"
         };
     }
+
+    public List<GetAllServiceResponseDto> GetAllServices()
+    {
+        var services = serviceRepository.GetAllServices();
+        
+        return services.Select(service => new GetAllServiceResponseDto
+        {
+            Id = service.Id,
+            Name = service.Name,
+            Description = service.Description,
+            ImageUrl = service.ImageUrl
+        }).ToList();
+        
+    }
 }

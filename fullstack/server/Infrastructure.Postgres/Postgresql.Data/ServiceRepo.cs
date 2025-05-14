@@ -36,4 +36,14 @@ public class ServiceRepo(MyDbContext ctx) : IServiceRepository
         ctx.Services.Update(existingService);
         ctx.SaveChanges();
     }
+
+    public List<Service> GetAllServices()
+    {
+        var services = ctx.Services.ToList();
+        if (services == null || services.Count == 0)
+        {
+            throw new InvalidOperationException("No services found");
+        }
+        return services;
+    }
 }

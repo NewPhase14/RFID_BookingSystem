@@ -14,6 +14,8 @@ public class ServiceController(IServiceService serviceService, ISecurityService 
     private const string DeleteServiceRoute = ControllerRoute + nameof(DeleteService);
 
     private const string UpdateServiceRoute = ControllerRoute + nameof(UpdateService);
+    
+    private const string GetAllServicesRoute = ControllerRoute + nameof(GetAllServices);
 
     [HttpPost]
     [Route(CreateServiceRoute)]
@@ -39,5 +41,12 @@ public class ServiceController(IServiceService serviceService, ISecurityService 
     public ActionResult<ServiceResponseDto> UpdateService([FromBody] ServiceUpdateRequestDto dto)
     {
         return Ok(serviceService.UpdateService(dto));
+    }
+    
+    [HttpGet]
+    [Route(GetAllServicesRoute)]
+    public ActionResult<List<GetAllServiceResponseDto>> GetAllServices()
+    {
+        return Ok(serviceService.GetAllServices());
     }
 }
