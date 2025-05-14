@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../booking/booking_page.dart';
 import '../home/home_page.dart';
 import '../profile/profile_page.dart';
-import '../room/rooms_page.dart';
+import '../services/services_page.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({super.key});
@@ -18,7 +18,7 @@ class BottomNavBarState extends State<BottomNavBar> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
     HomePage(),
-    RoomsPage(),
+    ServicesPage(),
     BookingPage(),
     ProfilePage(),
   ];
@@ -43,7 +43,7 @@ class BottomNavBarState extends State<BottomNavBar> {
           BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
           BottomNavigationBarItem(
             icon: Icon(Icons.meeting_room),
-            label: 'Rooms',
+            label: 'Services',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.calendar_month),
