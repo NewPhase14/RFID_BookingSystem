@@ -4,7 +4,7 @@ namespace Application.Interfaces;
 
 public interface IServiceService
 {
-    public ServiceResponseDto CreateService(ServiceCreateRequestDto dto);
+    public Task<ServiceResponseDto> CreateService(ServiceCreateRequestDto dto);
 
     public ServiceResponseDto DeleteService(string id);
     

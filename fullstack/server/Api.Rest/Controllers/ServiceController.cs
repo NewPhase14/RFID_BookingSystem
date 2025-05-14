@@ -19,14 +19,15 @@ public class ServiceController(IServiceService serviceService, ISecurityService 
 
     [HttpPost]
     [Route(CreateServiceRoute)]
-    public ActionResult<ServiceResponseDto> CreateService([FromBody] ServiceCreateRequestDto dto, [FromHeader] string authorization)
+    public async Task<ActionResult<ServiceResponseDto>> CreateService([FromBody] ServiceCreateRequestDto dto, [FromHeader] string authorization)
     {
         var jwt = security.VerifyJwtOrThrow(authorization);
         if (jwt.Role != "Admin")
         {
             return Unauthorized();
         }
-        return Ok(serviceService.CreateService(dto));
+        var result = await serviceService.CreateService(dto);
+        return Ok(result);
     }
     
     [HttpDelete]

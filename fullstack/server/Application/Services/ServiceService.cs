@@ -1,20 +1,39 @@
 using Application.Interfaces;
 using Application.Interfaces.Infrastructure.Postgres;
 using Application.Models.Dtos.Service;
+using CloudinaryDotNet;
+using CloudinaryDotNet.Actions;
 using Core.Domain.Entities;
 
 namespace Application.Services;
 
-public class ServiceService(IServiceRepository serviceRepository) : IServiceService
+public class ServiceService(IServiceRepository serviceRepository, ICloudinaryImageService cloudinaryImageService) : IServiceService
 {
-    public ServiceResponseDto CreateService(ServiceCreateRequestDto dto)
+    public async Task<ServiceResponseDto> CreateService(ServiceCreateRequestDto dto)
     {
+        string imageUrl = string.Empty;
+        
+        // This allows inserting a base64 string with the request for testing purposes,
+        // This should be changed to a file upload in the future
+
+        if (!string.IsNullOrEmpty(dto.ImageUrl))
+        {
+            // Convert Base64 string to byte array
+            var imageBytes = Convert.FromBase64String(dto.ImageUrl);
+            // Create a memory stream from the image bytes
+            using var stream = new MemoryStream(imageBytes);
+            // Generate a unique filename for the image
+            var fileName = Guid.NewGuid().ToString();
+            // Upload the image stream to Cloudinary and get the image URL
+            imageUrl = await cloudinaryImageService.UploadImageAsync(stream, fileName);
+        }
+        
         var service = new Service()
         {
             Id = Guid.NewGuid().ToString(),
             Name = dto.Name,
             Description = dto.Description,
-            ImageUrl = dto.ImageUrl
+            ImageUrl = imageUrl
         };
         serviceRepository.AddService(service);
         return new ServiceResponseDto()

@@ -44,6 +44,8 @@ public class Program
 
         services.AddEmailOptions(configuration);
 
+        services.AddCloudinaryOptions(configuration);
+        
         services.AddDataSourceAndRepositories();
         services.AddWebsocketInfrastructure();
 

@@ -15,6 +15,7 @@ public static class Extensions
         services.AddScoped<ICheckingService, CheckingService>();
         services.AddScoped<IServiceService, ServiceService>();
         services.AddScoped<IUserService, UserService>();
+        services.AddScoped<ICloudinaryImageService, CloudinaryImageService>();
         return services;
     }
 }
