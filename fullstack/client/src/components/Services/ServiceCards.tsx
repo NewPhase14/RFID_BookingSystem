@@ -1,7 +1,7 @@
 import React from 'react'
 import logo from "../../assets/logo.png"
 
-export const RoomCards = () => {
+export const ServiceCards = () => {
     return <>
         <Card
             title="Greenscreen Room"

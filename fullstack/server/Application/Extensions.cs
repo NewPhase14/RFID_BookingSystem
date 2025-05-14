@@ -1,7 +1,6 @@
 using Application.Interfaces;
-using Application.Models;
+using Application.Interfaces.Infrastructure.Websocket;
 using Application.Services;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application;
@@ -15,6 +14,7 @@ public static class Extensions
         services.AddScoped<IAvailabilityService, AvailabilityService>();
         services.AddScoped<ICheckingService, CheckingService>();
         services.AddScoped<IServiceService, ServiceService>();
+        services.AddScoped<IUserService, UserService>();
         return services;
     }
 }

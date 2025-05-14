@@ -18,7 +18,7 @@ export const StatCards = () => {
             period="From Jan 1st - Apr 30th"
         />
         <Card
-            title="Rooms"
+            title="Services"
             value="20"
             pillText="5%"
             trend="up"

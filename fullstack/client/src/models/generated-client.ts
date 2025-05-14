@@ -660,6 +660,88 @@ export class ServiceClient {
     }
 }
 
+export class UserClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getUserByEmail(email: string | undefined): Promise<UserResponseDto> {
+        let url_ = this.baseUrl + "/api/user/GetUserByEmail?";
+        if (email === null)
+            throw new Error("The parameter 'email' cannot be null.");
+        else if (email !== undefined)
+            url_ += "email=" + encodeURIComponent("" + email) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetUserByEmail(_response);
+        });
+    }
+
+    protected processGetUserByEmail(response: Response): Promise<UserResponseDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as UserResponseDto;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<UserResponseDto>(null as any);
+    }
+
+    getAllUsers(authorization: string | undefined): Promise<UserResponseDto[]> {
+        let url_ = this.baseUrl + "/api/user/GetAllUsers";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetAllUsers(_response);
+        });
+    }
+
+    protected processGetAllUsers(response: Response): Promise<UserResponseDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as UserResponseDto[];
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<UserResponseDto[]>(null as any);
+    }
+}
+
 export interface AuthResponseDto {
     jwt: string;
 }
@@ -768,6 +850,17 @@ export interface ServiceUpdateRequestDto {
     name: string;
     description: string;
     imageUrl: string;
+}
+
+export interface UserResponseDto {
+    id?: string;
+    firstName?: string;
+    lastName?: string;
+    rfid?: string;
+    email?: string;
+    roleName?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 

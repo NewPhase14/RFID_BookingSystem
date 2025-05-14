@@ -1,7 +1,7 @@
 import {AccountToggle} from "./AccountToggle.tsx";
 import {Search} from "./Search.tsx";
 import {RouteSelect} from "./RouteSelect.tsx";
-import { Settings } from "./Settings.tsx";
+import { Bottombar } from "./Bottombar.tsx";
 
 const Sidebar = () => {
     return (
@@ -10,7 +10,7 @@ const Sidebar = () => {
                 <AccountToggle/>
                 <RouteSelect/>
             </div>
-            <Settings/>
+            <Bottombar/>
         </div>
     )
 }

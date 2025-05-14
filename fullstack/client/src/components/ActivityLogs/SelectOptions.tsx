@@ -6,7 +6,7 @@ export default function SelectOptions() {
         <Menu as="div" className="relative inline-block text-left">
             <div>
                 <MenuButton className="inline-flex w-full justify-center gap-x-1.5 rounded-md bg-gray-800 px-3 py-2 text-sm font-semibold shadow-xs ring-1 ring-[--color-text-baby-blue] ring-inset hover:text-[--color-text-baby-blue] hover:bg-gray-700">
-                    Options
+                    All
                     <ChevronDownIcon aria-hidden="true" className="-mr-1 size-5 text-gray-400" />
                 </MenuButton>
             </div>
@@ -21,23 +21,23 @@ export default function SelectOptions() {
                             href="#"
                             className="block px-4 py-2 text-sm  hover:text-[--color-text-baby-blue] data-focus:outline-hidden"
                         >
-                            Created bookings
-                        </a>
-                    </MenuItem>
-                    <MenuItem>
-                        <a
-                            href="#"
-                            className="block px-4 py-2 text-sm  hover:text-[--color-text-baby-blue] data-focus:outline-hidden"
-                        >
-                            Entered rooms
-                        </a>
-                    </MenuItem>
-                    <MenuItem>
-                        <a
-                            href="#"
-                            className="block px-4 py-2 text-sm  hover:text-[--color-text-baby-blue] data-focus:outline-hidden"
-                        >
                             All
+                        </a>
+                    </MenuItem>
+                    <MenuItem>
+                        <a
+                            href="#"
+                            className="block px-4 py-2 text-sm  hover:text-[--color-text-baby-blue] data-focus:outline-hidden"
+                        >
+                            Created Bookings
+                        </a>
+                    </MenuItem>
+                    <MenuItem>
+                        <a
+                            href="#"
+                            className="block px-4 py-2 text-sm  hover:text-[--color-text-baby-blue] data-focus:outline-hidden"
+                        >
+                            Entered Services
                         </a>
                     </MenuItem>
                 </div>

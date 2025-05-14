@@ -106,7 +106,7 @@ void callback(char* topic, byte* message, unsigned int length) {
     lcd.clear();
     lcd.setCursor(0, 0);
     lcd.print("Access denied");
-    delay(1000);
+    delay(3000);
     lcd.clear();
     welcome();
   }

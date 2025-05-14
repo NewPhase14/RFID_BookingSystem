@@ -1,5 +1,5 @@
 import "../styles.css";
-import SelectOptions from "./SelectOptions.tsx";
+import {BsFillDoorOpenFill} from "react-icons/bs";
 
 export const TopBar = () => {
     return (
@@ -7,13 +7,16 @@ export const TopBar = () => {
             <div className="flex items-center justify-between p-0.5">
                 <div>
                     <span className="text-sm font-bold block">
-                        Activity
+                        Services
                     </span>
                     <span className="text-xs block">
-                        Created bookings / Entered Rooms
+                        All services
                     </span>
                 </div>
-                <SelectOptions/>
+                <button className="flex text-sm items-center gap-2 bg-gray-800 hover:bg-gray-700 hover:text-[--color-text-baby-blue] transition-colors rounded px-3 py-1.5">
+                    <BsFillDoorOpenFill/>
+                    <span>Create new</span>
+                </button>
             </div>
         </div>
     )

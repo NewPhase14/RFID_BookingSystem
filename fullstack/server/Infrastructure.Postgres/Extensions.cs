@@ -24,6 +24,7 @@ public static class Extensions
         services.AddScoped<IAvailabilityRepository, AvailabilityRepo>();
         services.AddScoped<ICheckingRepository, CheckingRepo>();
         services.AddScoped<IServiceRepository, ServiceRepo>();
+        services.AddScoped<IUserRepository, UserRepo>();
         services.AddScoped<Seeder>();
 
         return services;

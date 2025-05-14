@@ -528,6 +528,69 @@
           }
         }
       }
+    },
+    "/api/user/GetUserByEmail": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_GetUserByEmail",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/user/GetAllUsers": {
+      "get": {
+        "tags": [
+          "User"
+        ],
+        "operationId": "User_GetAllUsers",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -903,6 +966,38 @@
           "imageUrl": {
             "type": "string",
             "minLength": 1
+          }
+        }
+      },
+      "UserResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "rfid": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "roleName": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
