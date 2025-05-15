@@ -219,7 +219,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
 
         await repository.AddPasswordResetToken(token);
         
-        var verificationLink = $"localhost:5001/password-reset?token={token.Id}";
+        var verificationLink = $"https://bookit-rfid.web.app/reset-password?token={token.Id}";
         
         var email = fluentEmail
             .To(dto.Email, $"{user.FirstName} {user.LastName}")

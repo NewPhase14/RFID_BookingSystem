@@ -659,7 +659,7 @@ export class ServiceClient {
         return Promise.resolve<ServiceResponseDto>(null as any);
     }
 
-    getAllServices(): Promise<GetAllServiceResponseDto[]> {
+    getAllServices(): Promise<GetServiceResponseDto[]> {
         let url_ = this.baseUrl + "/api/service/GetAllServices";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -675,13 +675,13 @@ export class ServiceClient {
         });
     }
 
-    protected processGetAllServices(response: Response): Promise<GetAllServiceResponseDto[]> {
+    protected processGetAllServices(response: Response): Promise<GetServiceResponseDto[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as GetAllServiceResponseDto[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as GetServiceResponseDto[];
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -689,7 +689,44 @@ export class ServiceClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<GetAllServiceResponseDto[]>(null as any);
+        return Promise.resolve<GetServiceResponseDto[]>(null as any);
+    }
+
+    getServiceById(id: string | undefined): Promise<GetServiceResponseDto> {
+        let url_ = this.baseUrl + "/api/service/GetServiceById?";
+        if (id === null)
+            throw new Error("The parameter 'id' cannot be null.");
+        else if (id !== undefined)
+            url_ += "id=" + encodeURIComponent("" + id) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetServiceById(_response);
+        });
+    }
+
+    protected processGetServiceById(response: Response): Promise<GetServiceResponseDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as GetServiceResponseDto;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<GetServiceResponseDto>(null as any);
     }
 }
 
@@ -883,13 +920,17 @@ export interface ServiceUpdateRequestDto {
     name: string;
     description: string;
     imageUrl: string;
+    publicId: string;
 }
 
-export interface GetAllServiceResponseDto {
+export interface GetServiceResponseDto {
     id: string;
     name: string;
     description: string;
     imageUrl: string;
+    publicId: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface UserResponseDto {

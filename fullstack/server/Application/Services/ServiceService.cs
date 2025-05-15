@@ -12,6 +12,7 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
     public async Task<ServiceResponseDto> CreateService(ServiceCreateRequestDto dto)
     {
         string imageUrl = string.Empty;
+        string publicId = string.Empty;
         
         // This allows inserting a base64 string with the request for testing purposes,
         // This should be changed to a file upload in the future
@@ -25,7 +26,9 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
             // Generate a unique filename for the image
             var fileName = Guid.NewGuid().ToString();
             // Upload the image stream to Cloudinary and get the image URL
-            imageUrl = await cloudinaryImageService.UploadImageAsync(stream, fileName);
+            var uploadResult = await cloudinaryImageService.UploadImageAsync(stream, fileName);
+            imageUrl = uploadResult.SecureUrl;
+            publicId = uploadResult.PublicId;
         }
         
         var service = new Service()
@@ -33,8 +36,12 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
             Id = Guid.NewGuid().ToString(),
             Name = dto.Name,
             Description = dto.Description,
-            ImageUrl = imageUrl
+            ImageUrl = imageUrl,
+            PublicId = publicId,
+            CreatedAt = DateTime.Now,
+            UpdatedAt = DateTime.Now
         };
+        
         serviceRepository.AddService(service);
         return new ServiceResponseDto()
         {
@@ -58,7 +65,9 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
             Id = dto.Id,
             Name = dto.Name,
             Description = dto.Description,
-            ImageUrl = dto.ImageUrl
+            ImageUrl = dto.ImageUrl,
+            PublicId = dto.PublicId,
+            UpdatedAt = DateTime.Now
         };
         serviceRepository.UpdateService(service);
         return new ServiceResponseDto()
@@ -67,17 +76,37 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
         };
     }
 
-    public List<GetAllServiceResponseDto> GetAllServices()
+    public List<GetServiceResponseDto> GetAllServices()
     {
         var services = serviceRepository.GetAllServices();
         
-        return services.Select(service => new GetAllServiceResponseDto
+        return services.Select(service => new GetServiceResponseDto
         {
             Id = service.Id,
             Name = service.Name,
             Description = service.Description,
-            ImageUrl = service.ImageUrl
+            ImageUrl = service.ImageUrl,
+            PublicId = service.PublicId,
+            CreatedAt = service.CreatedAt,
+            UpdatedAt = service.UpdatedAt
+           
         }).ToList();
         
+    }
+
+    public GetServiceResponseDto GetServiceById(string id)
+    {
+        var services = serviceRepository.GetServiceById(id);
+        
+        return new GetServiceResponseDto
+        {
+            Id = services.Id,
+            Name = services.Name,
+            Description = services.Description,
+            ImageUrl = services.ImageUrl,
+            PublicId = services.PublicId,
+            CreatedAt = services.CreatedAt,
+            UpdatedAt = services.UpdatedAt
+        };
     }
 }

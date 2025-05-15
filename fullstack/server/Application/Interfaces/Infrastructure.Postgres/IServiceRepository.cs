@@ -8,4 +8,5 @@ public interface IServiceRepository
     void DeleteService(string id);
     void UpdateService(Service service);
     List<Service> GetAllServices();
+    Service GetServiceById(string id);
 }

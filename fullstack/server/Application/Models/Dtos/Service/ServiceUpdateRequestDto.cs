@@ -8,4 +8,6 @@ public class ServiceUpdateRequestDto
     [Required] public string Name { get; set; } = null!;
     [Required] public string Description { get; set; } = null!;
     [Required] public string ImageUrl { get; set; } = null!;
+    [Required] public string PublicId { get; set; } = null!;
+    
 }

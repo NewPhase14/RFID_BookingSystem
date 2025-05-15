@@ -46,4 +46,14 @@ public class ServiceRepo(MyDbContext ctx) : IServiceRepository
         }
         return services;
     }
+
+    public Service GetServiceById(string id)
+    {
+        var service = ctx.Services.FirstOrDefault(s => s.Id == id);
+        if (service == null)
+        {
+            throw new InvalidOperationException("Service not found");
+        }
+        return service;
+    }
 }

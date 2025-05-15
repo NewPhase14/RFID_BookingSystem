@@ -543,8 +543,38 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/GetAllServiceResponseDto"
+                    "$ref": "#/components/schemas/GetServiceResponseDto"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/service/GetServiceById": {
+      "get": {
+        "tags": [
+          "Service"
+        ],
+        "operationId": "Service_GetServiceById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetServiceResponseDto"
                 }
               }
             }
@@ -971,7 +1001,8 @@
           "id",
           "name",
           "description",
-          "imageUrl"
+          "imageUrl",
+          "publicId"
         ],
         "properties": {
           "id": {
@@ -989,17 +1020,24 @@
           "imageUrl": {
             "type": "string",
             "minLength": 1
+          },
+          "publicId": {
+            "type": "string",
+            "minLength": 1
           }
         }
       },
-      "GetAllServiceResponseDto": {
+      "GetServiceResponseDto": {
         "type": "object",
         "additionalProperties": false,
         "required": [
           "id",
           "name",
           "description",
-          "imageUrl"
+          "imageUrl",
+          "publicId",
+          "createdAt",
+          "updatedAt"
         ],
         "properties": {
           "id": {
@@ -1016,6 +1054,20 @@
           },
           "imageUrl": {
             "type": "string",
+            "minLength": 1
+          },
+          "publicId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
             "minLength": 1
           }
         }

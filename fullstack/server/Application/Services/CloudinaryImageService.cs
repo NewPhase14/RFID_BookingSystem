@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.Models.Dtos.Cloudinary;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 
@@ -7,7 +8,7 @@ namespace Application.Services;
 public class CloudinaryImageService(Cloudinary cloudinary) : ICloudinaryImageService
 {
     // Uploads an image asynchronously to Cloudinary and returns the image URL (URL is the link to the uploaded image)
-    public async Task<string> UploadImageAsync(Stream fileStream, string fileName)
+    public async Task<CloudinaryUploadResultDto> UploadImageAsync(Stream fileStream, string fileName)
     {
 
         var uploadParams = new ImageUploadParams
@@ -29,8 +30,16 @@ public class CloudinaryImageService(Cloudinary cloudinary) : ICloudinaryImageSer
             throw new InvalidOperationException("Upload failed");
         }
         
-        // Return the secure HTTPS URL of the uploaded image
-        return uploadResult.SecureUrl.ToString();
+        // Return the dto with HTTPS URL of the uploaded image and the public ID, so the values can be used in database
+        return new CloudinaryUploadResultDto
+        {
+            SecureUrl = uploadResult.SecureUri.ToString(),
+            PublicId = uploadResult.PublicId
+        };
     }
-        
+
+    public void DeleteImageAsync(string publicId)
+    {
+        throw new NotImplementedException();
+    }
 }
