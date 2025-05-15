@@ -21,7 +21,10 @@ CREATE TABLE services (
                           id TEXT PRIMARY KEY,
                           name VARCHAR(100) NOT NULL,
                           description TEXT NOT NULL,
-                          image_url TEXT NOT NULL
+                          image_url TEXT NOT NULL,
+                          public_id TEXT NOT NULL,
+                          created_at TIMESTAMP NOT NULL,
+                          updated_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE service_availability (
