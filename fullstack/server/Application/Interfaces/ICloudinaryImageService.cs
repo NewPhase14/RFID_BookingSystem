@@ -6,6 +6,6 @@ public interface ICloudinaryImageService
 {
     Task<CloudinaryUploadResultDto> UploadImageAsync(Stream fileStream, string fileName);
     
-    void DeleteImageAsync(string publicId);
+    Task DeleteImageAsync(string publicId);
     
 }

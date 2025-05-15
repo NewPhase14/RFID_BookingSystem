@@ -38,8 +38,17 @@ public class CloudinaryImageService(Cloudinary cloudinary) : ICloudinaryImageSer
         };
     }
 
-    public void DeleteImageAsync(string publicId)
+    public async Task DeleteImageAsync(string publicId)
     {
-        throw new NotImplementedException();
+        var deleteParams = new DeletionParams(publicId)
+        {
+            ResourceType = ResourceType.Image
+        };
+        
+        var deletionResult = await cloudinary.DestroyAsync(deleteParams);
+        if (deletionResult == null)
+        {
+            throw new InvalidOperationException("Image deletion failed");
+        }
     }
 }

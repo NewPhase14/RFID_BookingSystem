@@ -51,7 +51,16 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
 
     public ServiceResponseDto DeleteService(string id)
     {
-        serviceRepository.DeleteService(id);
+        var service = serviceRepository.DeleteService(id);
+        
+        if (service == null)
+        {
+            throw new InvalidOperationException("Service not found");
+        }
+        
+        // Delete the image from Cloudinary using the public IDx
+        cloudinaryImageService.DeleteImageAsync(service.PublicId);
+        
         return new ServiceResponseDto()
         {
             Message = "Service deleted successfully"

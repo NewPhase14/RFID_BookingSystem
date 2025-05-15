@@ -12,7 +12,7 @@ public class ServiceRepo(MyDbContext ctx) : IServiceRepository
         ctx.SaveChanges();
     }
 
-    public void DeleteService(string id)
+    public Service DeleteService(string id)
     {
         var service = ctx.Services.FirstOrDefault(s => s.Id == id);
         if (service == null)
@@ -21,6 +21,8 @@ public class ServiceRepo(MyDbContext ctx) : IServiceRepository
         }
         ctx.Services.Remove(service);
         ctx.SaveChanges();
+        
+        return service;
     }
 
     public void UpdateService(Service service)
