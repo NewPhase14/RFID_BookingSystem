@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../common/widgets.dart';
+import '../services/services_cubit.dart';
 import 'login_cubit.dart';
 import 'login_form.dart';
 import 'login_state.dart';
@@ -22,7 +23,18 @@ class LoginPage extends StatelessWidget {
         listener: (context, state) {
           if (state is LoggedIn) {
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (_) => const BottomNavBar()),
+              MaterialPageRoute(
+                builder:
+                    ///Calls the ServicesCubit to load the services,
+                    ///but only after the user has logged in successfully.
+                    (_) => BlocProvider(
+                      create:
+                          (context) =>
+                              ServicesCubit(context.read<BookingService>())
+                                ..loadServices(),
+                      child: const BottomNavBar(),
+                    ),
+              ),
             );
           } else if (state is LoginError) {
             ScaffoldMessenger.of(context).showSnackBar(
