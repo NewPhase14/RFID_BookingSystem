@@ -66,7 +66,7 @@ CREATE  TABLE password_reset_token (
                                        expires_at TIMESTAMP NOT NULL
 );
 
-CREATE TABLE booking_logs (
+CREATE TABLE activity_logs (
                               id TEXT PRIMARY KEY,
                               booking_id TEXT NOT NULL REFERENCES bookings(id),
                               attempted_at TIMESTAMP NOT NULL,

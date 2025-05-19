@@ -27,7 +27,7 @@ public partial class User
 
     public DateTime UpdatedAt { get; set; }
 
-    public virtual ICollection<BookingLog> BookingLogs { get; set; } = new List<BookingLog>();
+    public virtual ICollection<ActivityLog> ActivityLogs { get; set; } = new List<ActivityLog>();
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 

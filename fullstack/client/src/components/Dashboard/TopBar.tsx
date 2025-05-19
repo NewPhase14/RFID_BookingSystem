@@ -1,13 +1,16 @@
 import "../styles.css";
 import {FiCalendar} from "react-icons/fi";
+import {useAtom} from "jotai";
+import {AdminAtom} from "../../atoms/atoms.ts";
 
 export const TopBar = () => {
+    const [admin] = useAtom(AdminAtom);
     return (
         <div className="border-b px-4 mb-4 mt-2 pb-4 border-[--color-text-baby-blue]">
             <div className="flex items-center justify-between p-0.5">
                 <div>
                     <span className="text-sm font-bold block">
-                    Welcome back, Jeppe!
+                    Welcome back, {localStorage.getItem("firstname")}
                     </span>
                     <span className="text-xs block">
                     {Date()}

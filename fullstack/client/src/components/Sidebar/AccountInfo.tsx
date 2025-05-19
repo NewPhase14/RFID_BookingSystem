@@ -1,9 +1,11 @@
 import React from 'react'
 import "../styles.css"
-import {LuFileCog} from "react-icons/lu";
 import {BiCog} from "react-icons/bi";
+import {useAtom} from "jotai";
+import {AdminAtom} from "../../atoms/atoms.ts";
 
-export const AccountToggle = () => {
+export const AccountInfo = () => {
+    const [admin] = useAtom(AdminAtom);
     return (
         <div className="border-b mb-4 mt-2 pb-4 border-[--color-text-grey] ">
             <div className="flex p-0.5 relative gap-2 w-full items-center">
@@ -14,10 +16,10 @@ export const AccountToggle = () => {
                 />
                 <div className="text-start">
                     <span className="text-sm font-bold block">
-                        Jeppe Baden
+                        {localStorage.getItem("firstname") + " " + localStorage.getItem("lastname")}
                     </span>
                     <span className="text-xs block">
-                        jeppedev@test.dk
+                        {localStorage.getItem("email")}
                     </span>
                 </div>
                 <button className="ml-8 px-2 py-1.5 bg-[--color-background-grey] hover:bg-[--color-button-grey] transition-colors rounded">

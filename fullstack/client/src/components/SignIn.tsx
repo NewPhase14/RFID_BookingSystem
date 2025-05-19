@@ -2,18 +2,17 @@ import React, {useState} from 'react';
 import "./styles.css";
 import logo from "../assets/logo.png"
 import {useAtom} from "jotai";
-import {JwtAtom} from "../atoms/atoms.ts";
-import {AuthClient} from "../models/generated-client.ts";
+import {AdminAtom, JwtAtom} from "../atoms/atoms.ts";
 import toast from "react-hot-toast";
-import {useWsClient} from "ws-request-hook";
 import {randomUid} from "./App.tsx";
 import {useNavigate} from "react-router";
 import {DashboardRoute} from "../helpers/routeConstants.tsx";
-import {authClient} from "../apiControllerClients.ts";
-
+import {authClient, userClient} from "../apiControllerClients.ts";
 
 const SignIn = () => {
-    const [jwt ,setJwt] = useAtom(JwtAtom);
+    const [ ,setJwt] = useAtom(JwtAtom);
+    const [,setAdmin] = useAtom(AdminAtom);
+
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
@@ -61,18 +60,25 @@ const SignIn = () => {
 
                     <button
                         onClick={() => authClient.login({email: email, password: password, clientId: randomUid}).then(r => {
-                            toast.success("SignIn Successful");
-                            localStorage.setItem("jwt", r.jwt);
-                            setJwt(r.jwt);
-                            navigate(DashboardRoute);
-                            
+                            const tempJwt = r.jwt;
+                            userClient.getUserByEmail(email).then(r => {
+                                if (r.roleName == "Admin") {
+                                    toast.success("You have been signed in");
+                                    localStorage.setItem("jwt", tempJwt);
+                                    localStorage.setItem("firstname", r.firstName!);
+                                    localStorage.setItem("lastname", r.lastName!);
+                                    localStorage.setItem("email", r.email!);
+                                    setJwt(tempJwt);
+                                    setAdmin(r);
+                                    navigate(DashboardRoute);
+                                }
+                                else {
+                                    toast.error("Your acc is not an Admin account");
+                                }
+                            })
                         }).catch(() => {
                             toast.error("Username or password is incorrect");
-                        }).finally(() =>{
-                            if(localStorage.getItem("jwt")){
-
-                            }
-                        } )}
+                        })}
                         type="submit"
                         className="w-full py-3 rounded-md text-[var(--color-background-black)] bg-[--color-button-grey] hover:bg-blue-500 hover:text-white"
                     >

@@ -12,9 +12,9 @@ public partial class MyDbContext : DbContext
     {
     }
 
-    public virtual DbSet<Booking> Bookings { get; set; }
+    public virtual DbSet<ActivityLog> ActivityLogs { get; set; }
 
-    public virtual DbSet<BookingLog> BookingLogs { get; set; }
+    public virtual DbSet<Booking> Bookings { get; set; }
 
     public virtual DbSet<InviteToken> InviteTokens { get; set; }
 
@@ -30,6 +30,31 @@ public partial class MyDbContext : DbContext
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        modelBuilder.Entity<ActivityLog>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("activity_logs_pkey");
+
+            entity.ToTable("activity_logs");
+
+            entity.Property(e => e.Id).HasColumnName("id");
+            entity.Property(e => e.AttemptedAt)
+                .HasColumnType("timestamp without time zone")
+                .HasColumnName("attempted_at");
+            entity.Property(e => e.BookingId).HasColumnName("booking_id");
+            entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.UserId).HasColumnName("user_id");
+
+            entity.HasOne(d => d.Booking).WithMany(p => p.ActivityLogs)
+                .HasForeignKey(d => d.BookingId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("activity_logs_booking_id_fkey");
+
+            entity.HasOne(d => d.User).WithMany(p => p.ActivityLogs)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("activity_logs_user_id_fkey");
+        });
+
         modelBuilder.Entity<Booking>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("bookings_pkey");
@@ -61,31 +86,6 @@ public partial class MyDbContext : DbContext
                 .HasForeignKey(d => d.UserId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("bookings_user_id_fkey");
-        });
-
-        modelBuilder.Entity<BookingLog>(entity =>
-        {
-            entity.HasKey(e => e.Id).HasName("booking_logs_pkey");
-
-            entity.ToTable("booking_logs");
-
-            entity.Property(e => e.Id).HasColumnName("id");
-            entity.Property(e => e.AttemptedAt)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("attempted_at");
-            entity.Property(e => e.BookingId).HasColumnName("booking_id");
-            entity.Property(e => e.Status).HasColumnName("status");
-            entity.Property(e => e.UserId).HasColumnName("user_id");
-
-            entity.HasOne(d => d.Booking).WithMany(p => p.BookingLogs)
-                .HasForeignKey(d => d.BookingId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("booking_logs_booking_id_fkey");
-
-            entity.HasOne(d => d.User).WithMany(p => p.BookingLogs)
-                .HasForeignKey(d => d.UserId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("booking_logs_user_id_fkey");
         });
 
         modelBuilder.Entity<InviteToken>(entity =>

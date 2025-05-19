@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace Core.Domain.Entities;
 
-public partial class BookingLog
+public partial class ActivityLog
 {
     public string Id { get; set; } = null!;
 
