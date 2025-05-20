@@ -1,8 +1,6 @@
-using System.ComponentModel.DataAnnotations;
+using System.Security.Authentication;
 using Application.Interfaces;
-using Application.Interfaces.Infrastructure.Postgres;
 using Application.Interfaces.Infrastructure.Websocket;
-using Core.Domain.Entities;
 using Fleck;
 using WebSocketBoilerplate;
 
@@ -20,10 +18,16 @@ public class ClientWantsToEnterDashboard(
 {
     public override async Task Handle(ClientWantsToEnterDashboardDto dto, IWebSocketConnection socket)
     {
-        securityService.VerifyJwtOrThrow(dto.Jwt);
-        var clientId =  connectionManager.GetClientIdFromSocket(socket.ConnectionInfo.Id.ToString());
+        var claims = securityService.VerifyJwtOrThrow(dto.Jwt);
+        
+        if (claims.Role != "Admin")
+        {
+            throw new AuthenticationException("Unauthorized: Only admins can access the dashboard");
+        }
+        
+        var clientId =  connectionManager.GetClientIdFromSocket(socket);
         await connectionManager.AddToTopic("dashboard", clientId);
-        socket.SendDto(new ServerConfirmsAdditionToDashboard());
+        socket.SendDto(new ServerConfirmsAdditionToDashboard() {requestId = dto.requestId});
     }
 }
 

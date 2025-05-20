@@ -1,4 +1,5 @@
 using Application.Interfaces.Infrastructure.Postgres;
+using Application.Models.Dtos.Checking;
 using Core.Domain.Entities;
 using Infrastructure.Postgres.Scaffolding;
 using Microsoft.EntityFrameworkCore;
@@ -7,9 +8,11 @@ namespace Infrastructure.Postgres.Postgresql.Data;
 
 public class CheckingRepo(MyDbContext ctx) : ICheckingRepository
 {
-    public bool CheckBookingRequestDto(string rfid, string serviceId)
+    public CheckingBookingResponseDto CheckBookingRequestDto(string rfid, string serviceId)
     {
         bool isValid = false;
+        var userId = string.Empty;
+        var status = string.Empty;
 
         var user = ctx.Users.Include(user => user.Bookings)
             .FirstOrDefault(u => u.Rfid == rfid);
@@ -17,7 +20,7 @@ public class CheckingRepo(MyDbContext ctx) : ICheckingRepository
         if (user == null)
         {
             // throw exception 
-            return isValid;
+            throw new InvalidOperationException("User not found");
         }
         
         foreach (Booking booking in user.Bookings)
@@ -27,13 +30,26 @@ public class CheckingRepo(MyDbContext ctx) : ICheckingRepository
                 if (booking.StartTime <= DateTime.Now && booking.EndTime >= DateTime.Now)
                 {
                     isValid = true;
+                    userId = booking.UserId;
+                    status = "success";
                 }
                 else
                 {
                     isValid = false;
+                    userId = booking.UserId;
+                    status = "failed";
                 }
             }
         }
-        return isValid;
+
+        var activity = new CheckingBookingResponseDto
+        {
+            IsValid = isValid,
+            ServiceId = serviceId,
+            UserId = userId,
+            Status = status
+        };
+        
+        return activity;
     }
 }

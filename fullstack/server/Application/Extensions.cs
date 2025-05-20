@@ -12,6 +12,7 @@ public static class Extensions
         services.AddScoped<ISecurityService, SecurityService>();
         services.AddScoped<IBookingService, BookingService>();
         services.AddScoped<IAvailabilityService, AvailabilityService>();
+        services.AddScoped<IActivityLogService, ActivityLogService>();
         services.AddScoped<ICheckingService, CheckingService>();
         services.AddScoped<IServiceService, ServiceService>();
         services.AddScoped<IUserService, UserService>();

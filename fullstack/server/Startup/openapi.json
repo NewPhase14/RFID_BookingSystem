@@ -6,6 +6,29 @@
     "version": "1.0.0"
   },
   "paths": {
+    "/api/activity-logs/GetActivityLogs": {
+      "get": {
+        "tags": [
+          "ActivityLogs"
+        ],
+        "operationId": "ActivityLogs_GetActivityLogs",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ActivityLogDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/Login": {
       "post": {
         "tags": [
@@ -648,6 +671,30 @@
   },
   "components": {
     "schemas": {
+      "ActivityLogDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "serviceName": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "time": {
+            "type": "string"
+          },
+          "fullname": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
       "AuthResponseDto": {
         "type": "object",
         "additionalProperties": false,
@@ -1205,47 +1252,6 @@
           }
         ]
       },
-      "ClientWantsToBookServiceDto": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseDto"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "clientId": {
-                "type": "string"
-              },
-              "serviceId": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
-      "ServerResponseToBookService": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseDto"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "message": {
-                "type": "string"
-              },
-              "serviceId": {
-                "type": "string"
-              },
-              "clientId": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
       "ClientWantsToEnterDashboardDto": {
         "allOf": [
           {
@@ -1278,53 +1284,6 @@
           }
         ]
       },
-      "ClientWantsToOpenServiceDto": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseDto"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "serviceId": {
-                "type": "string"
-              },
-              "clientId": {
-                "type": "string"
-              },
-              "rfid": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
-      "ServerResponseToOpenService": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseDto"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "message": {
-                "type": "string"
-              },
-              "serviceId": {
-                "type": "string"
-              },
-              "clientId": {
-                "type": "string"
-              },
-              "rfid": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
       "StringConstants": {
         "type": "string",
         "description": "Available eventType constants",
@@ -1335,12 +1294,8 @@
           "Ping",
           "Pong",
           "ServerSendsErrorMessage",
-          "ClientWantsToBookServiceDto",
-          "ServerResponseToBookService",
           "ClientWantsToEnterDashboardDto",
-          "ServerConfirmsAdditionToDashboard",
-          "ClientWantsToOpenServiceDto",
-          "ServerResponseToOpenService"
+          "ServerConfirmsAdditionToDashboard"
         ]
       }
     }

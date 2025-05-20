@@ -9,6 +9,50 @@ import { BaseDto } from 'ws-request-hook';
 /* eslint-disable */
 // ReSharper disable InconsistentNaming
 
+export class ActivityLogsClient {
+    private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
+    private baseUrl: string;
+    protected jsonParseReviver: ((key: string, value: any) => any) | undefined = undefined;
+
+    constructor(baseUrl?: string, http?: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> }) {
+        this.http = http ? http : window as any;
+        this.baseUrl = baseUrl ?? "";
+    }
+
+    getActivityLogs(): Promise<ActivityLogDto[]> {
+        let url_ = this.baseUrl + "/api/activity-logs/GetActivityLogs";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetActivityLogs(_response);
+        });
+    }
+
+    protected processGetActivityLogs(response: Response): Promise<ActivityLogDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ActivityLogDto[];
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ActivityLogDto[]>(null as any);
+    }
+}
+
 export class AuthClient {
     private http: { fetch(url: RequestInfo, init?: RequestInit): Promise<Response> };
     private baseUrl: string;
@@ -812,6 +856,15 @@ export class UserClient {
     }
 }
 
+export interface ActivityLogDto {
+    id?: string;
+    serviceName?: string;
+    date?: string;
+    time?: string;
+    fullname?: string;
+    status?: string;
+}
+
 export interface AuthResponseDto {
     jwt: string;
 }
@@ -968,36 +1021,12 @@ export interface ServerSendsErrorMessage extends BaseDto {
     message?: string;
 }
 
-export interface ClientWantsToBookServiceDto extends BaseDto {
-    clientId?: string;
-    serviceId?: string;
-}
-
-export interface ServerResponseToBookService extends BaseDto {
-    message?: string;
-    serviceId?: string;
-    clientId?: string;
-}
-
 export interface ClientWantsToEnterDashboardDto extends BaseDto {
     jwt?: string;
 }
 
 export interface ServerConfirmsAdditionToDashboard extends BaseDto {
     message?: string;
-}
-
-export interface ClientWantsToOpenServiceDto extends BaseDto {
-    serviceId?: string;
-    clientId?: string;
-    rfid?: string;
-}
-
-export interface ServerResponseToOpenService extends BaseDto {
-    message?: string;
-    serviceId?: string;
-    clientId?: string;
-    rfid?: string;
 }
 
 /** Available eventType constants */
@@ -1008,12 +1037,8 @@ export enum StringConstants {
     Ping = "Ping",
     Pong = "Pong",
     ServerSendsErrorMessage = "ServerSendsErrorMessage",
-    ClientWantsToBookServiceDto = "ClientWantsToBookServiceDto",
-    ServerResponseToBookService = "ServerResponseToBookService",
     ClientWantsToEnterDashboardDto = "ClientWantsToEnterDashboardDto",
     ServerConfirmsAdditionToDashboard = "ServerConfirmsAdditionToDashboard",
-    ClientWantsToOpenServiceDto = "ClientWantsToOpenServiceDto",
-    ServerResponseToOpenService = "ServerResponseToOpenService",
 }
 
 export interface FileResponse {

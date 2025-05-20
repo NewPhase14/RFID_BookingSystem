@@ -32,11 +32,6 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
         
         var userRole = user.Role.Name;
 
-        if (userRole == "Admin")
-        {
-            connectionManager.AddToTopic("dashboard", dto.ClientId);
-        }
-
         return new AuthResponseDto
         {
             Jwt = GenerateJwt(new JwtClaims

@@ -7,7 +7,7 @@ public partial class ActivityLog
 {
     public string Id { get; set; } = null!;
 
-    public string BookingId { get; set; } = null!;
+    public string ServiceId { get; set; } = null!;
 
     public DateTime AttemptedAt { get; set; }
 
@@ -15,7 +15,7 @@ public partial class ActivityLog
 
     public string Status { get; set; } = null!;
 
-    public virtual Booking Booking { get; set; } = null!;
+    public virtual Service Service { get; set; } = null!;
 
     public virtual User User { get; set; } = null!;
 }

@@ -40,14 +40,14 @@ public partial class MyDbContext : DbContext
             entity.Property(e => e.AttemptedAt)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("attempted_at");
-            entity.Property(e => e.BookingId).HasColumnName("booking_id");
+            entity.Property(e => e.ServiceId).HasColumnName("service_id");
             entity.Property(e => e.Status).HasColumnName("status");
             entity.Property(e => e.UserId).HasColumnName("user_id");
 
-            entity.HasOne(d => d.Booking).WithMany(p => p.ActivityLogs)
-                .HasForeignKey(d => d.BookingId)
+            entity.HasOne(d => d.Service).WithMany(p => p.ActivityLogs)
+                .HasForeignKey(d => d.ServiceId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("activity_logs_booking_id_fkey");
+                .HasConstraintName("activity_logs_service_id_fkey");
 
             entity.HasOne(d => d.User).WithMany(p => p.ActivityLogs)
                 .HasForeignKey(d => d.UserId)

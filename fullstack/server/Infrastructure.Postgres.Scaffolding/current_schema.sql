@@ -68,7 +68,7 @@ CREATE  TABLE password_reset_token (
 
 CREATE TABLE activity_logs (
                               id TEXT PRIMARY KEY,
-                              booking_id TEXT NOT NULL REFERENCES bookings(id),
+                              service_id TEXT NOT NULL REFERENCES services(id),
                               attempted_at TIMESTAMP NOT NULL,
                               user_id TEXT NOT NULL REFERENCES users(id),
                               status TEXT NOT NULL    

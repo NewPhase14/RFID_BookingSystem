@@ -21,6 +21,7 @@ public static class Extensions
 
         services.AddScoped<IAuthDataRepository, AuthRepo>();
         services.AddScoped<IBookingDataRepository, BookingRepo>();
+        services.AddScoped<IActivityLogsRepository, ActivityLogsRepo>();
         services.AddScoped<IAvailabilityRepository, AvailabilityRepo>();
         services.AddScoped<ICheckingRepository, CheckingRepo>();
         services.AddScoped<IServiceRepository, ServiceRepo>();

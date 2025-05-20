@@ -13,7 +13,7 @@ public class CheckingEventHandler(ICheckingService checkingService, IMqttPublish
     public string TopicFilter => "access";
     public QualityOfService QoS => QualityOfService.AtLeastOnceDelivery;
 
-    public void Handle(object? sender, OnMessageReceivedEventArgs args)
+    public async void Handle(object? sender, OnMessageReceivedEventArgs args)
     {
         var dto = JsonSerializer.Deserialize<CheckBookingRequestDto>(args.PublishMessage.PayloadAsString,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
@@ -30,10 +30,17 @@ public class CheckingEventHandler(ICheckingService checkingService, IMqttPublish
             ServiceId = dto.ServiceId
         };
         
-        var response = checkingService.CheckIfValid(check);
+        var response = await checkingService.CheckIfValid(check);
         
-        publisher.Publish(response, "access/response");
-        
-        
+        try
+        {
+           
+            await publisher.Publish(response, "access/response");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"MQTT publish error: {ex.Message}");
+        }
+
     }
 }
