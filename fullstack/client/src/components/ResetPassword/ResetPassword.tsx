@@ -1,26 +1,130 @@
-import React, {useState} from "react";
+import React, { useEffect, useState } from "react";
 import "../styles.css";
-import {AiFillEyeInvisible, AiFillEye} from "react-icons/ai";
+import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
+import { authClient } from "../../apiControllerClients.ts";
+import { SignInRoute } from "../../helpers/routeConstants.tsx";
+import {useNavigate} from "react-router";
 
 const ResetPassword = () => {
+    const [token, setToken] = useState<string>("");
+
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+    const [password, setPassword] = useState<string>("");
+    const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+    const [errorMessage, setErrorMessage] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+
+    const [isReset, setIsReset] = useState<boolean>(false);
+
+    const [loading, setLoading] = useState<boolean>(false);
+
+    const navigate = useNavigate();
+
+    const passwordRequirements = {
+        minLength: /.{8,}/,
+        uppercase: /[A-Z]/,
+        lowercase: /[a-z]/,
+        number: /[0-9]/,
+        specialChar: /[!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~]/,
+    };
+
+    useEffect(() => {
+        const params = new URLSearchParams(window.location.search);
+        const urlToken = params.get("token");
+
+        if (urlToken) {
+            setToken(urlToken);
+        } else {
+            setErrorMessage("Error: Token is missing in the URL.");
+            setIsReset(false);
+        }
+    }, []);
+
+    useEffect(() => {
+        if (isReset) {
+            setErrorMessage("");
+        }
+    }, [isReset]);
+
+    const validatePassword = () => {
+        if (password !== confirmPassword) {
+            return "Passwords do not match.";
+        }
+
+        if (!passwordRequirements.minLength.test(password)) {
+            return "Password must be at least 8 characters long.";
+        }
+
+        if (!passwordRequirements.uppercase.test(password)) {
+            return "Password must contain at least one uppercase letter.";
+        }
+
+        if (!passwordRequirements.lowercase.test(password)) {
+            return "Password must contain at least one lowercase letter.";
+        }
+
+        if (!passwordRequirements.number.test(password)) {
+            return "Password must contain at least one number.";
+        }
+
+        if (!passwordRequirements.specialChar.test(password)) {
+            return "Password must contain at least one special character.";
+        }
+
+        return null;
+    };
+
+
+    const handleResetPassword = async (e: React.FormEvent) => {
+        e.preventDefault();
+
+        const validationError = validatePassword();
+        if (validationError) {
+            setErrorMessage(validationError);
+            return;
+        }
+
+        setLoading(true);
+
+        try {
+            await authClient.resetPassword({ tokenId: token, password });
+            setSuccessMessage("Password has been successfully reset.");
+            setIsReset(true);
+            setTimeout(() => {
+                navigate(SignInRoute);
+            }, 4000);
+
+        } catch (error) {
+            setErrorMessage("Error resetting password. Link may have expired.");
+            setIsReset(false);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="bg-background-black flex items-center justify-center min-h-screen">
             <div className="flex items-center justify-center min-h-screen">
                 <div className="bg-background-grey border border-white/10 rounded-2xl p-10 w-full max-w-lg">
-                    <h2 className="text-center text-white text-xl mb-6">Reset Password</h2>
-                    <p className="text-center text-text-grey mb-4">Please enter your new password</p>
+                    <h2 className="text-center text-white text-xl mb-6">Reset password</h2>
+                    <p className="text-center text-text-grey mb-4">
+                        To reset your password, please enter a new password below.
+                    </p>
 
-                    <form className="space-y-6">
-                        {/* New Password Field */}
+                    <form className="space-y-6" onSubmit={handleResetPassword}>
+                        {/* Password Field */}
                         <div className="relative">
-                    <input
-                        type={showPassword ? "text" : "password"}
-                        placeholder="New Password"
-                        className="w-full px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
-                    />
+                            <input
+                                type={showPassword ? "text" : "password"}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="New Password"
+                                className="w-full px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
+                                disabled={isReset}
+                            />
                             <div
                                 className="absolute top-4 right-4 cursor-pointer"
                                 onClick={() => setShowPassword(!showPassword)}
@@ -31,11 +135,14 @@ const ResetPassword = () => {
 
                         {/* Confirm Password Field */}
                         <div className="relative">
-                    <input
-                        type={showConfirmPassword ? "text" : "password"}
-                        placeholder="Confirm New Password"
-                        className="w-full px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
-                    />
+                            <input
+                                type={showConfirmPassword ? "text" : "password"}
+                                value={confirmPassword}
+                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                placeholder="Confirm New Password"
+                                className="w-full px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
+                                disabled={isReset}
+                            />
                             <div
                                 className="absolute top-4 right-4 cursor-pointer"
                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
@@ -44,15 +151,34 @@ const ResetPassword = () => {
                             </div>
                         </div>
 
+                        {errorMessage && (
+                            <div className="mb-6 text-red-500">
+                                <p>{errorMessage}</p>
+                            </div>
+                        )}
 
-                    <button className="w-full py-3 rounded-md text-[var(--color-background-black)] bg-[var(--color-button-grey)] hover:bg-blue-500 hover:text-white">
-                        Reset Password
-                    </button>
+                        {successMessage && (
+                            <div className="mb-6 text-green-500">
+                                <p>{successMessage}</p>
+                            </div>
+                        )}
+
+                        <button
+                            type="submit"
+                            disabled={loading || isReset}
+                            className={`w-full py-3 rounded-md text-[var(--color-background-black)] ${
+                                loading || isReset
+                                    ? "bg-gray-500 cursor-not-allowed"
+                                    : "bg-[var(--color-button-grey)] hover:bg-blue-500 hover:text-white"
+                            }`}
+                        >
+                            {loading ? "Loading..." : "Reset Password"}
+                        </button>
                     </form>
                 </div>
             </div>
         </div>
     );
-}
+};
 
 export default ResetPassword;

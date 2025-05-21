@@ -21,6 +21,8 @@ public static class Extensions
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ICloudinaryImageService, CloudinaryImageService>();
         services.AddValidatorsFromAssemblyContaining<AccountActivationValidator>();
+        services.AddValidatorsFromAssemblyContaining<ForgotPasswordValidator>();
+        services.AddValidatorsFromAssemblyContaining<ResetPasswordValidator>();
         return services;
     }
 }

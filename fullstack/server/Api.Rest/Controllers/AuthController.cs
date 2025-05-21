@@ -10,7 +10,10 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Rest.Controllers;
 
 [ApiController]
-public class AuthController(ISecurityService securityService, IValidator<AccountActivationRequestDto> accountActivationValidator) : ControllerBase
+public class AuthController(ISecurityService securityService, 
+    IValidator<AccountActivationRequestDto> accountActivationValidator,
+    IValidator<ForgotPasswordRequestDto> forgotPasswordValidator,
+    IValidator<ResetPasswordRequestDto> resetPasswordValidator) : ControllerBase
 {
     public const string ControllerRoute = "api/auth/";
 
@@ -68,6 +71,12 @@ public class AuthController(ISecurityService securityService, IValidator<Account
     [Route(ForgotPasswordRoute)]
     public async Task<ActionResult<ForgotPasswordResponseDto>> ForgotPassword([FromBody] ForgotPasswordRequestDto dto)
     {
+        var validationResult = await forgotPasswordValidator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+        
         return Ok(await securityService.ForgotPassword(dto));
     }
     
@@ -75,6 +84,12 @@ public class AuthController(ISecurityService securityService, IValidator<Account
     [Route (ResetPasswordRoute)]
     public async Task<ActionResult<ResetPasswordResponseDto>> ResetPassword([FromBody] ResetPasswordRequestDto dto)
     {
+        var validationResult = await resetPasswordValidator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+        
         return Ok(await securityService.ResetPassword(dto));
     }
     

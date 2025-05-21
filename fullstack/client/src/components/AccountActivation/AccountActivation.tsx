@@ -93,10 +93,9 @@ const AccountActivation = () => {
             await authClient.accountActivation({ tokenId: token, password });
             setSuccessMessage("Account activated successfully!");
             setIsActivated(true);
-
             setTimeout(() => {
                 navigate(SignInRoute);
-            }, 5000);
+            }, 4000);
 
         } catch (error) {
             setErrorMessage("Error activating account. This link may have expired.");
@@ -164,14 +163,14 @@ const AccountActivation = () => {
 
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={loading || isActivated}
                             className={`w-full py-3 rounded-md text-[var(--color-background-black)] ${
-                                loading
+                                loading || isActivated
                                     ? "bg-gray-500 cursor-not-allowed"
                                     : "bg-[var(--color-button-grey)] hover:bg-blue-500 hover:text-white"
                             }`}
                         >
-                            {loading ? "Activating..." : "Activate Account"}
+                            {loading ? "Loading..." : "Activate Account"}
                         </button>
                     </form>
                 </div>

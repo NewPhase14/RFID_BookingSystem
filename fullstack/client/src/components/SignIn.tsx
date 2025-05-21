@@ -5,8 +5,8 @@ import {useAtom} from "jotai";
 import {AdminAtom, JwtAtom} from "../atoms/atoms.ts";
 import toast from "react-hot-toast";
 import {randomUid} from "./App.tsx";
-import {useNavigate} from "react-router";
-import {DashboardRoute} from "../helpers/routeConstants.tsx";
+import {Link, useNavigate} from "react-router";
+import {DashboardRoute, ForgotPasswordRoute} from "../helpers/routeConstants.tsx";
 import {authClient, userClient} from "../apiControllerClients.ts";
 
 const SignIn = () => {
@@ -20,7 +20,7 @@ const SignIn = () => {
     return (
         <div className="bg-background-black flex items-center justify-center min-h-screen">
             <div className="bg-background-grey border border-white/10 rounded-2xl p-10 max-w-lg">
-                <div className="flex flex-col items-center mb-8">
+                <div className="flex flex-col items-center mb-8 w-2/3 mx-auto">
                    <img
                         src={logo}
                         alt="logo"
@@ -55,7 +55,12 @@ const SignIn = () => {
                     </div>
 
                     <div>
-                        <a href={"gg"} className="text-sm underline text-[--color-text-baby-blue]">Forgot password?</a>
+                        <Link
+                            to={ForgotPasswordRoute}
+                            className="text-sm underline text-[--color-text-baby-blue]"
+                        >
+                            Forgot password?
+                        </Link>
                     </div>
 
                     <button

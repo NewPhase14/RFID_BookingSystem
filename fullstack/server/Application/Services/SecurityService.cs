@@ -170,18 +170,18 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
         //Delete previous tokens if they exist, no matter if they are expired or not
         await repository.RemovePreviousInviteToken(user.Id);
 
-        var token = new InviteToken()
+        var inviteToken = new InviteToken
         {
             Id = Guid.NewGuid().ToString(),
             UserId = user.Id,
             CreatedAt = DateTime.Now,
             ExpiresAt = DateTime.Now.AddDays(1)
         };
-
-        await repository.AddInviteToken(token);
         
-        var verificationLink = $"https://bookit-rfid.web.app/activate?token={token.Id}";
-
+        var newToken = await repository.AddInviteToken(inviteToken);
+        
+        var verificationLink = $"https://bookit-rfid.web.app/activate?token={newToken.Id}";
+        
         var email = fluentEmail
             .To(user.Email, $"{user.FirstName} {user.LastName}")
             .Subject("(Resend) Account activation for bookit")
@@ -216,9 +216,9 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
             ExpiresAt = DateTime.Now.AddDays(1)
         };
 
-        await repository.AddPasswordResetToken(token);
+        var newToken = await repository.AddPasswordResetToken(token);
         
-        var verificationLink = $"https://bookit-rfid.web.app/reset-password?token={token.Id}";
+        var verificationLink = $"https://bookit-rfid.web.app/reset-password?token={newToken.Id}";
         
         var email = fluentEmail
             .To(dto.Email, $"{user.FirstName} {user.LastName}")

@@ -2,9 +2,16 @@ import {WsClientProvider} from 'ws-request-hook';
 import {useEffect, useState} from "react";
 import Home from "./Home.tsx";
 import {Route, Routes} from "react-router";
-import {AccountActivationRoute, SignInRoute} from "../helpers/routeConstants.tsx";
+import {
+    AccountActivationRoute,
+    ForgotPasswordRoute,
+    ResetPasswordRoute,
+    SignInRoute
+} from "../helpers/routeConstants.tsx";
 import SignIn from "./SignIn.tsx";
 import AccountActivation from "./AccountActivation/AccountActivation.tsx";
+import ForgotPassword from "./ForgotPassword/ForgotPassword.tsx";
+import ResetPassword from "./ResetPassword/ResetPassword.tsx";
 const baseUrl = import.meta.env.VITE_API_BASE_URL
 const prod = import.meta.env.PROD
 
@@ -30,6 +37,8 @@ setUrl(finalUrl);
                         {/* public routes */}
                         <Route path={SignInRoute} element={<SignIn />} />
                         <Route path={AccountActivationRoute} element={<AccountActivation />} />
+                        <Route path={ResetPasswordRoute} element={<ResetPassword />} />
+                        <Route path={ForgotPasswordRoute} element={<ForgotPassword />} />
 
                         {/* private routes */}
                         <Route path="/*" element={<Home/>}/>
