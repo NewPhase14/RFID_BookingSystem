@@ -6,33 +6,26 @@ namespace Application.Services;
 
 public class ActivityLogService(IActivityLogsRepository activityLogsRepository) : IActivityLogService
 {
-    public List<ActivityLogDto> GetActivityLogs()
+    public List<ActivityLogResponseDto> GetAllActivityLogs()
     {
         var activityLogs = activityLogsRepository.GetActivityLogs();
-        var activityLogsDto = new List<ActivityLogDto>();
 
-        foreach (var activityLog in activityLogs)
+        return activityLogs.Select(activityLog => new ActivityLogResponseDto
         {
-            var activityLogDto = new ActivityLogDto
-            {
-                Id = activityLog.Id,
-                Date = activityLog.AttemptedAt.ToString("dd-MM-yyyy"),
-                Time = activityLog.AttemptedAt.ToString("HH:mm:ss"),
-                ServiceName = activityLog.Service.Name,
-                Fullname = activityLog.User.FirstName + " " + activityLog.User.LastName,
-                Status = activityLog.Status
-            };
-            activityLogsDto.Add(activityLogDto);
-        }
-
-        return activityLogsDto ;
+            Id = activityLog.Id,
+            Date = activityLog.AttemptedAt.ToString("dd-MM-yyyy"),
+            Time = activityLog.AttemptedAt.ToString("HH:mm:ss"),
+            ServiceName = activityLog.Service.Name,
+            Fullname = activityLog.User.FirstName + " " + activityLog.User.LastName,
+            Status = activityLog.Status
+        }).ToList();
     }
 
-    public List<ActivityLogDto> GetLatestActivityLogs()
+    public List<ActivityLogResponseDto> GetLatestActivityLogs()
     {
         var latestActivityLogs = activityLogsRepository.GetLatestActivityLogs();
 
-        return latestActivityLogs.Select(activityLog => new ActivityLogDto
+        return latestActivityLogs.Select(activityLog => new ActivityLogResponseDto
         {
             Id = activityLog.Id,
             Date = activityLog.AttemptedAt.ToString("dd-MM-yyyy"),

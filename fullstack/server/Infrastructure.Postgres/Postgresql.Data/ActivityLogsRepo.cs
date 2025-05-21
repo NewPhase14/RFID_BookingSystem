@@ -8,7 +8,7 @@ namespace Infrastructure.Postgres.Postgresql.Data;
 
 public class ActivityLogsRepo(MyDbContext ctx) : IActivityLogsRepository
 {
-    public void AddActivityLogs(ActivityLog activityLog)
+    public void CreateActivityLogs(ActivityLog activityLog)
     {
         ctx.ActivityLogs.Add(activityLog);
     
@@ -18,8 +18,9 @@ public class ActivityLogsRepo(MyDbContext ctx) : IActivityLogsRepository
     public List<ActivityLog> GetActivityLogs()
     {
         var activityLogs = ctx.ActivityLogs
+            .Include(u => u.User)
+            .Include(s => s.Service)
             .OrderByDescending(x => x.AttemptedAt).ToList();
-        
         return activityLogs;
     }
     

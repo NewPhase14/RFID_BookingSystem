@@ -1,14 +1,15 @@
 using Application.Interfaces;
 using Application.Interfaces.Infrastructure.Postgres;
+using Application.Interfaces.Infrastructure.Websocket;
 using Application.Models.Dtos.Availability;
 using Application.Models.Dtos.Booking;
 using Core.Domain.Entities;
 
 namespace Application.Services;
 
-public class BookingService(IBookingDataRepository bookingRepository, IAvailabilityRepository availabilityRepository) : IBookingService
+public class BookingService(IBookingDataRepository bookingRepository, IAvailabilityRepository availabilityRepository, IConnectionManager connectionManager) : IBookingService
 {
-    public BookingResponseDto CreateBooking(BookingCreateRequestDto dto)
+    public async Task<BookingResponseDto> CreateBooking(BookingCreateRequestDto dto)
     {
         var booking = new Booking
         {
@@ -25,17 +26,77 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
         if (!CanCreateBooking(booking)) throw new InvalidOperationException("Booking could not be created.");
         
         var createdBooking = bookingRepository.CreateBooking(booking);
+
+        var latestBookings = bookingRepository.GetLatestBookings();
+        var bookingsToBroadcast = latestBookings.Select(b => new BookingResponseDto()
+        {
+            Id = b.Id,
+            UserId = b.UserId,
+            ServiceName = b.Service.Name,
+            Email = b.User.Email,
+            Date = b.Date.ToString("dd-MM-yyyy"),
+            StartTime = b.StartTime.ToString("HH:mm"),
+            EndTime = b.EndTime.ToString("HH:mm"),
+            CreatedAt = b.CreatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
+            UpdatedAt = b.UpdatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
+        }).ToList();
+        
+        var bookingsBroadcastDto = new BookingsBroadcastDto
+        {
+            eventType = "BookingsBroadcastDto",
+            bookings = bookingsToBroadcast
+        };
+        
+        await connectionManager.BroadcastToTopic("dashboard", bookingsBroadcastDto);
+        
         return new BookingResponseDto()
         {
             Id = createdBooking.Id,
             UserId = createdBooking.UserId,
-            ServiceId = createdBooking.ServiceId,
+            ServiceName = createdBooking.Service.Name,
+            Email = createdBooking.User.Email,
             Date = createdBooking.Date.ToString("dd-MM-yyyy"),
-            StartTime = createdBooking.StartTime.ToString(),
-            EndTime = createdBooking.EndTime.ToString(),
+            StartTime = createdBooking.StartTime.ToString("HH:mm"),
+            EndTime = createdBooking.EndTime.ToString("HH:mm"),
             CreatedAt = createdBooking.CreatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
             UpdatedAt = createdBooking.UpdatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
         };
+    }
+
+    public List<BookingResponseDto> GetAllBookings()
+    {
+        var bookings = bookingRepository.GetAllBookings();
+
+        return bookings.Select(b => new BookingResponseDto()
+        {
+            Id = b.Id,
+            UserId = b.UserId,
+            ServiceName = b.Service.Name,
+            Email = b.User.Email,
+            Date = b.Date.ToString("dd-MM-yyyy"),
+            StartTime = b.StartTime.ToString("HH:mm"),
+            EndTime = b.EndTime.ToString("HH:mm"),
+            CreatedAt = b.CreatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
+            UpdatedAt = b.UpdatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
+        }).ToList();
+    }
+
+    public List<BookingResponseDto> GetLatestBookings()
+    {
+        var latestBookings = bookingRepository.GetLatestBookings();
+
+        return latestBookings.Select(b => new BookingResponseDto()
+        {
+            Id = b.Id,
+            UserId = b.UserId,
+            ServiceName = b.Service.Name,
+            Email = b.User.Email,
+            Date = b.Date.ToString("dd-MM-yyyy"),
+            StartTime = b.StartTime.ToString("HH:mm"),
+            EndTime = b.EndTime.ToString("HH:mm"),
+            CreatedAt = b.CreatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
+            UpdatedAt = b.UpdatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
+        }).ToList();
     }
 
     private bool CanCreateBooking(Booking newBooking)
@@ -69,10 +130,11 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
         {
             Id = deletedBooking.Id,
             UserId = deletedBooking.UserId,
-            ServiceId = deletedBooking.ServiceId,
+            ServiceName = deletedBooking.Service.Name,
+            Email = deletedBooking.User.Email,
             Date = deletedBooking.Date.ToString("dd-MM-yyyy"),
-            StartTime = deletedBooking.StartTime.ToString(),
-            EndTime = deletedBooking.EndTime.ToString(),
+            StartTime = deletedBooking.StartTime.ToString("HH:mm"),
+            EndTime = deletedBooking.EndTime.ToString("HH:mm"),
             CreatedAt = deletedBooking.CreatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
             UpdatedAt = deletedBooking.UpdatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
         };

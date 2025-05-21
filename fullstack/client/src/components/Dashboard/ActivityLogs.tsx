@@ -20,7 +20,7 @@ const ActivityLogs = () => {
         if (readyState != 1) return;
 
         try {
-            onMessage<ActivityLog>("ActivityLogsResponseDto", (dto) => {
+            onMessage<ActivityLog>("ActivityLogsBroadcastDto", (dto) => {
                 setLatestActivityLogs(dto.activityLogs);
                 toast.success("Activity logs updated");
             });

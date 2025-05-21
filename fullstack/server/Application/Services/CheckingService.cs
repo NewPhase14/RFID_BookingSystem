@@ -22,11 +22,11 @@ public class CheckingService(ICheckingRepository checkingRepository, IActivityLo
             Status = activity.Status,
         };
 
-        activityLogsRepository.AddActivityLogs(activityLog);
+        activityLogsRepository.CreateActivityLogs(activityLog);
 
-        var logs = activityLogsRepository.GetLatestActivityLogs();
+        var latestActivityLogs = activityLogsRepository.GetLatestActivityLogs();
 
-        var logsDto = logs.Select(log => new ActivityLogDto
+        var activityLogsToBroadcast = latestActivityLogs.Select(log => new ActivityLogResponseDto
         {
             Id = log.Id,
             ServiceName = log.Service.Name,
@@ -36,13 +36,13 @@ public class CheckingService(ICheckingRepository checkingRepository, IActivityLo
             Status = log.Status,
         }).ToList();
 
-        var logsResponse = new ActivityLogsResponseDto
+        var activityLogsBroadcastDto = new ActivityLogsBroadcastDto
         {
-            eventType = "ActivityLogsResponseDto",
-            activityLogs = logsDto
+            eventType = "ActivityLogsBroadcastDto",
+            activityLogs = activityLogsToBroadcast
         };
 
-        await connectionManager.BroadcastToTopic("dashboard", logsResponse); 
+        await connectionManager.BroadcastToTopic("dashboard", activityLogsBroadcastDto); 
             
         return new CheckingResponseDto
         {

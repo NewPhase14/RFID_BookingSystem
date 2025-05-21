@@ -5,7 +5,7 @@ namespace Application.Interfaces.Infrastructure.Postgres;
 
 public interface IActivityLogsRepository
 {
-    void AddActivityLogs(ActivityLog activityLog);
+    void CreateActivityLogs(ActivityLog activityLog);
     
     List<ActivityLog> GetActivityLogs();
     

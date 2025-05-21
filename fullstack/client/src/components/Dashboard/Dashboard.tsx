@@ -3,6 +3,7 @@ import {TopBar} from "./TopBar.tsx";
 import {Grid} from "./Grid.tsx";
 import ActivityLogs from "./ActivityLogs.tsx";
 import useInitializeData from "../../hooks/useInitializeData.tsx";
+import BookingLogs from "./BookingLogs.tsx";
 
 
 const Dashboard = () => {
@@ -12,6 +13,7 @@ const Dashboard = () => {
         <TopBar/>
         <Grid/>
         <ActivityLogs/>
+        <BookingLogs/>
     </div>
 
 

@@ -14,6 +14,28 @@ public class BookingRepo(MyDbContext ctx) : IBookingDataRepository
         return createdBooking.Entity;
     }
 
+    public List<Booking> GetAllBookings()
+    {
+        var bookings = ctx.Bookings
+            .Include(b => b.Service)
+            .Include(b => b.User)
+            .OrderByDescending(b => b.CreatedAt)
+            .ToList();
+        return bookings;
+    }
+
+    public List<Booking> GetLatestBookings()
+    {
+        var bookings = ctx.Bookings
+            .Include(b => b.Service)
+            .Include(b => b.User)
+            .OrderByDescending(b => b.CreatedAt)
+            .Take(5)
+            .ToList();
+
+        return bookings;
+    }
+
     public Booking DeleteBooking(string id)
     {
         var booking = ctx.Bookings.FirstOrDefault(b => b.Id == id);

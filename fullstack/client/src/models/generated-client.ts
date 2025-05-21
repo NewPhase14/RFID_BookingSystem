@@ -19,8 +19,8 @@ export class ActivityLogsClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    getActivityLogs(): Promise<ActivityLogDto[]> {
-        let url_ = this.baseUrl + "/api/activity-logs/GetActivityLogs";
+    getAllActivityLogs(): Promise<ActivityLogResponseDto[]> {
+        let url_ = this.baseUrl + "/api/activity-logs/GetAllActivityLogs";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
@@ -31,17 +31,17 @@ export class ActivityLogsClient {
         };
 
         return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetActivityLogs(_response);
+            return this.processGetAllActivityLogs(_response);
         });
     }
 
-    protected processGetActivityLogs(response: Response): Promise<ActivityLogDto[]> {
+    protected processGetAllActivityLogs(response: Response): Promise<ActivityLogResponseDto[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ActivityLogDto[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ActivityLogResponseDto[];
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -49,10 +49,10 @@ export class ActivityLogsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<ActivityLogDto[]>(null as any);
+        return Promise.resolve<ActivityLogResponseDto[]>(null as any);
     }
 
-    getLatestActivityLogs(): Promise<ActivityLogDto[]> {
+    getLatestActivityLogs(): Promise<ActivityLogResponseDto[]> {
         let url_ = this.baseUrl + "/api/activity-logs/GetLatestActivityLogs";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -68,13 +68,13 @@ export class ActivityLogsClient {
         });
     }
 
-    protected processGetLatestActivityLogs(response: Response): Promise<ActivityLogDto[]> {
+    protected processGetLatestActivityLogs(response: Response): Promise<ActivityLogResponseDto[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ActivityLogDto[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ActivityLogResponseDto[];
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -82,7 +82,7 @@ export class ActivityLogsClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<ActivityLogDto[]>(null as any);
+        return Promise.resolve<ActivityLogResponseDto[]>(null as any);
     }
 }
 
@@ -526,7 +526,7 @@ export class BookingClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    createBooking(dto: BookingCreateRequestDto): Promise<BookingResponseDto> {
+    createBooking(dto: BookingCreateRequestDto, authorization: string | undefined): Promise<BookingResponseDto> {
         let url_ = this.baseUrl + "/api/booking/CreateBooking";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -536,6 +536,7 @@ export class BookingClient {
             body: content_,
             method: "POST",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             }
@@ -561,6 +562,74 @@ export class BookingClient {
             });
         }
         return Promise.resolve<BookingResponseDto>(null as any);
+    }
+
+    getAllBookings(authorization: string | undefined): Promise<BookingResponseDto[]> {
+        let url_ = this.baseUrl + "/api/booking/GetAllBookings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetAllBookings(_response);
+        });
+    }
+
+    protected processGetAllBookings(response: Response): Promise<BookingResponseDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as BookingResponseDto[];
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<BookingResponseDto[]>(null as any);
+    }
+
+    getLatestBookings(authorization: string | undefined): Promise<BookingResponseDto[]> {
+        let url_ = this.baseUrl + "/api/booking/GetLatestBookings";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetLatestBookings(_response);
+        });
+    }
+
+    protected processGetLatestBookings(response: Response): Promise<BookingResponseDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as BookingResponseDto[];
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<BookingResponseDto[]>(null as any);
     }
 
     deleteBooking(id: string | undefined, authorization: string | undefined): Promise<BookingResponseDto> {
@@ -962,7 +1031,7 @@ export class UserClient {
     }
 }
 
-export interface ActivityLogDto {
+export interface ActivityLogResponseDto {
     id?: string;
     serviceName?: string;
     date?: string;
@@ -1053,7 +1122,8 @@ export interface AvailabilityUpdateRequestDto {
 export interface BookingResponseDto {
     id?: string;
     userId?: string;
-    serviceId?: string;
+    serviceName?: string;
+    email?: string;
     date?: string;
     startTime?: string;
     endTime?: string;

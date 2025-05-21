@@ -3,7 +3,7 @@ import {
     ActivityLogsAtom,
     BookingsAtom,
     JwtAtom,
-    LatestActivityLogsAtom,
+    LatestActivityLogsAtom, LatestBookingsAtom,
     ServicesAtom,
     UsersAtom,
 } from "../atoms/atoms.ts";
@@ -16,6 +16,7 @@ export default function useInitializeData() {
     const [, setActivityLogs] = useAtom(ActivityLogsAtom);
     const [, setLatestActivityLogs] = useAtom(LatestActivityLogsAtom);
     const [, setBookings] = useAtom(BookingsAtom);
+    const [, setLatestBookings] = useAtom(LatestBookingsAtom);
     const [jwt] = useAtom(JwtAtom);
 
     useEffect(() => {
@@ -31,7 +32,7 @@ export default function useInitializeData() {
     }, [setUsers])
 
     useEffect(() => {
-        activityLogsClient.getActivityLogs().then(r => {
+        activityLogsClient.getAllActivityLogs().then(r => {
             setActivityLogs(r);
         })
     }, [setActivityLogs])
@@ -43,6 +44,14 @@ export default function useInitializeData() {
     }, [setLatestActivityLogs])
 
     useEffect(() => {
+        bookingClient.getAllBookings(jwt).then(r => {
+            setBookings(r);
+        })
+    }, [setBookings])
 
-    })
+    useEffect(() => {
+        bookingClient.getLatestBookings(jwt).then(r => {
+            setLatestBookings(r);
+        })
+    }, [setLatestBookings])
 }

@@ -9,20 +9,20 @@ public class ActivityLogsController(IActivityLogService activityLogService) : Co
 {
     public const string ControllerRoute = "api/activity-logs/";
     
-    public const string GetActivityLogsRoute = ControllerRoute + nameof(GetActivityLogs);
+    public const string GetAllActivityLogsRoute = ControllerRoute + nameof(GetAllActivityLogs);
     
     public const string GetLatestActivityLogsRoute = ControllerRoute + nameof(GetLatestActivityLogs);
     
     [HttpGet]
-    [Route(GetActivityLogsRoute)]
-    public ActionResult<List<ActivityLogDto>> GetActivityLogs()
+    [Route(GetAllActivityLogsRoute)]
+    public ActionResult<List<ActivityLogResponseDto>> GetAllActivityLogs()
     {
-        return Ok(activityLogService.GetActivityLogs());
+        return Ok(activityLogService.GetAllActivityLogs());
     }
     
     [HttpGet]
     [Route(GetLatestActivityLogsRoute)]
-    public ActionResult<List<ActivityLogDto>> GetLatestActivityLogs()
+    public ActionResult<List<ActivityLogResponseDto>> GetLatestActivityLogs()
     {
         return Ok(activityLogService.GetLatestActivityLogs());
     }

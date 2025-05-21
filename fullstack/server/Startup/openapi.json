@@ -6,12 +6,12 @@
     "version": "1.0.0"
   },
   "paths": {
-    "/api/activity-logs/GetActivityLogs": {
+    "/api/activity-logs/GetAllActivityLogs": {
       "get": {
         "tags": [
           "ActivityLogs"
         ],
-        "operationId": "ActivityLogs_GetActivityLogs",
+        "operationId": "ActivityLogs_GetAllActivityLogs",
         "responses": {
           "200": {
             "description": "",
@@ -20,7 +20,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ActivityLogDto"
+                    "$ref": "#/components/schemas/ActivityLogResponseDto"
                   }
                 }
               }
@@ -43,7 +43,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ActivityLogDto"
+                    "$ref": "#/components/schemas/ActivityLogResponseDto"
                   }
                 }
               }
@@ -403,6 +403,16 @@
           "Booking"
         ],
         "operationId": "Booking_CreateBooking",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 2
+          }
+        ],
         "requestBody": {
           "x-name": "dto",
           "content": {
@@ -422,6 +432,72 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BookingResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/booking/GetAllBookings": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "operationId": "Booking_GetAllBookings",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BookingResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/booking/GetLatestBookings": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "operationId": "Booking_GetLatestBookings",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BookingResponseDto"
+                  }
                 }
               }
             }
@@ -755,7 +831,7 @@
   },
   "components": {
     "schemas": {
-      "ActivityLogDto": {
+      "ActivityLogResponseDto": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
@@ -1044,7 +1120,10 @@
           "userId": {
             "type": "string"
           },
-          "serviceId": {
+          "serviceName": {
+            "type": "string"
+          },
+          "email": {
             "type": "string"
           },
           "date": {

@@ -12,6 +12,10 @@ public class BookingController(IBookingService bookingService, ISecurityService 
     
     public const string CreateBookingRoute = ControllerRoute + nameof(CreateBooking);
     
+    public const string GetAllBookingsRoute = ControllerRoute + nameof(GetAllBookings);
+    
+    public const string GetLatestBookingsRoute = ControllerRoute + nameof(GetLatestBookings);
+    
     public const string DeleteBookingRoute = ControllerRoute + nameof(DeleteBooking);
     
     public const string GetAvailabilitySlotsRoute = ControllerRoute + nameof(GetAvailabilitySlots);
@@ -27,6 +31,29 @@ public class BookingController(IBookingService bookingService, ISecurityService 
             return Unauthorized();
         }
         return Ok(bookingService.CreateBooking(dto));
+    }
+    [HttpGet]
+    [Route(GetAllBookingsRoute)]
+    public ActionResult<List<BookingResponseDto>> GetAllBookings([FromHeader] string authorization)
+    {
+        var jwt = security.VerifyJwtOrThrow(authorization);
+        if (jwt.Role != "Admin")
+        {
+            return Unauthorized();
+        }
+        return Ok(bookingService.GetAllBookings());
+    }
+    
+    [HttpGet]
+    [Route(GetLatestBookingsRoute)]
+    public ActionResult<List<BookingResponseDto>> GetLatestBookings([FromHeader] string authorization)
+    {
+        var jwt = security.VerifyJwtOrThrow(authorization);
+        if (jwt.Role != "Admin")
+        {
+            return Unauthorized();
+        }
+        return Ok(bookingService.GetLatestBookings());
     }
     
     [HttpDelete]

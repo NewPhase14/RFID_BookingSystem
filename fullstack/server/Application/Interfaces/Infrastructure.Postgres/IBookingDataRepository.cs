@@ -5,6 +5,10 @@ namespace Application.Interfaces.Infrastructure.Postgres;
 public interface IBookingDataRepository
 {
     Booking CreateBooking(Booking booking);
+    
+    List<Booking> GetAllBookings();
+    
+    List<Booking> GetLatestBookings();
 
     Booking DeleteBooking(string id);
     

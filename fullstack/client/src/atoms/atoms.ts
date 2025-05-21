@@ -1,6 +1,6 @@
 import {atom} from 'jotai';
 import {
-    ActivityLogDto, BookingResponseDto,
+    ActivityLogResponseDto, BookingResponseDto,
     ServiceResponseDto,
     UserResponseDto
 } from '../models/generated-client.ts';
@@ -15,8 +15,10 @@ export const BookingsAtom = atom<BookingResponseDto[]>([]);
 
 export const ServicesAtom = atom<ServiceResponseDto[]>([]);
 
-export const LatestActivityLogsAtom = atom<ActivityLogDto[]>([]);
+export const LatestActivityLogsAtom = atom<ActivityLogResponseDto[]>([]);
 
-export const ActivityLogsAtom = atom<ActivityLogDto[]>([]);
+export const LatestBookingsAtom = atom<BookingResponseDto[]>([]);
+
+export const ActivityLogsAtom = atom<ActivityLogResponseDto[]>([]);
 
 export const CreatedServiceAtom = atom<ServiceResponseDto>();
