@@ -13,7 +13,7 @@ import AccountActivation from "./AccountActivation/AccountActivation.tsx";
 import ForgotPassword from "./ForgotPassword/ForgotPassword.tsx";
 import ResetPassword from "./ResetPassword/ResetPassword.tsx";
 const baseUrl = import.meta.env.VITE_API_BASE_URL
-const prod = import.meta.env
+const prod = import.meta.env.PROD
 
 export const randomUid = crypto.randomUUID()
 
