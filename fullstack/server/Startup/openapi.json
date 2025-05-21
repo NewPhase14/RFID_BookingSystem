@@ -29,6 +29,29 @@
         }
       }
     },
+    "/api/activity-logs/GetLatestActivityLogs": {
+      "get": {
+        "tags": [
+          "ActivityLogs"
+        ],
+        "operationId": "ActivityLogs_GetLatestActivityLogs",
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ActivityLogDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/auth/Login": {
       "post": {
         "tags": [
@@ -267,6 +290,44 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/AvailabilityResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/availability/CreateAllAvailabilities": {
+      "post": {
+        "tags": [
+          "Availability"
+        ],
+        "operationId": "Availability_CreateAllAvailabilities",
+        "requestBody": {
+          "x-name": "dtos",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/AvailabilityCreateRequestDto"
+                }
+              }
+            }
+          },
+          "required": true,
+          "x-position": 1
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AvailabilityResponseDto"
+                  }
                 }
               }
             }
@@ -566,7 +627,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/GetServiceResponseDto"
+                    "$ref": "#/components/schemas/ServiceResponseDto"
                   }
                 }
               }
@@ -597,7 +658,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/GetServiceResponseDto"
+                  "$ref": "#/components/schemas/ServiceResponseDto"
                 }
               }
             }
@@ -859,13 +920,32 @@
       "AvailabilityResponseDto": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "message"
-        ],
         "properties": {
-          "message": {
+          "id": {
+            "type": "string"
+          },
+          "serviceId": {
+            "type": "string"
+          },
+          "dayOfWeek": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "availableFrom": {
             "type": "string",
-            "minLength": 1
+            "format": "time"
+          },
+          "availableTo": {
+            "type": "string",
+            "format": "time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -1009,11 +1089,43 @@
         "type": "object",
         "additionalProperties": false,
         "required": [
-          "message"
+          "id",
+          "name",
+          "description",
+          "imageUrl",
+          "publicId",
+          "createdAt",
+          "updatedAt"
         ],
         "properties": {
-          "message": {
+          "id": {
             "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "imageUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "publicId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "minLength": 1
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
             "minLength": 1
           }
         }
@@ -1074,51 +1186,6 @@
           }
         }
       },
-      "GetServiceResponseDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "required": [
-          "id",
-          "name",
-          "description",
-          "imageUrl",
-          "publicId",
-          "createdAt",
-          "updatedAt"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "minLength": 1
-          },
-          "name": {
-            "type": "string",
-            "minLength": 1
-          },
-          "description": {
-            "type": "string",
-            "minLength": 1
-          },
-          "imageUrl": {
-            "type": "string",
-            "minLength": 1
-          },
-          "publicId": {
-            "type": "string",
-            "minLength": 1
-          },
-          "createdAt": {
-            "type": "string",
-            "format": "date-time",
-            "minLength": 1
-          },
-          "updatedAt": {
-            "type": "string",
-            "format": "date-time",
-            "minLength": 1
-          }
-        }
-      },
       "UserResponseDto": {
         "type": "object",
         "additionalProperties": false,
@@ -1142,12 +1209,10 @@
             "type": "string"
           },
           "createdAt": {
-            "type": "string",
-            "format": "date-time"
+            "type": "string"
           },
           "updatedAt": {
-            "type": "string",
-            "format": "date-time"
+            "type": "string"
           }
         }
       },

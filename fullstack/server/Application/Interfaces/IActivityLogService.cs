@@ -5,4 +5,6 @@ namespace Application.Interfaces;
 public interface IActivityLogService
 {
     List<ActivityLogDto> GetActivityLogs();
+    
+    List<ActivityLogDto> GetLatestActivityLogs();
 }

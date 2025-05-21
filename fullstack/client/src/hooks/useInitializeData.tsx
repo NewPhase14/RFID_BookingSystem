@@ -1,11 +1,13 @@
 import {useAtom} from "jotai";
-import {JwtAtom, ServicesAtom, UsersAtom} from "../atoms/atoms.ts";
+import {ActivityLogsAtom, JwtAtom, LatestActivityLogsAtom, ServicesAtom, UsersAtom,} from "../atoms/atoms.ts";
 import {useEffect} from "react";
-import {serviceClient, userClient} from "../apiControllerClients.ts";
+import {activityLogsClient, serviceClient, userClient} from "../apiControllerClients.ts";
 
 export default function useInitializeData() {
-    const [users, setUsers] = useAtom(UsersAtom);
-    const [services, setServices] = useAtom(ServicesAtom);
+    const [, setUsers] = useAtom(UsersAtom);
+    const [, setServices] = useAtom(ServicesAtom);
+    const [, setActivityLogs] = useAtom(ActivityLogsAtom);
+    const [, setLatestActivityLogs] = useAtom(LatestActivityLogsAtom);
     const [jwt] = useAtom(JwtAtom);
 
     useEffect(() => {
@@ -19,4 +21,16 @@ export default function useInitializeData() {
             setUsers(r);
         })
     }, [setUsers])
+
+    useEffect(() => {
+        activityLogsClient.getActivityLogs().then(r => {
+            setActivityLogs(r);
+        })
+    }, [setActivityLogs])
+
+    useEffect(() => {
+        activityLogsClient.getLatestActivityLogs().then(r => {
+            setLatestActivityLogs(r);
+        })
+    }, [setLatestActivityLogs])
 }

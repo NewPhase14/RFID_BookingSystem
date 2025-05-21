@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import {AvailabilityRoute, CreateServiceRoute} from "../../../helpers/routeConstants.tsx";
+import {CreateAvailabilityRoute} from "../../../helpers/routeConstants.tsx";
 import {serviceClient} from "../../../apiControllerClients.ts";
 import {useAtom} from "jotai";
-import {JwtAtom} from "../../../atoms/atoms.ts";
+import {CreatedServiceAtom, JwtAtom, ServicesAtom} from "../../../atoms/atoms.ts";
 import {ServiceCreateRequestDto} from "../../../models/generated-client.ts";
 import toast from "react-hot-toast";
 import {useNavigate} from "react-router";
@@ -12,6 +12,8 @@ export const CreationView = () => {
     const [description, setDescription] = useState("");
     const [image, setImage] = useState("");
     const [jwt] = useAtom(JwtAtom);
+    const [, setCreatedService] = useAtom(CreatedServiceAtom);
+    const [services, setServices] = useAtom(ServicesAtom);
     const navigate = useNavigate();
     const [base64, setBase64] = useState("");
 
@@ -97,8 +99,10 @@ export const CreationView = () => {
                 <button className="flex text-sm items-center gap-2 bg-gray-800 hover:bg-gray-700 hover:text-[--color-text-baby-blue] transition-colors rounded px-3 py-1.5"
                         onClick={() => {
                             serviceClient.createService(createServiceDto, jwt).then(r => {
-                                toast.success(r.message);
-                                navigate(AvailabilityRoute);
+                                toast.success("Service created successfully!");
+                                setCreatedService(r);
+                                setServices([...services, r]);
+                                navigate(CreateAvailabilityRoute);
                             }).catch(() => {
                                 toast.error("Could not create service");
                             });

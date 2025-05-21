@@ -1,7 +1,7 @@
 import {useWsClient} from "ws-request-hook";
 import {useEffect} from "react";
 import {useAtom} from "jotai";
-import {ActivityLogAtom} from "../../atoms/atoms.ts";
+import {LatestActivityLogsAtom} from "../../atoms/atoms.ts";
 import toast from "react-hot-toast";
 
 const ActivityLogs = () => {
@@ -12,7 +12,7 @@ const ActivityLogs = () => {
         activityLogs: []
     }
 
-    const [activityLogs, setActivityLogs] = useAtom(ActivityLogAtom);
+    const [latestActivityLogs, setLatestActivityLogs] = useAtom(LatestActivityLogsAtom);
     const {onMessage, readyState} = useWsClient();
 
 
@@ -21,7 +21,7 @@ const ActivityLogs = () => {
 
         try {
             onMessage<ActivityLog>("ActivityLogsResponseDto", (dto) => {
-                setActivityLogs(dto.activityLogs);
+                setLatestActivityLogs(dto.activityLogs);
                 toast.success("Activity logs updated");
             });
         }
@@ -49,7 +49,7 @@ const ActivityLogs = () => {
             </tr>
             </thead>
             <tbody>
-            {activityLogs.map((log) => (
+            {latestActivityLogs.map((log) => (
                 <tr key={log.id}>
                     <td>{log.id}</td>
                     <td>{log.serviceName}</td>

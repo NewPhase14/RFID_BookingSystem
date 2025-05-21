@@ -18,8 +18,8 @@ public class UserService(IUserRepository userRepository) : IUserService
             LastName = user.LastName,
             RoleName = user.Role.Name,
             Email = user.Email,
-            CreatedAt = user.CreatedAt,
-            UpdatedAt = user.UpdatedAt
+            CreatedAt = user.CreatedAt.ToString("dd-MM-yyyy HH:mm"),
+            UpdatedAt = user.UpdatedAt.ToString("dd-MM-yyyy HH:mm")
         };
     }
 
@@ -35,8 +35,8 @@ public class UserService(IUserRepository userRepository) : IUserService
             LastName = user.LastName,
             RoleName = user.Role.Name,
             Email = user.Email,
-            CreatedAt = user.CreatedAt,
-            UpdatedAt = user.UpdatedAt
+            CreatedAt = user.CreatedAt.ToString("dd-MM-yyyy HH:mm"),
+            UpdatedAt = user.UpdatedAt.ToString("dd-MM-yyyy HH:mm")
         }).ToList();
     }
 }

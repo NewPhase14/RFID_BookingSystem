@@ -42,10 +42,16 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
             UpdatedAt = DateTime.Now
         };
         
-        serviceRepository.AddService(service);
+        var createdService = serviceRepository.CreateService(service);
         return new ServiceResponseDto()
         {
-            Message = "Service created successfully"
+            Id = createdService.Id,
+            Name = createdService.Name,
+            Description = createdService.Description,
+            ImageUrl = createdService.ImageUrl,
+            PublicId = createdService.PublicId,
+            CreatedAt = createdService.CreatedAt,
+            UpdatedAt = createdService.UpdatedAt
         };
     }
 
@@ -63,7 +69,13 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
         
         return new ServiceResponseDto()
         {
-            Message = "Service deleted successfully"
+            Id = service.Id,
+            Name = service.Name,
+            Description = service.Description,
+            ImageUrl = service.ImageUrl,
+            PublicId = service.PublicId,
+            CreatedAt = service.CreatedAt,
+            UpdatedAt = service.UpdatedAt
         };
     }
 
@@ -78,18 +90,24 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
             PublicId = dto.PublicId,
             UpdatedAt = DateTime.Now
         };
-        serviceRepository.UpdateService(service);
+        var updatedService = serviceRepository.UpdateService(service);
         return new ServiceResponseDto()
         {
-            Message = "Service updated successfully"
+            Id = updatedService.Id,
+            Name = updatedService.Name,
+            Description = updatedService.Description,
+            ImageUrl = updatedService.ImageUrl,
+            PublicId = updatedService.PublicId,
+            CreatedAt = updatedService.CreatedAt,
+            UpdatedAt = updatedService.UpdatedAt
         };
     }
 
-    public List<GetServiceResponseDto> GetAllServices()
+    public List<ServiceResponseDto> GetAllServices()
     {
         var services = serviceRepository.GetAllServices();
         
-        return services.Select(service => new GetServiceResponseDto
+        return services.Select(service => new ServiceResponseDto()
         {
             Id = service.Id,
             Name = service.Name,
@@ -103,11 +121,11 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
         
     }
 
-    public GetServiceResponseDto GetServiceById(string id)
+    public ServiceResponseDto GetServiceById(string id)
     {
         var services = serviceRepository.GetServiceById(id);
         
-        return new GetServiceResponseDto
+        return new ServiceResponseDto()
         {
             Id = services.Id,
             Name = services.Name,

@@ -1,5 +1,4 @@
 import {TopBar} from "./TopBar.tsx";
-import useInitializeData from "../../hooks/useInitializeData.tsx";
 import {Table} from "./Table.tsx";
 
 export const Users = () => {

@@ -12,6 +12,7 @@ export const Table = () => {
                     <th></th>
                     <th>First name</th>
                     <th>Last name</th>
+                    <th>Role</th>
                     <th>Rfid</th>
                     <th>Created at</th>
                     <th>Updated at</th>
@@ -23,6 +24,7 @@ export const Table = () => {
                         <td></td>
                         <td>{user.firstName}</td>
                         <td>{user.lastName}</td>
+                        <td>{user.roleName}</td>
                         <td>{user.rfid}</td>
                         <td>{user.createdAt}</td>
                         <td>{user.updatedAt}</td>

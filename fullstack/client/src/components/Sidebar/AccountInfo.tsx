@@ -22,7 +22,7 @@ export const AccountInfo = () => {
                         {localStorage.getItem("email")}
                     </span>
                 </div>
-                <button className="ml-8 px-2 py-1.5 bg-[--color-background-grey] hover:bg-[--color-button-grey] transition-colors rounded">
+                <button className="px-2 py-1.5 bg-[--color-background-grey] hover:bg-[--color-button-grey] transition-colors rounded">
                     <BiCog/>
                 </button>
             </div>

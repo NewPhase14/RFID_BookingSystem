@@ -27,5 +27,19 @@ public class ActivityLogService(IActivityLogsRepository activityLogsRepository) 
 
         return activityLogsDto ;
     }
-    
+
+    public List<ActivityLogDto> GetLatestActivityLogs()
+    {
+        var latestActivityLogs = activityLogsRepository.GetLatestActivityLogs();
+
+        return latestActivityLogs.Select(activityLog => new ActivityLogDto
+        {
+            Id = activityLog.Id,
+            Date = activityLog.AttemptedAt.ToString("dd-MM-yyyy"),
+            Time = activityLog.AttemptedAt.ToString("HH:mm:ss"),
+            ServiceName = activityLog.Service.Name,
+            Fullname = activityLog.User.FirstName + " " + activityLog.User.LastName,
+            Status = activityLog.Status
+        }).ToList();
+    }
 }

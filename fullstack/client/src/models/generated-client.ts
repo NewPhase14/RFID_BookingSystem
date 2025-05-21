@@ -51,6 +51,39 @@ export class ActivityLogsClient {
         }
         return Promise.resolve<ActivityLogDto[]>(null as any);
     }
+
+    getLatestActivityLogs(): Promise<ActivityLogDto[]> {
+        let url_ = this.baseUrl + "/api/activity-logs/GetLatestActivityLogs";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetLatestActivityLogs(_response);
+        });
+    }
+
+    protected processGetLatestActivityLogs(response: Response): Promise<ActivityLogDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ActivityLogDto[];
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<ActivityLogDto[]>(null as any);
+    }
 }
 
 export class AuthClient {
@@ -369,6 +402,43 @@ export class AvailabilityClient {
             });
         }
         return Promise.resolve<AvailabilityResponseDto>(null as any);
+    }
+
+    createAllAvailabilities(dtos: AvailabilityCreateRequestDto[]): Promise<AvailabilityResponseDto[]> {
+        let url_ = this.baseUrl + "/api/availability/CreateAllAvailabilities";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dtos);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processCreateAllAvailabilities(_response);
+        });
+    }
+
+    protected processCreateAllAvailabilities(response: Response): Promise<AvailabilityResponseDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as AvailabilityResponseDto[];
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<AvailabilityResponseDto[]>(null as any);
     }
 
     deleteAvailability(id: string | undefined): Promise<AvailabilityResponseDto> {
@@ -703,7 +773,7 @@ export class ServiceClient {
         return Promise.resolve<ServiceResponseDto>(null as any);
     }
 
-    getAllServices(): Promise<GetServiceResponseDto[]> {
+    getAllServices(): Promise<ServiceResponseDto[]> {
         let url_ = this.baseUrl + "/api/service/GetAllServices";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -719,13 +789,13 @@ export class ServiceClient {
         });
     }
 
-    protected processGetAllServices(response: Response): Promise<GetServiceResponseDto[]> {
+    protected processGetAllServices(response: Response): Promise<ServiceResponseDto[]> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as GetServiceResponseDto[];
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ServiceResponseDto[];
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -733,10 +803,10 @@ export class ServiceClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<GetServiceResponseDto[]>(null as any);
+        return Promise.resolve<ServiceResponseDto[]>(null as any);
     }
 
-    getServiceById(id: string | undefined): Promise<GetServiceResponseDto> {
+    getServiceById(id: string | undefined): Promise<ServiceResponseDto> {
         let url_ = this.baseUrl + "/api/service/GetServiceById?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -756,13 +826,13 @@ export class ServiceClient {
         });
     }
 
-    protected processGetServiceById(response: Response): Promise<GetServiceResponseDto> {
+    protected processGetServiceById(response: Response): Promise<ServiceResponseDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as GetServiceResponseDto;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as ServiceResponseDto;
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -770,7 +840,7 @@ export class ServiceClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<GetServiceResponseDto>(null as any);
+        return Promise.resolve<ServiceResponseDto>(null as any);
     }
 }
 
@@ -918,7 +988,13 @@ export interface ResetPasswordRequestDto {
 }
 
 export interface AvailabilityResponseDto {
-    message: string;
+    id?: string;
+    serviceId?: string;
+    dayOfWeek?: number;
+    availableFrom?: string;
+    availableTo?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export interface AvailabilityCreateRequestDto {
@@ -959,7 +1035,13 @@ export interface CheckBookingRequestDto {
 }
 
 export interface ServiceResponseDto {
-    message: string;
+    id: string;
+    name: string;
+    description: string;
+    imageUrl: string;
+    publicId: string;
+    createdAt: Date;
+    updatedAt: Date;
 }
 
 export interface ServiceCreateRequestDto {
@@ -976,16 +1058,6 @@ export interface ServiceUpdateRequestDto {
     publicId: string;
 }
 
-export interface GetServiceResponseDto {
-    id: string;
-    name: string;
-    description: string;
-    imageUrl: string;
-    publicId: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
 export interface UserResponseDto {
     id?: string;
     firstName?: string;
@@ -993,8 +1065,8 @@ export interface UserResponseDto {
     rfid?: string;
     email?: string;
     roleName?: string;
-    createdAt?: Date;
-    updatedAt?: Date;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 

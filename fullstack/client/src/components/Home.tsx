@@ -10,19 +10,17 @@ import {
     SignInRoute,
     LogsRoute,
     ServiceRoute,
-    UserRoute, CreateServiceRoute,
+    UserRoute, CreateServiceRoute, CreateAvailabilityRoute,
 } from "../helpers/routeConstants.tsx";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
 import { JwtAtom } from "../atoms/atoms.ts";
 import {CreateService} from "./Services/CreateService/CreateService.tsx";
-import useInitializeData from "../hooks/useInitializeData.tsx";
-import {DevTools} from "jotai-devtools";
+import {CreateAvailability} from "./Services/CreateAvailability/CreateAvailability.tsx";
 
 const Home = () => {
     const navigate = useNavigate();
     const [jwt] = useAtom(JwtAtom);
-    useInitializeData();
 
     useEffect(() => {
         if (!jwt || jwt.length < 1) {
@@ -47,6 +45,7 @@ const Home = () => {
                 <Route element={<Users />} path={UserRoute} />
                 <Route element={<ActivityLogs />} path={LogsRoute} />
                 <Route element={<CreateService/>} path={CreateServiceRoute} />
+                <Route element={<CreateAvailability/>} path={CreateAvailabilityRoute}/>
             </Routes>
         </main>
     );

@@ -55,7 +55,7 @@ export const TopBar = () => {
                     Welcome back, {localStorage.getItem("firstname")}
                     </span>
                     <span className="text-xs block">
-                    {Date()}
+                    {Date().split("G")[0]}
                     </span>
                 </div>
                 <button className="flex text-sm items-center gap-2 bg-gray-800 hover:bg-gray-700 hover:text-[--color-text-baby-blue] transition-colors rounded px-3 py-1.5"

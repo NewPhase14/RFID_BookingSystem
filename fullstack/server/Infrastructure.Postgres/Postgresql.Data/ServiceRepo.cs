@@ -6,10 +6,11 @@ namespace Infrastructure.Postgres.Postgresql.Data;
 
 public class ServiceRepo(MyDbContext ctx) : IServiceRepository
 {
-    public void AddService(Service service)
+    public Service CreateService(Service service)
     {
-        ctx.Services.Add(service);
+        var createdService = ctx.Services.Add(service);
         ctx.SaveChanges();
+        return createdService.Entity;
     }
 
     public Service DeleteService(string id)
@@ -25,7 +26,7 @@ public class ServiceRepo(MyDbContext ctx) : IServiceRepository
         return service;
     }
 
-    public void UpdateService(Service service)
+    public Service UpdateService(Service service)
     {
         var existingService = ctx.Services.FirstOrDefault(s => s.Id == service.Id);
         if (existingService == null)
@@ -35,8 +36,10 @@ public class ServiceRepo(MyDbContext ctx) : IServiceRepository
         existingService.Name = service.Name;
         existingService.Description = service.Description;
         existingService.ImageUrl = service.ImageUrl;
-        ctx.Services.Update(existingService);
+        existingService.UpdatedAt = DateTime.Now;
+        var updatedService = ctx.Services.Update(existingService);
         ctx.SaveChanges();
+        return updatedService.Entity;
     }
 
     public List<Service> GetAllServices()

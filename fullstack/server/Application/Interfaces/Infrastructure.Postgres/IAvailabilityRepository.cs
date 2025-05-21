@@ -5,11 +5,13 @@ namespace Application.Interfaces.Infrastructure.Postgres;
 
 public interface IAvailabilityRepository
 {
-    void AddAvailability(ServiceAvailability availability);
+    ServiceAvailability CreateAvailability(ServiceAvailability availability);
+    
+    List<ServiceAvailability> CreateAllAvailabilities(List<ServiceAvailability> availabilities);
     
     ServiceAvailability GetAvailability(Booking booking, int bookingDay);
     
-    void UpdateAvailability(ServiceAvailability availability);
+    ServiceAvailability UpdateAvailability(ServiceAvailability availability);
     
-    void DeleteAvailability(string id);     
+    ServiceAvailability DeleteAvailability(string id);     
 }

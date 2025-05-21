@@ -7,7 +7,7 @@ public class UserResponseDto
     public string LastName { get; set; } = null!;
     public string Rfid { get; set; } = null!;
     public string Email { get; set; } = null!;
-    public string RoleName { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public string RoleName { get; set; } = null!;
+    public string CreatedAt { get; set; } = null!;
+    public string UpdatedAt { get; set; } = null!;
 }

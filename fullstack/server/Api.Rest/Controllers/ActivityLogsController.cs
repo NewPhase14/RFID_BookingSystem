@@ -11,11 +11,21 @@ public class ActivityLogsController(IActivityLogService activityLogService) : Co
     
     public const string GetActivityLogsRoute = ControllerRoute + nameof(GetActivityLogs);
     
+    public const string GetLatestActivityLogsRoute = ControllerRoute + nameof(GetLatestActivityLogs);
+    
     [HttpGet]
     [Route(GetActivityLogsRoute)]
     public ActionResult<List<ActivityLogDto>> GetActivityLogs()
     {
         return Ok(activityLogService.GetActivityLogs());
     }
+    
+    [HttpGet]
+    [Route(GetLatestActivityLogsRoute)]
+    public ActionResult<List<ActivityLogDto>> GetLatestActivityLogs()
+    {
+        return Ok(activityLogService.GetLatestActivityLogs());
+    }
+    
     
 }

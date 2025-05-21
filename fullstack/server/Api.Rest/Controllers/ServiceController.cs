@@ -48,14 +48,14 @@ public class ServiceController(IServiceService serviceService, ISecurityService 
     
     [HttpGet]
     [Route(GetAllServicesRoute)]
-    public ActionResult<List<GetServiceResponseDto>> GetAllServices()
+    public ActionResult<List<ServiceResponseDto>> GetAllServices()
     {
         return Ok(serviceService.GetAllServices());
     }
     
     [HttpGet]
     [Route(GetServiceByIdRoute)]
-    public ActionResult<GetServiceResponseDto> GetServiceById(string id)
+    public ActionResult<ServiceResponseDto> GetServiceById(string id)
     {
         return Ok(serviceService.GetServiceById(id));
     }
