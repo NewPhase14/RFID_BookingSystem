@@ -19,6 +19,12 @@ public class BookingController(IBookingService bookingService, ISecurityService 
     public const string DeleteBookingRoute = ControllerRoute + nameof(DeleteBooking);
     
     public const string GetAvailabilitySlotsRoute = ControllerRoute + nameof(GetAvailabilitySlots);
+    
+    public const string GetTodaysBookingsByUserIdRoute = ControllerRoute + nameof(GetTodaysBookingsByUserId);
+    
+    public const string GetFutureBookingsByUserIdRoute = ControllerRoute + nameof(GetFutureBookingsByUserId);
+    
+    public const string GetPastBookingsByUserIdRoute = ControllerRoute + nameof(GetPastBookingsByUserId);
 
     
     [HttpPost]
@@ -73,5 +79,27 @@ public class BookingController(IBookingService bookingService, ISecurityService 
     public ActionResult<List<AvailabiltySlotsDto>> GetAvailabilitySlots(string serviceId)
     {
         return Ok(bookingService.GetAvailabilitySlots(serviceId));
+    }
+    
+    [HttpGet]
+    [Route(GetTodaysBookingsByUserIdRoute)]
+    public ActionResult<List<BookingResponseDto>> GetTodaysBookingsByUserId(string userId)
+    {
+        
+        return Ok(bookingService.GetTodaysBookingsByUserId(userId));
+    }
+    
+    [HttpGet]
+    [Route(GetFutureBookingsByUserIdRoute)]
+    public ActionResult<List<BookingResponseDto>> GetFutureBookingsByUserId(string userId)
+    {
+        return Ok(bookingService.GetFutureBookingsByUserId(userId));
+    }
+    
+    [HttpGet]
+    [Route(GetPastBookingsByUserIdRoute)]
+    public ActionResult<List<BookingResponseDto>> GetPastBookingsByUserId(string userId)
+    {
+        return Ok(bookingService.GetPastBookingsByUserId(userId));
     }
 }

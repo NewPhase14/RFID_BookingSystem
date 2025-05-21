@@ -14,4 +14,9 @@ public interface IBookingService
     public BookingResponseDto DeleteBooking(string id);
     
     public List<AvailabiltySlotsDto> GetAvailabilitySlots(string serviceId);
+    
+    List<BookingResponseDto> GetTodaysBookingsByUserId(string userId);
+    List<BookingResponseDto> GetFutureBookingsByUserId(string userId);
+    List<BookingResponseDto> GetPastBookingsByUserId(string userId);
+    
 }

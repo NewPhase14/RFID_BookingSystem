@@ -56,5 +56,57 @@ public class BookingRepo(MyDbContext ctx) : IBookingDataRepository
             booking.StartTime < b.EndTime && b.Date == booking.Date
         );
     }
+
+    public List<Booking> GetFutureBookingsByUserId(string userId)
+    {
+        var now = DateTime.Now;
+        var today = DateOnly.FromDateTime(now);
+        var currentTime = TimeOnly.FromDateTime(now);
+
+        var bookings = ctx.Bookings
+            .Include(b => b.Service)
+            .Include(b => b.User)
+            .Where(b => b.UserId == userId &&
+                        (b.Date > today || (b.Date == today && b.StartTime > currentTime)))
+            .OrderBy(b => b.Date)
+            .ThenBy(b => b.StartTime)
+            .ToList();
+
+        return bookings;
+    }
+
+    public List<Booking> GetPastBookingsByUserId(string userId)
+    {
+        var now = DateTime.Now;
+        var today = DateOnly.FromDateTime(now);
+        var currentTime = TimeOnly.FromDateTime(now);
+
+        var bookings = ctx.Bookings
+            .Include(b => b.Service)
+            .Include(b => b.User)
+            .Where(b => b.UserId == userId &&
+                        (b.Date < today || (b.Date == today && b.EndTime < currentTime)))
+            .OrderByDescending(b => b.Date)
+            .ThenByDescending(b => b.StartTime)
+            .ToList();
+
+        return bookings;
+    }
+
+
+    public List<Booking> GetTodaysBookingsByUserId(string userId)
+    {
+        var today = DateOnly.FromDateTime(DateTime.Now);
+
+        var bookings = ctx.Bookings
+            .Include(b => b.Service)
+            .Include(b => b.User)
+            .Where(b => b.UserId == userId && b.Date == today)
+            .OrderBy(b => b.StartTime)
+            .ToList();
+
+        return bookings;
+    }
     
+       
 }

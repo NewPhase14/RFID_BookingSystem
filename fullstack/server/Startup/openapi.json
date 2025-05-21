@@ -576,6 +576,105 @@
         }
       }
     },
+    "/api/booking/GetTodaysBookingsByUserId": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "operationId": "Booking_GetTodaysBookingsByUserId",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BookingResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/booking/GetFutureBookingsByUserId": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "operationId": "Booking_GetFutureBookingsByUserId",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BookingResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/booking/GetPastBookingsByUserId": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "operationId": "Booking_GetPastBookingsByUserId",
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/BookingResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/checking/CheckBookingRequest": {
       "post": {
         "tags": [

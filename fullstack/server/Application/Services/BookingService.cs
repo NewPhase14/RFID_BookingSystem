@@ -176,4 +176,58 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
         return availabilitySlots;
         
     }
+
+    public List<BookingResponseDto> GetTodaysBookingsByUserId(string userId)
+    {
+        var bookings = bookingRepository.GetTodaysBookingsByUserId(userId);
+
+        return bookings.Select(b => new BookingResponseDto()
+        {
+            Id = b.Id,
+            UserId = b.UserId,
+            ServiceName = b.Service.Name,
+            Email = b.User.Email,
+            Date = b.Date.ToString("dd-MM-yyyy"),
+            StartTime = b.StartTime.ToString("HH:mm"),
+            EndTime = b.EndTime.ToString("HH:mm"),
+            CreatedAt = b.CreatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
+            UpdatedAt = b.UpdatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
+        }).ToList();
+    }
+
+    public List<BookingResponseDto> GetFutureBookingsByUserId(string userId)
+    {
+        var bookings = bookingRepository.GetFutureBookingsByUserId(userId);
+
+        return bookings.Select(b => new BookingResponseDto()
+        {
+            Id = b.Id,
+            UserId = b.UserId,
+            ServiceName = b.Service.Name,
+            Email = b.User.Email,
+            Date = b.Date.ToString("dd-MM-yyyy"),
+            StartTime = b.StartTime.ToString("HH:mm"),
+            EndTime = b.EndTime.ToString("HH:mm"),
+            CreatedAt = b.CreatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
+            UpdatedAt = b.UpdatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
+        }).ToList();
+    }
+
+    public List<BookingResponseDto> GetPastBookingsByUserId(string userId)
+    {
+        var bookings = bookingRepository.GetPastBookingsByUserId(userId);
+
+        return bookings.Select(b => new BookingResponseDto()
+        {
+            Id = b.Id,
+            UserId = b.UserId,
+            ServiceName = b.Service.Name,
+            Email = b.User.Email,
+            Date = b.Date.ToString("dd-MM-yyyy"),
+            StartTime = b.StartTime.ToString("HH:mm"),
+            EndTime = b.EndTime.ToString("HH:mm"),
+            CreatedAt = b.CreatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
+            UpdatedAt = b.UpdatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
+        }).ToList();
+    }
 }

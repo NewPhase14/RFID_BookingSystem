@@ -13,4 +13,10 @@ public interface IBookingDataRepository
     Booking DeleteBooking(string id);
     
     bool BookingOverlapping(Booking booking);
+    
+    List<Booking> GetFutureBookingsByUserId(string userId);
+    
+    List<Booking> GetPastBookingsByUserId(string userId);
+    
+    List<Booking> GetTodaysBookingsByUserId(string userId);
 }
