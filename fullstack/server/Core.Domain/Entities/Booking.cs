@@ -11,9 +11,11 @@ public partial class Booking
 
     public string ServiceId { get; set; } = null!;
 
-    public DateTime StartTime { get; set; }
+    public DateOnly Date { get; set; }
 
-    public DateTime EndTime { get; set; }
+    public TimeOnly StartTime { get; set; }
+
+    public TimeOnly EndTime { get; set; }
 
     public DateTime CreatedAt { get; set; }
 

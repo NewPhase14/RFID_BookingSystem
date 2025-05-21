@@ -1,10 +1,8 @@
 using Application.Interfaces;
 using Application.Interfaces.Infrastructure.Postgres;
-using Application.Models;
 using Application.Models.Dtos.Availability;
 using Application.Models.Dtos.Booking;
 using Core.Domain.Entities;
-using Microsoft.Extensions.Options;
 
 namespace Application.Services;
 
@@ -17,38 +15,40 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
             Id = Guid.NewGuid().ToString(),
             UserId = dto.UserId,
             ServiceId = dto.ServiceId,
+            Date = dto.Date,
             StartTime = dto.StartTime,
             EndTime = dto.EndTime,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
 
         };
-        if (CanCreateBooking(booking))
-        {
-            bookingRepository.AddBooking(booking);
-            return new BookingResponseDto()
-            {
-                Message = "Booking created successfully",
-            };
-        }
+        if (!CanCreateBooking(booking)) throw new InvalidOperationException("Booking could not be created.");
         
+        var createdBooking = bookingRepository.CreateBooking(booking);
         return new BookingResponseDto()
         {
-            Message = "Booking creation failed",
+            Id = createdBooking.Id,
+            UserId = createdBooking.UserId,
+            ServiceId = createdBooking.ServiceId,
+            Date = createdBooking.Date.ToString("dd-MM-yyyy"),
+            StartTime = createdBooking.StartTime.ToString(),
+            EndTime = createdBooking.EndTime.ToString(),
+            CreatedAt = createdBooking.CreatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
+            UpdatedAt = createdBooking.UpdatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
         };
     }
 
     private bool CanCreateBooking(Booking newBooking)
     {
-        var bookingDay = (int)newBooking.StartTime.DayOfWeek;
+        var bookingDay = (int)newBooking.Date.DayOfWeek;
 
         var availability =  availabilityRepository.GetAvailability(newBooking, bookingDay);
 
         if (availability == null)
             throw new InvalidOperationException("No availability for this service on the selected day.");
 
-        var startTime = TimeOnly.FromTimeSpan(newBooking.StartTime.TimeOfDay);
-        var endTime = TimeOnly.FromTimeSpan(newBooking.EndTime.TimeOfDay);
+        var startTime = newBooking.StartTime;
+        var endTime = newBooking.EndTime;
 
         if (startTime < availability.AvailableFrom || endTime > availability.AvailableTo)
             throw new InvalidOperationException("Booking time is outside the available service hours.");
@@ -64,10 +64,17 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
 
     public BookingResponseDto DeleteBooking(string id)
     {
-        bookingRepository.DeleteBooking(id);
+        var deletedBooking = bookingRepository.DeleteBooking(id);
         return new BookingResponseDto()
         {
-            Message = "Booking deleted successfully",
+            Id = deletedBooking.Id,
+            UserId = deletedBooking.UserId,
+            ServiceId = deletedBooking.ServiceId,
+            Date = deletedBooking.Date.ToString("dd-MM-yyyy"),
+            StartTime = deletedBooking.StartTime.ToString(),
+            EndTime = deletedBooking.EndTime.ToString(),
+            CreatedAt = deletedBooking.CreatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
+            UpdatedAt = deletedBooking.UpdatedAt.ToString("dd-MM-yyyy HH:mm:ss"),
         };
     }
 

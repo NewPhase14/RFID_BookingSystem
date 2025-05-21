@@ -1,7 +1,12 @@
 import React from 'react'
 import {FiTrendingDown, FiTrendingUp} from "react-icons/fi";
+import {useAtom} from "jotai";
+import {ServicesAtom, UsersAtom} from "../../atoms/atoms.ts";
 
 export const StatCards = () => {
+    const [services] = useAtom(ServicesAtom);
+    const [users] = useAtom(UsersAtom);
+
     return <>
         <Card
             title="Bookings Today"
@@ -12,14 +17,14 @@ export const StatCards = () => {
         />
         <Card
             title="Users"
-            value="176"
+            value={users.length.toString()}
             pillText="10%"
             trend="down"
             period="From Jan 1st - Apr 30th"
         />
         <Card
             title="Services"
-            value="20"
+            value={services.length.toString()}
             pillText="5%"
             trend="up"
             period="Previous 365 days"

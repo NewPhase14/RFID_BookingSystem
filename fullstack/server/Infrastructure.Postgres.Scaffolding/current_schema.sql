@@ -42,12 +42,12 @@ CREATE TABLE bookings (
                           id TEXT PRIMARY KEY,
                           user_id TEXT NOT NULL REFERENCES users(id),
                           service_id TEXT NOT NULL REFERENCES services(id),
-                          start_time TIMESTAMP NOT NULL,
-                          end_time TIMESTAMP NOT NULL,
+                          date DATE NOT NULL,
+                          start_time TIME NOT NULL,
+                          end_time TIME NOT NULL,
                           created_at TIMESTAMP NOT NULL,
                           updated_at TIMESTAMP NOT NULL,
                           CONSTRAINT time_valid CHECK ( start_time < end_time )
-
 );
 
 

@@ -65,13 +65,10 @@ public partial class MyDbContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("created_at");
-            entity.Property(e => e.EndTime)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("end_time");
+            entity.Property(e => e.Date).HasColumnName("date");
+            entity.Property(e => e.EndTime).HasColumnName("end_time");
             entity.Property(e => e.ServiceId).HasColumnName("service_id");
-            entity.Property(e => e.StartTime)
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("start_time");
+            entity.Property(e => e.StartTime).HasColumnName("start_time");
             entity.Property(e => e.UpdatedAt)
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("updated_at");

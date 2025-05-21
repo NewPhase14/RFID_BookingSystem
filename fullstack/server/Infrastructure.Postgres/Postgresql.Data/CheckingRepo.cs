@@ -27,7 +27,15 @@ public class CheckingRepo(MyDbContext ctx) : ICheckingRepository
         {
             if (booking.ServiceId == serviceId)
             {
-                if (booking.StartTime <= DateTime.Now && booking.EndTime >= DateTime.Now)
+                DateTime today = DateTime.Now;
+                if (booking.Date != DateOnly.FromDateTime(today))
+                {
+                    throw new InvalidOperationException("Booking date is not today");
+                }
+                {
+                    
+                }
+                if (booking.StartTime <= TimeOnly.FromDateTime(today) && booking.EndTime >= TimeOnly.FromDateTime(today))
                 {
                     isValid = true;
                     userId = booking.UserId;

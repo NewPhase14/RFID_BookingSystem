@@ -403,16 +403,6 @@
           "Booking"
         ],
         "operationId": "Booking_CreateBooking",
-        "parameters": [
-          {
-            "name": "authorization",
-            "in": "header",
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 2
-          }
-        ],
         "requestBody": {
           "x-name": "dto",
           "content": {
@@ -1047,13 +1037,30 @@
       "BookingResponseDto": {
         "type": "object",
         "additionalProperties": false,
-        "required": [
-          "message"
-        ],
         "properties": {
-          "message": {
-            "type": "string",
-            "minLength": 1
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "serviceId": {
+            "type": "string"
+          },
+          "date": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
           }
         }
       },
@@ -1063,6 +1070,7 @@
         "required": [
           "userId",
           "serviceId",
+          "date",
           "startTime",
           "endTime"
         ],
@@ -1075,14 +1083,19 @@
             "type": "string",
             "minLength": 1
           },
+          "date": {
+            "type": "string",
+            "format": "date",
+            "minLength": 1
+          },
           "startTime": {
             "type": "string",
-            "format": "date-time",
+            "format": "time",
             "minLength": 1
           },
           "endTime": {
             "type": "string",
-            "format": "date-time",
+            "format": "time",
             "minLength": 1
           }
         }

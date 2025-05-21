@@ -526,7 +526,7 @@ export class BookingClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    createBooking(dto: BookingCreateRequestDto, authorization: string | undefined): Promise<BookingResponseDto> {
+    createBooking(dto: BookingCreateRequestDto): Promise<BookingResponseDto> {
         let url_ = this.baseUrl + "/api/booking/CreateBooking";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -536,7 +536,6 @@ export class BookingClient {
             body: content_,
             method: "POST",
             headers: {
-                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             }
@@ -1052,14 +1051,22 @@ export interface AvailabilityUpdateRequestDto {
 }
 
 export interface BookingResponseDto {
-    message: string;
+    id?: string;
+    userId?: string;
+    serviceId?: string;
+    date?: string;
+    startTime?: string;
+    endTime?: string;
+    updatedAt?: string;
+    createdAt?: string;
 }
 
 export interface BookingCreateRequestDto {
     userId: string;
     serviceId: string;
-    startTime: Date;
-    endTime: Date;
+    date: Date;
+    startTime: string;
+    endTime: string;
 }
 
 export interface AvailabiltySlotsDto {

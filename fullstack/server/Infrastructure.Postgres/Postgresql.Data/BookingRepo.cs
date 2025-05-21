@@ -7,13 +7,14 @@ namespace Infrastructure.Postgres.Postgresql.Data;
 
 public class BookingRepo(MyDbContext ctx) : IBookingDataRepository
 {
-    public void AddBooking(Booking booking)
+    public Booking CreateBooking(Booking booking)
     {
-        ctx.Bookings.Add(booking);
+        var createdBooking = ctx.Bookings.Add(booking);
         ctx.SaveChanges();
+        return createdBooking.Entity;
     }
 
-    public void DeleteBooking(string id)
+    public Booking DeleteBooking(string id)
     {
         var booking = ctx.Bookings.FirstOrDefault(b => b.Id == id);
         if (booking == null)
@@ -22,6 +23,7 @@ public class BookingRepo(MyDbContext ctx) : IBookingDataRepository
         }
         ctx.Bookings.Remove(booking);
         ctx.SaveChanges();
+        return booking;
     }
 
     public bool BookingOverlapping(Booking booking)
@@ -29,7 +31,7 @@ public class BookingRepo(MyDbContext ctx) : IBookingDataRepository
         return  ctx.Bookings.Any(b =>
             b.ServiceId == booking.ServiceId &&
             b.StartTime < booking.EndTime &&
-            booking.StartTime < b.EndTime
+            booking.StartTime < b.EndTime && b.Date == booking.Date
         );
     }
     
