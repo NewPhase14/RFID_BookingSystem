@@ -14,4 +14,6 @@ public interface IAvailabilityRepository
     ServiceAvailability UpdateAvailability(ServiceAvailability availability);
     
     ServiceAvailability DeleteAvailability(string id);     
+    
+    ServiceAvailability GetAvailabilityForServiceAndDay(string serviceId, int dayOfWeek);
 }

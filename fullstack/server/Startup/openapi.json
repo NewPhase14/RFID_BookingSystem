@@ -477,6 +477,39 @@
         }
       }
     },
+    "/api/booking/GetAvailabilitySlots": {
+      "get": {
+        "tags": [
+          "Booking"
+        ],
+        "operationId": "Booking_GetAvailabilitySlots",
+        "parameters": [
+          {
+            "name": "serviceId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AvailabiltySlotsDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/checking/CheckBookingRequest": {
       "post": {
         "tags": [
@@ -1051,6 +1084,23 @@
             "type": "string",
             "format": "date-time",
             "minLength": 1
+          }
+        }
+      },
+      "AvailabiltySlotsDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string",
+            "format": "time"
+          },
+          "endTime": {
+            "type": "string",
+            "format": "time"
           }
         }
       },

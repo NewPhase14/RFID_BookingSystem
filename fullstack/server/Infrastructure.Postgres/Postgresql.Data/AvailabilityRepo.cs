@@ -56,4 +56,10 @@ public class AvailabilityRepo(MyDbContext ctx) : IAvailabilityRepository
         ctx.SaveChanges();
         return deletedAvailability.Entity;
     }
+    
+    public ServiceAvailability GetAvailabilityForServiceAndDay(string serviceId, int dayOfWeek)
+    {
+        return ctx.ServiceAvailabilities
+            .FirstOrDefault(a => a.ServiceId == serviceId && a.DayOfWeek == dayOfWeek); 
+    }
 }

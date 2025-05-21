@@ -1,4 +1,5 @@
 using Application.Interfaces;
+using Application.Models.Dtos.Availability;
 using Application.Models.Dtos.Booking;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,6 +13,8 @@ public class BookingController(IBookingService bookingService, ISecurityService 
     public const string CreateBookingRoute = ControllerRoute + nameof(CreateBooking);
     
     public const string DeleteBookingRoute = ControllerRoute + nameof(DeleteBooking);
+    
+    public const string GetAvailabilitySlotsRoute = ControllerRoute + nameof(GetAvailabilitySlots);
 
     
     [HttpPost]
@@ -36,5 +39,12 @@ public class BookingController(IBookingService bookingService, ISecurityService 
             return Unauthorized();
         }
         return Ok(bookingService.DeleteBooking(id));
+    }
+    
+    [HttpGet]
+    [Route(GetAvailabilitySlotsRoute)]
+    public ActionResult<List<AvailabiltySlotsDto>> GetAvailabilitySlots(string serviceId)
+    {
+        return Ok(bookingService.GetAvailabilitySlots(serviceId));
     }
 }
