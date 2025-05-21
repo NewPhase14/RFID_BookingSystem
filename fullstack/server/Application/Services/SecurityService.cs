@@ -84,16 +84,20 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
             throw new ApplicationException("Failed to insert user into database", e);
         }
 
-        var inviteToken = repository.AddInviteToken(new InviteToken()
+
+        var inviteToken = new InviteToken
         {
             Id = Guid.NewGuid().ToString(),
             UserId = newUser.Id,
             CreatedAt = DateTime.Now,
             ExpiresAt = DateTime.Now.AddDays(1)
-        });
+        };
 
-        //Insert real address when it's ready
-        var verificationLink = $"https://bookit-rfid.web.app/activate?token={inviteToken.Id}";
+
+        var newToken = await repository.AddInviteToken(inviteToken);
+       
+
+        var verificationLink = $"https://bookit-rfid.web.app/activate?token={newToken.Id}";
         
         var email = fluentEmail
             .To(newUser.Email, $"{newUser.FirstName} {newUser.LastName}")

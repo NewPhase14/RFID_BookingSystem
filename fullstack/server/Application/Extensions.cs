@@ -1,7 +1,10 @@
 using Application.Interfaces;
 using Application.Interfaces.Infrastructure.Websocket;
 using Application.Services;
+using Application.Validators.Auth;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
+
 
 namespace Application;
 
@@ -17,6 +20,7 @@ public static class Extensions
         services.AddScoped<IServiceService, ServiceService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ICloudinaryImageService, CloudinaryImageService>();
+        services.AddValidatorsFromAssemblyContaining<AccountActivationValidator>();
         return services;
     }
 }

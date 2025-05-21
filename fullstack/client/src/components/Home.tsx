@@ -4,7 +4,6 @@ import Dashboard from "./Dashboard/Dashboard.tsx";
 import { ActivityLogs } from "./ActivityLogs/ActivityLogs.tsx";
 import { Services } from "./Services/OverviewService/Services.tsx";
 import { Users } from "./Users/Users.tsx";
-import SignIn from "./SignIn.tsx";
 import {
     DashboardRoute,
     SignInRoute,
@@ -26,15 +25,9 @@ const Home = () => {
         if (!jwt || jwt.length < 1) {
             navigate(SignInRoute);
         }
-    }, []);
+    }, [jwt]);
 
-    if (!jwt || jwt.length < 1) {
-        return (
-            <div className="flex h-screen items-center justify-center">
-                <SignIn/>
-            </div>
-        );
-    }
+    if (!jwt || jwt.length < 1) return null;
 
     return (
         <main className="grid gap-4 p-4 grid-cols-[220px,_1fr]">

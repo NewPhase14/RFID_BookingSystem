@@ -4,12 +4,13 @@ using Application.Models.Dtos;
 using Application.Models.Dtos.Auth;
 using Application.Models.Dtos.Auth.Invite;
 using Application.Models.Dtos.Auth.Password;
+using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Rest.Controllers;
 
 [ApiController]
-public class AuthController(ISecurityService securityService) : ControllerBase
+public class AuthController(ISecurityService securityService, IValidator<AccountActivationRequestDto> accountActivationValidator) : ControllerBase
 {
     public const string ControllerRoute = "api/auth/";
 
@@ -46,6 +47,12 @@ public class AuthController(ISecurityService securityService) : ControllerBase
     [Route(AccountActivationRoute)]
     public async Task<ActionResult<AccountActivationResponseDto>> AccountActivation([FromBody] AccountActivationRequestDto dto)
     {
+        var validationResult = await accountActivationValidator.ValidateAsync(dto);
+        if (!validationResult.IsValid)
+        {
+            return BadRequest(validationResult.Errors);
+        }
+        
         return Ok(await securityService.AccountActivation(dto));
     }
 
