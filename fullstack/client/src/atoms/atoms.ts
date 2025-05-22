@@ -22,3 +22,5 @@ export const LatestBookingsAtom = atom<BookingResponseDto[]>([]);
 export const ActivityLogsAtom = atom<ActivityLogResponseDto[]>([]);
 
 export const CreatedServiceAtom = atom<ServiceResponseDto>();
+
+export const TopicAtom = atom<string>();

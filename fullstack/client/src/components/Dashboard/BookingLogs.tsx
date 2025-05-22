@@ -29,7 +29,7 @@ const BookingLogs = () => {
             console.error("Error in Bookings: ", e);
             toast.error("Error in Bookings: " + e);
         }
-    }, [readyState]);
+    }, [onMessage,readyState]);
 
     return (
 

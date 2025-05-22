@@ -32,7 +32,7 @@ const ActivityLogs = () => {
 
 
 
-    }, [readyState]);
+    }, [onMessage,readyState]);
 
     return (
         <div className="overflow-x-auto rounded-box border border-base-content/5  mt-4">
