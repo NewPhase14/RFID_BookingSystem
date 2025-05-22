@@ -17,8 +17,8 @@ const Card = ({title, description, img}: {
     img: string;
 }) => {
     return <div className="col-span-4">
-        <div className="flex mb-4 items-start justify-between">
-            <div className="card bg-gray-800 w-96 shadow-sm pb-10">
+        <div className="flex">
+            <div className="card bg-gray-800 w-dvw shadow-sm pb-10">
                 <div className="card-body">
                     <h2 className="card-title">{title}</h2>
                     <p>{description}</p>

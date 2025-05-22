@@ -1,5 +1,5 @@
 import Sidebar from "./Sidebar/Sidebar.tsx";
-import { Route, Routes, useNavigate } from "react-router";
+import {Navigate, Route, Routes, useNavigate} from "react-router";
 import Dashboard from "./Dashboard/Dashboard.tsx";
 import { AllLogs } from "./AllLogs/AllLogs.tsx";
 import { Services } from "./Services/OverviewService/Services.tsx";
@@ -40,6 +40,7 @@ const Home = () => {
                 <Route element={<AllLogs />} path={LogsRoute} />
                 <Route element={<CreateService/>} path={CreateServiceRoute} />
                 <Route element={<CreateAvailability/>} path={CreateAvailabilityRoute}/>
+                <Route element={<Navigate to={DashboardRoute}/>} path="*" />
             </Routes>
         </main>
     );
