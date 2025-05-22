@@ -8,7 +8,15 @@ import {
     UsersAtom,
 } from "../atoms/atoms.ts";
 import {useEffect} from "react";
-import {activityLogsClient, bookingClient, serviceClient, userClient} from "../apiControllerClients.ts";
+import {
+    activityLogsClient,
+    bookingClient,
+    serviceClient,
+    subscriptionClient,
+    userClient
+} from "../apiControllerClients.ts";
+import {randomUid} from "../components/App.tsx";
+import toast from "react-hot-toast";
 
 export default function useInitializeData() {
     const [, setUsers] = useAtom(UsersAtom);
@@ -54,4 +62,10 @@ export default function useInitializeData() {
             setLatestBookings(r);
         })
     }, [setLatestBookings])
+
+    useEffect(() => {
+        subscriptionClient.subscribeToDashboard(jwt, randomUid).then(r => {
+            toast.success("Successfully joined Dashboard topic");
+        })
+    }, [jwt, randomUid])
 }
