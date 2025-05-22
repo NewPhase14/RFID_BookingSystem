@@ -10,10 +10,9 @@ export const TopBar = () => {
                         Logs
                     </span>
                     <span className="text-xs block">
-                        Created bookings / Entered Rooms
+                        All logs
                     </span>
                 </div>
-                <SelectOptions/>
             </div>
         </div>
     )

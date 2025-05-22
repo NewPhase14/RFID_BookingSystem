@@ -1,7 +1,7 @@
 import Sidebar from "./Sidebar/Sidebar.tsx";
 import { Route, Routes, useNavigate } from "react-router";
 import Dashboard from "./Dashboard/Dashboard.tsx";
-import { ActivityLogs } from "./ActivityLogs/ActivityLogs.tsx";
+import { AllLogs } from "./AllLogs/AllLogs.tsx";
 import { Services } from "./Services/OverviewService/Services.tsx";
 import { Users } from "./Users/Users.tsx";
 import {
@@ -16,6 +16,7 @@ import { useEffect } from "react";
 import { JwtAtom } from "../atoms/atoms.ts";
 import {CreateService} from "./Services/CreateService/CreateService.tsx";
 import {CreateAvailability} from "./Services/CreateAvailability/CreateAvailability.tsx";
+import "./styles.css"
 
 const Home = () => {
     const navigate = useNavigate();
@@ -36,7 +37,7 @@ const Home = () => {
                 <Route element={<Dashboard />} path={DashboardRoute} />
                 <Route element={<Services />} path={ServiceRoute} />
                 <Route element={<Users />} path={UserRoute} />
-                <Route element={<ActivityLogs />} path={LogsRoute} />
+                <Route element={<AllLogs />} path={LogsRoute} />
                 <Route element={<CreateService/>} path={CreateServiceRoute} />
                 <Route element={<CreateAvailability/>} path={CreateAvailabilityRoute}/>
             </Routes>

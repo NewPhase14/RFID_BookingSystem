@@ -1,11 +1,11 @@
 import {TopBar} from "./TopBar.tsx";
-import {Table} from "./Table.tsx";
+import SelectOptions from "./SelectOptions.tsx";
 
-export const ActivityLogs = () => {
+export const AllLogs = () => {
     return (
         <div className="bg-background-grey rounded-lg pb-4 shadow">
             <TopBar/>
-            <Table/>
+            <SelectOptions/>
         </div>
     )
 }

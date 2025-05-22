@@ -1,5 +1,4 @@
 import React from 'react'
-import logo from "../../../assets/logo.png"
 import {useAtom} from "jotai";
 import {ServicesAtom} from "../../../atoms/atoms.ts";
 
@@ -19,7 +18,7 @@ const Card = ({title, description, img}: {
 }) => {
     return <div className="col-span-4">
         <div className="flex mb-4 items-start justify-between">
-            <div className="card bg-base-100 w-96 shadow-sm">
+            <div className="card bg-gray-800 w-96 shadow-sm pb-10">
                 <div className="card-body">
                     <h2 className="card-title">{title}</h2>
                     <p>{description}</p>
@@ -27,6 +26,8 @@ const Card = ({title, description, img}: {
                 <figure>
                     <img
                         src={img}
+                        width={300}
+                        height={300}
                         alt="Shoes" />
                 </figure>
             </div>

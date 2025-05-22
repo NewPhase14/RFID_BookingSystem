@@ -1,35 +1,12 @@
-import {useWsClient} from "ws-request-hook";
-import {useEffect} from "react";
+
 import {useAtom} from "jotai";
-import {LatestBookingsAtom} from "../../atoms/atoms.ts";
-import toast from "react-hot-toast";
+import {BookingsAtom} from "../../atoms/atoms.ts";
 import "../styles.css"
 
 const BookingLogs = () => {
 
-    interface Booking {
-        eventType: string,
-        requestId: string,
-        bookings: []
-    }
+    const [bookings] = useAtom(BookingsAtom);
 
-    const [latestBookings, setLatestBookings] = useAtom(LatestBookingsAtom);
-    const {onMessage, readyState} = useWsClient();
-
-    useEffect(() => {
-        if (readyState != 1) return;
-
-        try {
-            onMessage<Booking>("BookingsBroadcastDto", (dto) => {
-                setLatestBookings(dto.bookings);
-                toast.success("Bookings updated");
-            });
-        }
-        catch (e) {
-            console.error("Error in Bookings: ", e);
-            toast.error("Error in Bookings: " + e);
-        }
-    }, [readyState]);
 
     return (
 
@@ -46,7 +23,7 @@ const BookingLogs = () => {
                 </tr>
                 </thead>
                 <tbody>
-                {latestBookings.map((booking) => (
+                {bookings.map((booking) => (
                     <tr key={booking.id}>
                         <td>{booking.serviceName}</td>
                         <td>{booking.email}</td>
