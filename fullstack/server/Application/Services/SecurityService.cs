@@ -60,17 +60,21 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
         
         if (userRole is null) throw new ValidationException("User role not found");
         
+        var normalizedFirstName = char.ToUpper(dto.FirstName[0]) + dto.FirstName[1..].ToLower();
+        
+        var normalizedLastName = char.ToUpper(dto.LastName[0]) + dto.LastName[1..].ToLower();
+
         var newUser = new User
         {
             Id = Guid.NewGuid().ToString(),
             Rfid = dto.Rfid,
-            Email = dto.Email,
+            Email = dto.Email.ToLower(),
             Role = userRole,
             RoleId = userRole.Id,
             Salt = salt,
             HashedPassword = hash,
-            FirstName = dto.FirstName,
-            LastName = dto.LastName,
+            FirstName = normalizedFirstName,
+            LastName = normalizedLastName,
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         };
