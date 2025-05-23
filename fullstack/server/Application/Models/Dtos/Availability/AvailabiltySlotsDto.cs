@@ -3,6 +3,6 @@ namespace Application.Models.Dtos.Availability;
 public class AvailabiltySlotsDto
 {
     public string Date { get; set; } = null!;
-    public TimeOnly StartTime { get; set; }
-    public TimeOnly EndTime { get; set; }
+    public string StartTime { get; set; } = null!;
+    public string EndTime { get; set; } = null!;
 }

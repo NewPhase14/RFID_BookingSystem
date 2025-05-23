@@ -167,8 +167,8 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
                 availabilitySlots.Add(new AvailabiltySlotsDto
                 {
                     Date = date.ToString("dd-MM-yyyy"),
-                    StartTime = time,
-                    EndTime = time.AddHours(1)
+                    StartTime = time.ToString("HH:mm"),
+                    EndTime = time.AddHours(1).ToString("HH:mm")
                 });
             }
         }
