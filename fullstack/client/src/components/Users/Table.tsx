@@ -5,7 +5,7 @@ export const Table = () => {
     const [users] = useAtom(UsersAtom);
 
     return (
-        <div className="overflow-x-auto rounded-box border border-base-content/5 mt-4 px-4">
+        <div className="overflow-x-auto rounded-box border border-base-content/5 mt-4 mx-4">
             <table className="table">
                 <thead>
                 <tr>

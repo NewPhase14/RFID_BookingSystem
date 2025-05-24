@@ -18,21 +18,19 @@ const ActivityLogs = () => {
 
     useEffect(() => {
         if (readyState != 1) return;
-
         try {
-            onMessage<ActivityLog>("ActivityLogsBroadcastDto", (dto) => {
+            const unsubscribe = onMessage<ActivityLog>("ActivityLogsBroadcastDto", (dto) => {
                 setLatestActivityLogs(dto.activityLogs);
                 toast.success("Activity logs updated");
             });
-        }
-        catch (e) {
+            return () => {
+                unsubscribe();
+            };
+        } catch (e) {
             console.error("Error in AllLogs: ", e);
             toast.error("Error in AllLogs: " + e);
         }
-
-
-
-    }, [onMessage,readyState]);
+    });
 
     return (
         <div className="overflow-x-auto rounded-box border border-base-content/5  mt-4">

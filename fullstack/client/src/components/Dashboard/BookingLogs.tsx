@@ -18,18 +18,19 @@ const BookingLogs = () => {
 
     useEffect(() => {
         if (readyState != 1) return;
-
         try {
-            onMessage<Booking>("BookingsBroadcastDto", (dto) => {
+            const unsubscribe = onMessage<Booking>("BookingsBroadcastDto", (dto) => {
                 setLatestBookings(dto.bookings);
-                toast.success("Bookings updated");
+                toast.success("Booking logs updated");
             });
+            return () => {
+                unsubscribe();
+            };
+        } catch (e) {
+            console.error("Error in AllLogs: ", e);
+            toast.error("Error in AllLogs: " + e);
         }
-        catch (e) {
-            console.error("Error in Bookings: ", e);
-            toast.error("Error in Bookings: " + e);
-        }
-    }, [onMessage,readyState]);
+    });
 
     return (
 

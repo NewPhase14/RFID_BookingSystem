@@ -4,6 +4,7 @@ using Application.Models.Dtos;
 using Application.Models.Dtos.Auth;
 using Application.Models.Dtos.Auth.Invite;
 using Application.Models.Dtos.Auth.Password;
+using Application.Models.Dtos.User;
 using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,7 +42,7 @@ public class AuthController(ISecurityService securityService,
 
     [Route(RegisterRoute)]
     [HttpPost]
-    public async Task<ActionResult<AuthResponseDto>> Register([FromBody] AuthRegisterRequestDto dto)
+    public async Task<ActionResult<UserResponseDto>> Register([FromBody] AuthRegisterRequestDto dto)
     {
         return Ok(await securityService.Register(dto));
     }

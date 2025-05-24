@@ -9,7 +9,7 @@ import {
     SignInRoute,
     LogsRoute,
     ServiceRoute,
-    UserRoute, CreateServiceRoute, CreateAvailabilityRoute,
+    UserRoute, CreateServiceRoute, CreateAvailabilityRoute, RegisterUserRoute,
 } from "../helpers/routeConstants.tsx";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
@@ -17,6 +17,7 @@ import { JwtAtom } from "../atoms/atoms.ts";
 import {CreateService} from "./Services/CreateService/CreateService.tsx";
 import {CreateAvailability} from "./Services/CreateAvailability/CreateAvailability.tsx";
 import "./styles.css"
+import {RegisterUser} from "./Users/RegisterUser/RegisterUser.tsx";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -37,6 +38,7 @@ const Home = () => {
                 <Route element={<Dashboard />} path={DashboardRoute} />
                 <Route element={<Services />} path={ServiceRoute} />
                 <Route element={<Users />} path={UserRoute} />
+                <Route element={<RegisterUser/>} path={RegisterUserRoute}/>
                 <Route element={<AllLogs />} path={LogsRoute} />
                 <Route element={<CreateService/>} path={CreateServiceRoute} />
                 <Route element={<CreateAvailability/>} path={CreateAvailabilityRoute}/>

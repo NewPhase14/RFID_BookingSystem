@@ -99,7 +99,7 @@ export const CreationView = () => {
                 <button className="flex text-sm items-center gap-2 bg-gray-800 hover:bg-gray-700 hover:text-[--color-text-baby-blue] transition-colors rounded px-3 py-1.5"
                         onClick={() => {
                             serviceClient.createService(createServiceDto, jwt).then(r => {
-                                toast.success("Service created successfully!");
+                                toast.success("Service created successfully");
                                 setCreatedService(r);
                                 setServices([...services, r]);
                                 navigate(CreateAvailabilityRoute);

@@ -31,7 +31,7 @@ const SignIn = () => {
 
                 <div className="space-y-6">
                     <div>
-                        <label className="block mb-2 text-sm text-text-grey" htmlFor="email">Email Address</label>
+                        <label className="block mb-2 text-sm text-text-grey">Email Address</label>
                         <input
                             type="email"
                             value={email}
@@ -42,7 +42,7 @@ const SignIn = () => {
                     </div>
 
                     <div>
-                        <label className="block mb-2 text-sm text-text-grey" htmlFor="password">Password</label>
+                        <label className="block mb-2 text-sm text-text-grey">Password</label>
                         <div>
                         <input
                             type="password"

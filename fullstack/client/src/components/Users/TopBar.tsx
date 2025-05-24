@@ -1,10 +1,10 @@
 import "../styles.css";
-import {FiCalendar, FiUserPlus} from "react-icons/fi";
-import {useAtom} from "jotai";
-import {AdminAtom} from "../../atoms/atoms.ts";
+import {FiUserPlus} from "react-icons/fi";
+import {useNavigate} from "react-router";
+import {RegisterUserRoute} from "../../helpers/routeConstants.tsx";
 
 export const TopBar = () => {
-    const [admin] = useAtom(AdminAtom);
+    const navigate = useNavigate();
     return (
         <div className="border-b px-4 mb-4 mt-2 pb-4 border-[--color-text-baby-blue]">
             <div className="flex items-center justify-between p-0.5">
@@ -16,9 +16,11 @@ export const TopBar = () => {
                     All Users
                     </span>
                 </div>
-                <button className="flex text-sm items-center gap-2 bg-gray-800 hover:bg-gray-700 hover:text-[--color-text-baby-blue] transition-colors rounded px-3 py-1.5">
+                <button
+                    onClick={() => {navigate(RegisterUserRoute)}}
+                    className="flex text-sm items-center gap-2 bg-gray-800 hover:bg-gray-700 hover:text-[--color-text-baby-blue] transition-colors rounded px-3 py-1.5">
                     <FiUserPlus/>
-                    <span>Create user</span>
+                    <span>Register user</span>
                 </button>
             </div>
         </div>

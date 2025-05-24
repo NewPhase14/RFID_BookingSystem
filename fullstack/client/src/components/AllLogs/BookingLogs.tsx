@@ -10,7 +10,7 @@ const BookingLogs = () => {
 
     return (
 
-        <div className="overflow-x-auto rounded-box border border-base-content/5  mt-4">
+        <div className="overflow-x-auto rounded-box border border-base-content/5 mt-4">
             <table className="table">
                 <thead>
                 <tr>

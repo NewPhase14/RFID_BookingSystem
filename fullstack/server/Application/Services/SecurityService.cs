@@ -10,6 +10,7 @@ using Application.Models.Dtos;
 using Application.Models.Dtos.Auth;
 using Application.Models.Dtos.Auth.Invite;
 using Application.Models.Dtos.Auth.Password;
+using Application.Models.Dtos.User;
 using Core.Domain.Entities;
 using FluentEmail.Core;
 using JWT;
@@ -46,7 +47,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
         };
     }
 
-    public async Task<AuthResponseDto> Register(AuthRegisterRequestDto dto)
+    public async Task<UserResponseDto> Register(AuthRegisterRequestDto dto)
     {
         var existingUser = repository.GetUserOrNull(dto.Email);
         if (existingUser is not null) throw new ValidationException("User already exists");
@@ -115,15 +116,16 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthDa
             Console.WriteLine("Failed to send email.");
         }
 
-        return new AuthResponseDto
+        return new UserResponseDto()
         {
-            Jwt = GenerateJwt(new JwtClaims
-            {
-                Id = newUser.Id,
-                Role = newUser.Role.Name,
-                Exp = DateTimeOffset.UtcNow.AddHours(1000).ToUnixTimeSeconds().ToString(),
-                Email = newUser.Email
-            })
+            Id = newUser.Id,
+            Rfid = newUser.Rfid,
+            Email = newUser.Email,
+            FirstName = newUser.FirstName,
+            LastName = newUser.LastName,
+            RoleName = newUser.Role.Name,
+            CreatedAt = newUser.CreatedAt.ToString("dd-MM-yyyy HH:mm"),
+            UpdatedAt = newUser.UpdatedAt.ToString("dd-MM-yyyy HH:mm")
         };
     }
 

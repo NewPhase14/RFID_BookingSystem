@@ -3,6 +3,7 @@ using Application.Models.Dtos;
 using Application.Models.Dtos.Auth;
 using Application.Models.Dtos.Auth.Invite;
 using Application.Models.Dtos.Auth.Password;
+using Application.Models.Dtos.User;
 
 namespace Application.Interfaces;
 
@@ -13,7 +14,7 @@ public interface ISecurityService
     public string GenerateSalt();
     public string GenerateJwt(JwtClaims claims);
     public AuthResponseDto Login(AuthLoginRequestDto dto);
-    public Task<AuthResponseDto> Register(AuthRegisterRequestDto dto);
+    public Task<UserResponseDto> Register(AuthRegisterRequestDto dto);
     public Task<AccountActivationResponseDto> AccountActivation(AccountActivationRequestDto dto);
     public Task<ResendInviteEmailResponseDto> ResendInviteEmail(ResendInviteEmailRequestDto dto);
     public Task<ForgotPasswordResponseDto> ForgotPassword(ForgotPasswordRequestDto dto);

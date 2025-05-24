@@ -133,7 +133,7 @@ export class AuthClient {
         return Promise.resolve<AuthResponseDto>(null as any);
     }
 
-    register(dto: AuthRegisterRequestDto): Promise<AuthResponseDto> {
+    register(dto: AuthRegisterRequestDto): Promise<UserResponseDto> {
         let url_ = this.baseUrl + "/api/auth/Register";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -153,13 +153,13 @@ export class AuthClient {
         });
     }
 
-    protected processRegister(response: Response): Promise<AuthResponseDto> {
+    protected processRegister(response: Response): Promise<UserResponseDto> {
         const status = response.status;
         let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
         if (status === 200) {
             return response.text().then((_responseText) => {
             let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as AuthResponseDto;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as UserResponseDto;
             return result200;
             });
         } else if (status !== 200 && status !== 204) {
@@ -167,7 +167,7 @@ export class AuthClient {
             return throwException("An unexpected server error occurred.", status, _responseText, _headers);
             });
         }
-        return Promise.resolve<AuthResponseDto>(null as any);
+        return Promise.resolve<UserResponseDto>(null as any);
     }
 
     accountActivation(dto: AccountActivationRequestDto): Promise<AccountActivationResponseDto> {
@@ -1215,6 +1215,17 @@ export interface AuthLoginRequestDto {
     clientId: string;
 }
 
+export interface UserResponseDto {
+    id?: string;
+    firstName?: string;
+    lastName?: string;
+    rfid?: string;
+    email?: string;
+    roleName?: string;
+    createdAt?: string;
+    updatedAt?: string;
+}
+
 export interface AuthRegisterRequestDto {
     rfid: string;
     email: string;
@@ -1341,17 +1352,6 @@ export interface ServiceUpdateRequestDto {
     description: string;
     imageUrl: string;
     publicId: string;
-}
-
-export interface UserResponseDto {
-    id?: string;
-    firstName?: string;
-    lastName?: string;
-    rfid?: string;
-    email?: string;
-    roleName?: string;
-    createdAt?: string;
-    updatedAt?: string;
 }
 
 

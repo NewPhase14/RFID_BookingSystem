@@ -4,6 +4,7 @@ export const CreateServiceRoute = '/services/create';
 export const SignInRoute = '/signin';
 export const LogsRoute= '/logs';
 export const UserRoute = '/users';
+export const RegisterUserRoute = '/users/register';
 export const CreateAvailabilityRoute = '/services/availability';
 export const AccountActivationRoute = '/activate';
 export const ResetPasswordRoute = '/reset-password';

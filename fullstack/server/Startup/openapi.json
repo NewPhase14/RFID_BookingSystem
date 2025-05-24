@@ -108,7 +108,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/AuthResponseDto"
+                  "$ref": "#/components/schemas/UserResponseDto"
                 }
               }
             }
@@ -1029,6 +1029,36 @@
           }
         }
       },
+      "UserResponseDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "rfid": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "roleName": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "type": "string"
+          }
+        }
+      },
       "AuthRegisterRequestDto": {
         "type": "object",
         "additionalProperties": false,
@@ -1325,12 +1355,10 @@
             "type": "string"
           },
           "startTime": {
-            "type": "string",
-            "format": "time"
+            "type": "string"
           },
           "endTime": {
-            "type": "string",
-            "format": "time"
+            "type": "string"
           }
         }
       },
@@ -1463,36 +1491,6 @@
           "publicId": {
             "type": "string",
             "minLength": 1
-          }
-        }
-      },
-      "UserResponseDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "id": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "rfid": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "roleName": {
-            "type": "string"
-          },
-          "createdAt": {
-            "type": "string"
-          },
-          "updatedAt": {
-            "type": "string"
           }
         }
       },
