@@ -10,9 +10,10 @@ class ServicesPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: const Text("Bookit")),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
+          padding: const EdgeInsets.all(16),
           child: BlocBuilder<ServicesCubit, ServicesState>(
             builder: (context, state) {
               if (state is ServicesLoading) {
@@ -23,20 +24,21 @@ class ServicesPage extends StatelessWidget {
                 return Center(child: Text(state.message));
               }
 
-              if (state is ServicesInitialized) {
+              if (state is ServicesLoaded) {
                 final services = state.services;
 
                 if (services.isEmpty) {
                   return const Center(child: Text("No services available."));
                 }
 
-                return ListView.separated(
+                return ListView.builder(
                   itemCount: services.length,
-                  separatorBuilder:
-                      (context, index) => const SizedBox(height: 16),
                   itemBuilder: (context, index) {
                     final service = services[index];
-                    return ServiceCard(service: service);
+                    return Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: ServiceCard(service: service),
+                    );
                   },
                 );
               }

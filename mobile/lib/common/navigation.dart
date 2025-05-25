@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../booking/booking_page.dart';
+import '../bookings/bookings_page.dart';
 import '../home/home_page.dart';
 import '../profile/profile_page.dart';
 import '../services/services_page.dart';
@@ -12,7 +11,6 @@ class BottomNavBar extends StatefulWidget {
   BottomNavBarState createState() => BottomNavBarState();
 }
 
-/// List of pages that correspond to each item in the BottomNavigationBar.
 /// These widgets are displayed in the main content area of the app.
 class BottomNavBarState extends State<BottomNavBar> {
   int _currentIndex = 0;
@@ -23,7 +21,6 @@ class BottomNavBarState extends State<BottomNavBar> {
     ProfilePage(),
   ];
 
-  /// Callback function to update the selected index when a tab is tapped.
   void onTabTapped(int index) {
     setState(() {
       _currentIndex = index;

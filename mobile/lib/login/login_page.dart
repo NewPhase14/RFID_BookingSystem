@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../common/widgets.dart';
+import '../bookings/bookings_cubit.dart';
+import '../common/navigation.dart';
 import '../services/services_cubit.dart';
 import 'login_cubit.dart';
 import 'login_form.dart';
@@ -25,13 +25,20 @@ class LoginPage extends StatelessWidget {
             Navigator.of(context).pushReplacement(
               MaterialPageRoute(
                 builder:
-                    ///Calls the ServicesCubit to load the services,
-                    ///but only after the user has logged in successfully.
-                    (_) => BlocProvider(
-                      create:
-                          (context) =>
-                              ServicesCubit(context.read<BookingService>())
-                                ..loadServices(),
+                    (_) => MultiBlocProvider(
+                      providers: [
+                        BlocProvider(
+                          create:
+                              (context) =>
+                                  ServicesCubit(context.read<BookingService>())
+                                    ..loadAllServices(),
+                        ),
+                        BlocProvider(
+                          create:
+                              (context) =>
+                                  BookingCubit(context.read<BookingService>()),
+                        ),
+                      ],
                       child: const BottomNavBar(),
                     ),
               ),
@@ -50,7 +57,7 @@ class LoginPage extends StatelessWidget {
               body: SafeArea(
                 child: Center(
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(horizontal: 24),
+                    padding: EdgeInsets.symmetric(horizontal: 20),
                     child: LoginForm(),
                   ),
                 ),

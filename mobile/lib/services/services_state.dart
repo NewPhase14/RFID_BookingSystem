@@ -8,12 +8,12 @@ class ServicesReady extends ServicesState {}
 
 class ServicesLoading extends ServicesState {}
 
+class ServicesLoaded extends ServicesState {
+  final List<Services> services;
+  ServicesLoaded(this.services);
+}
+
 class ServicesError extends ServicesState {
   final String message;
   ServicesError(this.message);
-}
-
-class ServicesInitialized extends ServicesState {
-  final List<Services> services;
-  ServicesInitialized(this.services);
 }

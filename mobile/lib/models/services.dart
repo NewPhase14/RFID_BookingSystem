@@ -28,4 +28,16 @@ class Services {
       'updatedAt': updatedAt,
     };
   }
+
+  factory Services.fromJson(Map<String, dynamic> json) {
+    return Services(
+      id: json['id'],
+      name: json['name'],
+      description: json['description'],
+      imageUrl: json['imageUrl'],
+      publicId: json['publicId'],
+      createdAt: json['createdAt'],
+      updatedAt: json['updatedAt'],
+    );
+  }
 }

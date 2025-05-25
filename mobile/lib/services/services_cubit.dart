@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/booking_service.dart';
-import '../models/services.dart';
 import 'services_state.dart';
 
 class ServicesCubit extends Cubit<ServicesState> {
@@ -8,11 +7,11 @@ class ServicesCubit extends Cubit<ServicesState> {
 
   ServicesCubit(this.service) : super(ServicesReady());
 
-  Future<void> loadServices() async {
+  Future<void> loadAllServices() async {
     emit(ServicesLoading());
     try {
       final serviceList = await service.services();
-      emit(ServicesInitialized(serviceList));
+      emit(ServicesLoaded(serviceList));
     } catch (error) {
       emit(ServicesError(error.toString()));
     }

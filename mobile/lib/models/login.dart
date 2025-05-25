@@ -8,4 +8,12 @@ class Login {
   Map<String, dynamic> toJson() {
     return {'email': email, 'password': password, 'clientId': clientId};
   }
+
+  factory Login.fromJson(Map<String, dynamic> json) {
+    return Login(
+      email: json['email'],
+      password: json['password'],
+      clientId: json['clientId'],
+    );
+  }
 }
