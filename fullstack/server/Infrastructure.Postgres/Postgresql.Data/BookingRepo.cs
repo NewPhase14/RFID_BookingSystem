@@ -38,7 +38,10 @@ public class BookingRepo(MyDbContext ctx) : IBookingDataRepository
 
     public Booking DeleteBooking(string id)
     {
-        var booking = ctx.Bookings.FirstOrDefault(b => b.Id == id);
+        var booking = ctx.Bookings
+            .Include(b => b.Service)
+            .Include(b => b.User)
+            .FirstOrDefault(b => b.Id == id);
         if (booking == null)
         {
             throw new InvalidOperationException("Booking not found");
