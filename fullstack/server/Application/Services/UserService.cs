@@ -39,4 +39,14 @@ public class UserService(IUserRepository userRepository) : IUserService
             UpdatedAt = user.UpdatedAt.ToString("dd-MM-yyyy HH:mm")
         }).ToList();
     }
+
+    public UserResponseDto DeleteUser(string id)
+    {
+    var user = userRepository.DeleteUser(id);
+
+        return new UserResponseDto
+        {
+            Id = user.Id
+        };
+    }
 }

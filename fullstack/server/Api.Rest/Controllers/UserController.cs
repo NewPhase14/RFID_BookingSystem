@@ -14,6 +14,8 @@ public class UserController(IUserService userService, ISecurityService security)
     
     public const string GetAllUsersRoute = ControllerRoute + nameof(GetAllUsers);
     
+    public const string DeleteUserRoute = ControllerRoute + nameof(DeleteUser);
+    
     [HttpGet]
     [Route(GetUserByEmailRoute)]
     public ActionResult<UserResponseDto> GetUserByEmail(string email)
@@ -31,5 +33,17 @@ public class UserController(IUserService userService, ISecurityService security)
             return Unauthorized();
         }
         return Ok(userService.GetAllUsers());
+    }
+    
+    [HttpDelete]
+    [Route(DeleteUserRoute)]
+    public ActionResult<UserResponseDto> DeleteUser(string id, [FromHeader] string authorization)
+    {
+        var jwt = security.VerifyJwtOrThrow(authorization);
+        if (jwt.Role != "Admin")
+        {
+            return Unauthorized();
+        }
+        return Ok(userService.DeleteUser(id));
     }
 }

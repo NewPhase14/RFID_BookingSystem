@@ -6,4 +6,5 @@ public interface IUserService
 {
     public UserResponseDto GetUserByEmail(string email);
     public List<UserResponseDto> GetAllUsers();
+    public UserResponseDto DeleteUser(string id);
 }

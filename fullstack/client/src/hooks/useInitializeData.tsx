@@ -1,4 +1,3 @@
-// hooks/useInitializeData.tsx
 import { useAtom } from "jotai";
 import {
     ActivityLogsAtom,

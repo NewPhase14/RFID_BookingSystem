@@ -29,7 +29,7 @@ CREATE TABLE services (
 
 CREATE TABLE service_availability (
                                       id TEXT PRIMARY KEY,
-                                      service_id TEXT NOT NULL REFERENCES services(id),
+                                      service_id TEXT NOT NULL REFERENCES services(id) ON DELETE CASCADE,
                                       day_of_week INT NOT NULL,
                                       available_from TIME NOT NULL,
                                       available_to TIME NOT NULL,
@@ -40,8 +40,8 @@ CREATE TABLE service_availability (
 
 CREATE TABLE bookings (
                           id TEXT PRIMARY KEY,
-                          user_id TEXT NOT NULL REFERENCES users(id),
-                          service_id TEXT NOT NULL REFERENCES services(id),
+                          user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+                          service_id TEXT NOT NULL REFERENCES services(id) ON DELETE CASCADE,
                           date DATE NOT NULL,
                           start_time TIME NOT NULL,
                           end_time TIME NOT NULL,
@@ -53,7 +53,7 @@ CREATE TABLE bookings (
 
 CREATE TABLE invite_token (
                                           id TEXT PRIMARY KEY,
-                                          user_id TEXT NOT NULL REFERENCES users(id),
+                                          user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                                           created_at TIMESTAMP NOT NULL,
                                           expires_at TIMESTAMP NOT NULL
 );
@@ -61,16 +61,16 @@ CREATE TABLE invite_token (
 
 CREATE  TABLE password_reset_token (
                                        id TEXT PRIMARY KEY,
-                                       user_id TEXT NOT NULL REFERENCES users(id),
+                                       user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                                        created_at TIMESTAMP NOT NULL,
                                        expires_at TIMESTAMP NOT NULL
 );
 
 CREATE TABLE activity_logs (
                               id TEXT PRIMARY KEY,
-                              service_id TEXT NOT NULL REFERENCES services(id),
+                              service_id TEXT NOT NULL REFERENCES services(id) ON DELETE CASCADE,
                               attempted_at TIMESTAMP NOT NULL,
-                              user_id TEXT NOT NULL REFERENCES users(id),
+                              user_id TEXT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
                               status TEXT NOT NULL    
 );
 

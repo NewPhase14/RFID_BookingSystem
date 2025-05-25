@@ -33,4 +33,18 @@ public class UserRepo(MyDbContext context) : IUserRepository
         
         return users;
     }
+
+    public User DeleteUser(string id)
+    {
+        var user = context.Users.FirstOrDefault(u => u.Id == id);
+        if (user == null)
+        {
+            throw new InvalidOperationException("User not found");
+        }
+        
+        context.Users.Remove(user);
+        context.SaveChanges();
+        
+        return user;
+    }
 }

@@ -49,7 +49,7 @@ export const CreationView = () => {
             }));
 
         if (dtos.length > 0) {
-            availabilityClient.createAllAvailabilities(dtos).then((r) => {
+            availabilityClient.createAllAvailabilities(dtos).then(() => {
                 toast.success("Availabilities created successfully");
                 navigate(ServiceRoute);
             });
