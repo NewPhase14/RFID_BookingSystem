@@ -7,106 +7,105 @@ namespace Infrastructure.Postgres.Postgresql.Data;
 
 public class BookingRepo(MyDbContext ctx) : IBookingDataRepository
 {
-    public Booking CreateBooking(Booking booking)
+    public async Task<Booking> CreateBooking(Booking booking)
     {
-        var createdBooking = ctx.Bookings.Add(booking);
-        ctx.SaveChanges();
-        return createdBooking.Entity;
+        await ctx.Bookings.AddAsync(booking);
+        await ctx.SaveChangesAsync();
+        return booking;
     }
 
-    public List<Booking> GetAllBookings()
+    public async Task<List<Booking>> GetAllBookings()
     {
-        var bookings = ctx.Bookings
+        var bookings = await ctx.Bookings
             .Include(b => b.Service)
             .Include(b => b.User)
             .OrderByDescending(b => b.CreatedAt)
-            .ToList();
+            .ToListAsync();
         return bookings;
     }
 
-    public List<Booking> GetLatestBookings()
+    public async Task<List<Booking>> GetLatestBookings()
     {
-        var bookings = ctx.Bookings
+        var bookings = await ctx.Bookings
             .Include(b => b.Service)
             .Include(b => b.User)
             .OrderByDescending(b => b.CreatedAt)
             .Take(5)
-            .ToList();
-
+            .ToListAsync();
         return bookings;
     }
 
-    public Booking DeleteBooking(string id)
+    public async Task<Booking> DeleteBooking(string id)
     {
-        var booking = ctx.Bookings
+        var booking = await ctx.Bookings
             .Include(b => b.Service)
             .Include(b => b.User)
-            .FirstOrDefault(b => b.Id == id);
+            .FirstOrDefaultAsync(b => b.Id == id);
         if (booking == null)
         {
             throw new InvalidOperationException("Booking not found");
         }
         ctx.Bookings.Remove(booking);
-        ctx.SaveChanges();
+        await ctx.SaveChangesAsync();
         return booking;
     }
 
-    public bool BookingOverlapping(Booking booking)
+    public async Task<bool> BookingOverlapping(Booking booking)
     {
-        return  ctx.Bookings.Any(b =>
+        return await ctx.Bookings.AnyAsync(b =>
             b.ServiceId == booking.ServiceId &&
             b.StartTime < booking.EndTime &&
             booking.StartTime < b.EndTime && b.Date == booking.Date
         );
     }
 
-    public List<Booking> GetFutureBookingsByUserId(string userId)
+    public async Task<List<Booking>> GetFutureBookingsByUserId(string userId)
     {
         var now = DateTime.Now;
         var today = DateOnly.FromDateTime(now);
         var currentTime = TimeOnly.FromDateTime(now);
 
-        var bookings = ctx.Bookings
+        var bookings = await ctx.Bookings
             .Include(b => b.Service)
             .Include(b => b.User)
             .Where(b => b.UserId == userId &&
                         (b.Date > today || (b.Date == today && b.StartTime > currentTime)))
             .OrderBy(b => b.Date)
             .ThenBy(b => b.StartTime)
-            .ToList();
+            .ToListAsync();
 
         return bookings;
     }
 
-    public List<Booking> GetPastBookingsByUserId(string userId)
+    public async Task<List<Booking>> GetPastBookingsByUserId(string userId)
     {
         var now = DateTime.Now;
         var today = DateOnly.FromDateTime(now);
         var currentTime = TimeOnly.FromDateTime(now);
 
-        var bookings = ctx.Bookings
+        var bookings = await ctx.Bookings
             .Include(b => b.Service)
             .Include(b => b.User)
             .Where(b => b.UserId == userId &&
                         (b.Date < today || (b.Date == today && b.EndTime < currentTime)))
             .OrderByDescending(b => b.Date)
             .ThenByDescending(b => b.StartTime)
-            .ToList();
+            .ToListAsync();
 
         return bookings;
     }
 
 
-    public List<Booking> GetTodaysBookingsByUserId(string userId)
+    public async Task<List<Booking>> GetTodaysBookingsByUserId(string userId)
     {
         var today = DateOnly.FromDateTime(DateTime.Now);
 
-        var bookings = ctx.Bookings
+        var bookings = await ctx.Bookings
             .Include(b => b.Service)
             .Include(b => b.User)
             .Where(b => b.UserId == userId && b.Date == today)
             .OrderBy(b => b.StartTime)
-            .ToList();
+            .ToListAsync();
 
         return bookings;
     }

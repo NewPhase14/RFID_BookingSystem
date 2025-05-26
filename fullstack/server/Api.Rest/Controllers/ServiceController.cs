@@ -48,9 +48,9 @@ public class ServiceController(IServiceService serviceService, ISecurityService 
     
     [HttpGet]
     [Route(GetAllServicesRoute)]
-    public ActionResult<List<ServiceResponseDto>> GetAllServices()
+    public async Task<ActionResult<List<ServiceResponseDto>>> GetAllServices()
     {
-        return Ok(serviceService.GetAllServices());
+        return Ok(await serviceService.GetAllServices());
     }
     
     [HttpGet]

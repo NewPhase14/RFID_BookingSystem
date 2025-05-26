@@ -514,6 +514,43 @@ export class AvailabilityClient {
         }
         return Promise.resolve<AvailabilityResponseDto>(null as any);
     }
+
+    getAvailabilitySlots(serviceId: string | undefined): Promise<AvailabiltySlotsDto[]> {
+        let url_ = this.baseUrl + "/api/availability/GetAvailabilitySlots?";
+        if (serviceId === null)
+            throw new Error("The parameter 'serviceId' cannot be null.");
+        else if (serviceId !== undefined)
+            url_ += "serviceId=" + encodeURIComponent("" + serviceId) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_: RequestInit = {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processGetAvailabilitySlots(_response);
+        });
+    }
+
+    protected processGetAvailabilitySlots(response: Response): Promise<AvailabiltySlotsDto[]> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as AvailabiltySlotsDto[];
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<AvailabiltySlotsDto[]>(null as any);
+    }
 }
 
 export class BookingClient {
@@ -668,43 +705,6 @@ export class BookingClient {
             });
         }
         return Promise.resolve<BookingResponseDto>(null as any);
-    }
-
-    getAvailabilitySlots(serviceId: string | undefined): Promise<AvailabiltySlotsDto[]> {
-        let url_ = this.baseUrl + "/api/booking/GetAvailabilitySlots?";
-        if (serviceId === null)
-            throw new Error("The parameter 'serviceId' cannot be null.");
-        else if (serviceId !== undefined)
-            url_ += "serviceId=" + encodeURIComponent("" + serviceId) + "&";
-        url_ = url_.replace(/[?&]$/, "");
-
-        let options_: RequestInit = {
-            method: "GET",
-            headers: {
-                "Accept": "application/json"
-            }
-        };
-
-        return this.http.fetch(url_, options_).then((_response: Response) => {
-            return this.processGetAvailabilitySlots(_response);
-        });
-    }
-
-    protected processGetAvailabilitySlots(response: Response): Promise<AvailabiltySlotsDto[]> {
-        const status = response.status;
-        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
-        if (status === 200) {
-            return response.text().then((_responseText) => {
-            let result200: any = null;
-            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as AvailabiltySlotsDto[];
-            return result200;
-            });
-        } else if (status !== 200 && status !== 204) {
-            return response.text().then((_responseText) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            });
-        }
-        return Promise.resolve<AvailabiltySlotsDto[]>(null as any);
     }
 
     getTodaysBookingsByUserId(userId: string | undefined): Promise<BookingResponseDto[]> {
@@ -1333,6 +1333,12 @@ export interface AvailabilityUpdateRequestDto {
     updatedAt?: Date;
 }
 
+export interface AvailabiltySlotsDto {
+    date?: string;
+    startTime?: string;
+    endTime?: string;
+}
+
 export interface BookingResponseDto {
     id?: string;
     userId?: string;
@@ -1351,12 +1357,6 @@ export interface BookingCreateRequestDto {
     date: Date;
     startTime: string;
     endTime: string;
-}
-
-export interface AvailabiltySlotsDto {
-    date?: string;
-    startTime?: string;
-    endTime?: string;
 }
 
 export interface CheckingResponseDto {
@@ -1398,14 +1398,6 @@ export interface MemberLeftNotification extends BaseDto {
     topic?: string;
 }
 
-export interface ExampleClientDto extends BaseDto {
-    somethingTheClientSends?: string;
-}
-
-export interface ExampleServerResponse extends BaseDto {
-    somethingTheServerSends?: string;
-}
-
 export interface Ping extends BaseDto {
 }
 
@@ -1416,24 +1408,12 @@ export interface ServerSendsErrorMessage extends BaseDto {
     message?: string;
 }
 
-export interface ClientWantsToEnterDashboardDto extends BaseDto {
-    jwt?: string;
-}
-
-export interface ServerConfirmsAdditionToDashboard extends BaseDto {
-    message?: string;
-}
-
 /** Available eventType constants */
 export enum StringConstants {
     MemberLeftNotification = "MemberLeftNotification",
-    ExampleClientDto = "ExampleClientDto",
-    ExampleServerResponse = "ExampleServerResponse",
     Ping = "Ping",
     Pong = "Pong",
     ServerSendsErrorMessage = "ServerSendsErrorMessage",
-    ClientWantsToEnterDashboardDto = "ClientWantsToEnterDashboardDto",
-    ServerConfirmsAdditionToDashboard = "ServerConfirmsAdditionToDashboard",
 }
 
 export interface FileResponse {

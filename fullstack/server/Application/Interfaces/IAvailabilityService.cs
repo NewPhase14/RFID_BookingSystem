@@ -4,12 +4,15 @@ namespace Application.Interfaces;
 
 public interface IAvailabilityService
 {
-    public AvailabilityResponseDto CreateAvailability(AvailabilityCreateRequestDto dto);
+    AvailabilityResponseDto CreateAvailability(AvailabilityCreateRequestDto dto);
     
-    public List<AvailabilityResponseDto> CreateAllAvailabilities(List<AvailabilityCreateRequestDto> dtos);
+    List<AvailabilityResponseDto> CreateAllAvailabilities(List<AvailabilityCreateRequestDto> dtos);
     
-    public AvailabilityResponseDto DeleteAvailability(string id);
+    AvailabilityResponseDto DeleteAvailability(string id);
     
-    public AvailabilityResponseDto UpdateAvailability(AvailabilityUpdateRequestDto dto);
+    AvailabilityResponseDto UpdateAvailability(AvailabilityUpdateRequestDto dto);
+    
+    Task<List<AvailabiltySlotsDto>> GetAvailabilitySlots(string serviceId);
+
     
 }

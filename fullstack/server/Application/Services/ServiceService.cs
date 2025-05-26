@@ -103,9 +103,9 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
         };
     }
 
-    public List<ServiceResponseDto> GetAllServices()
+    public async Task<List<ServiceResponseDto>> GetAllServices()
     {
-        var services = serviceRepository.GetAllServices();
+        var services = await serviceRepository.GetAllServices();
         
         return services.Select(service => new ServiceResponseDto()
         {

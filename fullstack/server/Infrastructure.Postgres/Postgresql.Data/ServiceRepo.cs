@@ -1,6 +1,7 @@
 using Application.Interfaces.Infrastructure.Postgres;
 using Core.Domain.Entities;
 using Infrastructure.Postgres.Scaffolding;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Postgres.Postgresql.Data;
 
@@ -42,9 +43,9 @@ public class ServiceRepo(MyDbContext ctx) : IServiceRepository
         return updatedService.Entity;
     }
 
-    public List<Service> GetAllServices()
+    public async Task<List<Service>> GetAllServices()
     {
-        var services = ctx.Services.ToList();
+        var services = await ctx.Services.ToListAsync();
         if (services == null || services.Count == 0)
         {
             throw new InvalidOperationException("No services found");

@@ -18,8 +18,6 @@ public class BookingController(IBookingService bookingService, ISecurityService 
     
     public const string DeleteBookingRoute = ControllerRoute + nameof(DeleteBooking);
     
-    public const string GetAvailabilitySlotsRoute = ControllerRoute + nameof(GetAvailabilitySlots);
-    
     public const string GetTodaysBookingsByUserIdRoute = ControllerRoute + nameof(GetTodaysBookingsByUserId);
     
     public const string GetFutureBookingsByUserIdRoute = ControllerRoute + nameof(GetFutureBookingsByUserId);
@@ -29,77 +27,70 @@ public class BookingController(IBookingService bookingService, ISecurityService 
     
     [HttpPost]
     [Route(CreateBookingRoute)]
-    public ActionResult<BookingResponseDto> CreateBooking([FromBody] BookingCreateRequestDto dto, [FromHeader] string authorization)
+    public async Task<ActionResult<BookingResponseDto>> CreateBooking([FromBody] BookingCreateRequestDto dto, [FromHeader] string authorization)
     {
         var jwt = security.VerifyJwtOrThrow(authorization);
         if (jwt.Role != "User")
         {
             return Unauthorized();
         }
-        return Ok(bookingService.CreateBooking(dto));
+        return Ok(await bookingService.CreateBooking(dto));
     }
     [HttpGet]
     [Route(GetAllBookingsRoute)]
-    public ActionResult<List<BookingResponseDto>> GetAllBookings([FromHeader] string authorization)
+    public async Task<ActionResult<List<BookingResponseDto>>> GetAllBookings([FromHeader] string authorization)
     {
         var jwt = security.VerifyJwtOrThrow(authorization);
         if (jwt.Role != "Admin")
         {
             return Unauthorized();
         }
-        return Ok(bookingService.GetAllBookings());
+        return Ok(await bookingService.GetAllBookings());
     }
     
     [HttpGet]
     [Route(GetLatestBookingsRoute)]
-    public ActionResult<List<BookingResponseDto>> GetLatestBookings([FromHeader] string authorization)
+    public async Task<ActionResult<List<BookingResponseDto>>> GetLatestBookings([FromHeader] string authorization)
     {
         var jwt = security.VerifyJwtOrThrow(authorization);
         if (jwt.Role != "Admin")
         {
             return Unauthorized();
         }
-        return Ok(bookingService.GetLatestBookings());
+        return Ok(await bookingService.GetLatestBookings());
     }
     
     [HttpDelete]
     [Route(DeleteBookingRoute)]
-    public ActionResult<BookingResponseDto> DeleteBooking(string id, [FromHeader] string authorization)
+    public async Task<ActionResult<BookingResponseDto>> DeleteBooking(string id, [FromHeader] string authorization)
     {
         var jwt = security.VerifyJwtOrThrow(authorization);
         if (jwt.Role!= "User")
         {
             return Unauthorized();
         }
-        return Ok(bookingService.DeleteBooking(id));
-    }
-    
-    [HttpGet]
-    [Route(GetAvailabilitySlotsRoute)]
-    public ActionResult<List<AvailabiltySlotsDto>> GetAvailabilitySlots(string serviceId)
-    {
-        return Ok(bookingService.GetAvailabilitySlots(serviceId));
+        return Ok(await bookingService.DeleteBooking(id));
     }
     
     [HttpGet]
     [Route(GetTodaysBookingsByUserIdRoute)]
-    public ActionResult<List<BookingResponseDto>> GetTodaysBookingsByUserId(string userId)
+    public async Task<ActionResult<List<BookingResponseDto>>> GetTodaysBookingsByUserId(string userId)
     {
         
-        return Ok(bookingService.GetTodaysBookingsByUserId(userId));
+        return Ok(await bookingService.GetTodaysBookingsByUserId(userId));
     }
     
     [HttpGet]
     [Route(GetFutureBookingsByUserIdRoute)]
-    public ActionResult<List<BookingResponseDto>> GetFutureBookingsByUserId(string userId)
+    public async Task<ActionResult<List<BookingResponseDto>>> GetFutureBookingsByUserId(string userId)
     {
-        return Ok(bookingService.GetFutureBookingsByUserId(userId));
+        return Ok(await bookingService.GetFutureBookingsByUserId(userId));
     }
     
     [HttpGet]
     [Route(GetPastBookingsByUserIdRoute)]
-    public ActionResult<List<BookingResponseDto>> GetPastBookingsByUserId(string userId)
+    public async Task<ActionResult<List<BookingResponseDto>>> GetPastBookingsByUserId(string userId)
     {
-        return Ok(bookingService.GetPastBookingsByUserId(userId));
+        return Ok(await bookingService.GetPastBookingsByUserId(userId));
     }
 }

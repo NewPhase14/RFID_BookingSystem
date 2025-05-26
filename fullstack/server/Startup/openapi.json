@@ -397,6 +397,39 @@
         }
       }
     },
+    "/api/availability/GetAvailabilitySlots": {
+      "get": {
+        "tags": [
+          "Availability"
+        ],
+        "operationId": "Availability_GetAvailabilitySlots",
+        "parameters": [
+          {
+            "name": "serviceId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "x-position": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AvailabiltySlotsDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/booking/CreateBooking": {
       "post": {
         "tags": [
@@ -536,39 +569,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/BookingResponseDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/booking/GetAvailabilitySlots": {
-      "get": {
-        "tags": [
-          "Booking"
-        ],
-        "operationId": "Booking_GetAvailabilitySlots",
-        "parameters": [
-          {
-            "name": "serviceId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "x-position": 1
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AvailabiltySlotsDto"
-                  }
                 }
               }
             }
@@ -1316,6 +1316,21 @@
           }
         }
       },
+      "AvailabiltySlotsDto": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "string"
+          },
+          "endTime": {
+            "type": "string"
+          }
+        }
+      },
       "BookingResponseDto": {
         "type": "object",
         "additionalProperties": false,
@@ -1382,21 +1397,6 @@
             "type": "string",
             "format": "time",
             "minLength": 1
-          }
-        }
-      },
-      "AvailabiltySlotsDto": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "date": {
-            "type": "string"
-          },
-          "startTime": {
-            "type": "string"
-          },
-          "endTime": {
-            "type": "string"
           }
         }
       },
@@ -1563,38 +1563,6 @@
           }
         }
       },
-      "ExampleClientDto": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseDto"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "somethingTheClientSends": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
-      "ExampleServerResponse": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseDto"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "somethingTheServerSends": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
       "Ping": {
         "allOf": [
           {
@@ -1633,50 +1601,14 @@
           }
         ]
       },
-      "ClientWantsToEnterDashboardDto": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseDto"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "jwt": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
-      "ServerConfirmsAdditionToDashboard": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/BaseDto"
-          },
-          {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "message": {
-                "type": "string"
-              }
-            }
-          }
-        ]
-      },
       "StringConstants": {
         "type": "string",
         "description": "Available eventType constants",
         "enum": [
           "MemberLeftNotification",
-          "ExampleClientDto",
-          "ExampleServerResponse",
           "Ping",
           "Pong",
-          "ServerSendsErrorMessage",
-          "ClientWantsToEnterDashboardDto",
-          "ServerConfirmsAdditionToDashboard"
+          "ServerSendsErrorMessage"
         ]
       }
     }

@@ -7,6 +7,6 @@ public interface IServiceRepository
     Service CreateService(Service service);
     Service DeleteService(string id);
     Service UpdateService(Service service);
-    List<Service> GetAllServices();
+    Task<List<Service>> GetAllServices();
     Service GetServiceById(string id);
 }

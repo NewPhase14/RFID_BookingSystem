@@ -9,11 +9,11 @@ public interface IAvailabilityRepository
     
     List<ServiceAvailability> CreateAllAvailabilities(List<ServiceAvailability> availabilities);
     
-    ServiceAvailability GetAvailability(Booking booking, int bookingDay);
+    Task<ServiceAvailability> GetAvailability(Booking booking, int bookingDay);
     
     ServiceAvailability UpdateAvailability(ServiceAvailability availability);
     
     ServiceAvailability DeleteAvailability(string id);     
     
-    ServiceAvailability GetAvailabilityForServiceAndDay(string serviceId, int dayOfWeek);
+    Task<ServiceAvailability> GetAvailabilityForServiceAndDay(string serviceId, int dayOfWeek);
 }

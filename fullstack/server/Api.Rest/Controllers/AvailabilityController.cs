@@ -18,6 +18,9 @@ public class AvailabilityController(IAvailabilityService availabilityService) : 
     public const string DeleteAvailabilityRoute = ControllerRoute + nameof(DeleteAvailability);
     
     public const string UpdateAvailabilityRoute = ControllerRoute + nameof(UpdateAvailability);
+    
+    public const string GetAvailabilitySlotsRoute = ControllerRoute + nameof(GetAvailabilitySlots);
+
 
 
     [HttpPost]
@@ -47,6 +50,13 @@ public class AvailabilityController(IAvailabilityService availabilityService) : 
     public ActionResult<AvailabilityResponseDto> UpdateAvailability([FromBody] AvailabilityUpdateRequestDto dto)
     {
         return Ok(availabilityService.UpdateAvailability(dto));
+    }
+    
+    [HttpGet]
+    [Route(GetAvailabilitySlotsRoute)]
+    public ActionResult<List<AvailabiltySlotsDto>> GetAvailabilitySlots(string serviceId)
+    {
+        return Ok(availabilityService.GetAvailabilitySlots(serviceId));
     }
     
     

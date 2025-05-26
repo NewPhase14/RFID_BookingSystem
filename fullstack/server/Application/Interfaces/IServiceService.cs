@@ -10,7 +10,7 @@ public interface IServiceService
     
     public ServiceResponseDto UpdateService(ServiceUpdateRequestDto dto);
     
-    public List<ServiceResponseDto> GetAllServices();
+    public Task<List<ServiceResponseDto>> GetAllServices();
     
     public ServiceResponseDto GetServiceById(string id);
 }

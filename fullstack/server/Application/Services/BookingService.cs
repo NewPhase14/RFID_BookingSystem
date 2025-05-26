@@ -1,7 +1,6 @@
 using Application.Interfaces;
 using Application.Interfaces.Infrastructure.Postgres;
 using Application.Interfaces.Infrastructure.Websocket;
-using Application.Models.Dtos.Availability;
 using Application.Models.Dtos.Booking;
 using Core.Domain.Entities;
 
@@ -23,11 +22,11 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
             UpdatedAt = DateTime.Now
 
         };
-        if (!CanCreateBooking(booking)) throw new InvalidOperationException("Booking could not be created.");
+        if (!await CanCreateBooking(booking)) throw new InvalidOperationException("Booking could not be created.");
         
-        var createdBooking = bookingRepository.CreateBooking(booking);
+        var createdBooking = await bookingRepository.CreateBooking(booking);
 
-        var latestBookings = bookingRepository.GetLatestBookings();
+        var latestBookings = await bookingRepository.GetLatestBookings();
         var bookingsToBroadcast = latestBookings.Select(b => new BookingResponseDto()
         {
             Id = b.Id,
@@ -48,13 +47,12 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
         };
         
         await connectionManager.BroadcastToTopic("dashboard", bookingsBroadcastDto);
-        
         return new BookingResponseDto()
         {
             Id = createdBooking.Id,
             UserId = createdBooking.UserId,
-            ServiceName = createdBooking.Service.Name,
             Email = createdBooking.User.Email,
+            ServiceName = createdBooking.Service.Name,
             Date = createdBooking.Date.ToString("dd-MM-yyyy"),
             StartTime = createdBooking.StartTime.ToString("HH:mm"),
             EndTime = createdBooking.EndTime.ToString("HH:mm"),
@@ -63,10 +61,9 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
         };
     }
 
-    public List<BookingResponseDto> GetAllBookings()
+    public async Task<List<BookingResponseDto>> GetAllBookings()
     {
-        var bookings = bookingRepository.GetAllBookings();
-
+        var bookings = await bookingRepository.GetAllBookings();
         return bookings.Select(b => new BookingResponseDto()
         {
             Id = b.Id,
@@ -81,9 +78,9 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
         }).ToList();
     }
 
-    public List<BookingResponseDto> GetLatestBookings()
+    public async Task<List<BookingResponseDto>> GetLatestBookings()
     {
-        var latestBookings = bookingRepository.GetLatestBookings();
+        var latestBookings = await bookingRepository.GetLatestBookings();
 
         return latestBookings.Select(b => new BookingResponseDto()
         {
@@ -99,15 +96,14 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
         }).ToList();
     }
 
-    private bool CanCreateBooking(Booking newBooking)
+    private async Task<bool> CanCreateBooking(Booking newBooking)
     {
         var bookingDay = (int)newBooking.Date.DayOfWeek;
 
-        var availability =  availabilityRepository.GetAvailability(newBooking, bookingDay);
-
+        var availability = await availabilityRepository.GetAvailability(newBooking, bookingDay);
         if (availability == null)
-            throw new InvalidOperationException("No availability for this service on the selected day.");
-
+            throw new InvalidOperationException("No availability for this service on this selected day");
+        
         var startTime = newBooking.StartTime;
         var endTime = newBooking.EndTime;
 
@@ -115,7 +111,7 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
             throw new InvalidOperationException("Booking time is outside the available service hours.");
 
         // Overlapping check
-        var overlaps = bookingRepository.BookingOverlapping(newBooking);
+        var overlaps = await bookingRepository.BookingOverlapping(newBooking);
 
         if (overlaps)
             throw new InvalidOperationException("This booking overlaps with an existing booking.");
@@ -123,9 +119,9 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
         return true;
     }
 
-    public BookingResponseDto DeleteBooking(string id)
+    public async Task<BookingResponseDto> DeleteBooking(string id)
     {
-        var deletedBooking = bookingRepository.DeleteBooking(id);
+        var deletedBooking = await bookingRepository.DeleteBooking(id);
         return new BookingResponseDto()
         {
             Id = deletedBooking.Id,
@@ -140,46 +136,9 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
         };
     }
 
-    public List<AvailabiltySlotsDto> GetAvailabilitySlots(string serviceId)
+    public async Task<List<BookingResponseDto>> GetTodaysBookingsByUserId(string userId)
     {
-        var today = DateTime.Today;
-        var availabilitySlots = new List<AvailabiltySlotsDto>();
-
-        for (int i = 0; i < 7; i++)
-        {
-            var date = today.AddDays(i);
-            int dayOfWeek = (int)date.DayOfWeek;
-            var availability = availabilityRepository.GetAvailabilityForServiceAndDay(serviceId, dayOfWeek);
-
-            if (availability == null)
-                continue;
-
-            var slotStart = availability.AvailableFrom;
-            var slotEnd = availability.AvailableTo;
-
-            for (var time = slotStart; time < slotEnd; time = time.AddHours(1))
-            {
-                var slotDateTime = date.Add(time.ToTimeSpan());
-                
-                if (i == 0 && slotDateTime < DateTime.Now)
-                    continue;
-
-                availabilitySlots.Add(new AvailabiltySlotsDto
-                {
-                    Date = date.ToString("dd-MM-yyyy"),
-                    StartTime = time.ToString("HH:mm"),
-                    EndTime = time.AddHours(1).ToString("HH:mm")
-                });
-            }
-        }
-
-        return availabilitySlots;
-        
-    }
-
-    public List<BookingResponseDto> GetTodaysBookingsByUserId(string userId)
-    {
-        var bookings = bookingRepository.GetTodaysBookingsByUserId(userId);
+        var bookings = await bookingRepository.GetTodaysBookingsByUserId(userId);
 
         return bookings.Select(b => new BookingResponseDto()
         {
@@ -195,9 +154,9 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
         }).ToList();
     }
 
-    public List<BookingResponseDto> GetFutureBookingsByUserId(string userId)
+    public async Task<List<BookingResponseDto>> GetFutureBookingsByUserId(string userId)
     {
-        var bookings = bookingRepository.GetFutureBookingsByUserId(userId);
+        var bookings = await bookingRepository.GetFutureBookingsByUserId(userId);
 
         return bookings.Select(b => new BookingResponseDto()
         {
@@ -213,9 +172,9 @@ public class BookingService(IBookingDataRepository bookingRepository, IAvailabil
         }).ToList();
     }
 
-    public List<BookingResponseDto> GetPastBookingsByUserId(string userId)
+    public async Task<List<BookingResponseDto>> GetPastBookingsByUserId(string userId)
     {
-        var bookings = bookingRepository.GetPastBookingsByUserId(userId);
+        var bookings = await bookingRepository.GetPastBookingsByUserId(userId);
 
         return bookings.Select(b => new BookingResponseDto()
         {

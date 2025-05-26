@@ -4,19 +4,19 @@ namespace Application.Interfaces.Infrastructure.Postgres;
 
 public interface IBookingDataRepository
 {
-    Booking CreateBooking(Booking booking);
+    Task<Booking> CreateBooking(Booking booking);
     
-    List<Booking> GetAllBookings();
+    Task<List<Booking>> GetAllBookings();
     
-    List<Booking> GetLatestBookings();
+    Task<List<Booking>> GetLatestBookings();
 
-    Booking DeleteBooking(string id);
+    Task<Booking> DeleteBooking(string id);
     
-    bool BookingOverlapping(Booking booking);
+    Task<bool> BookingOverlapping(Booking booking);
     
-    List<Booking> GetFutureBookingsByUserId(string userId);
+    Task<List<Booking>> GetFutureBookingsByUserId(string userId);
     
-    List<Booking> GetPastBookingsByUserId(string userId);
+    Task<List<Booking>> GetPastBookingsByUserId(string userId);
     
-    List<Booking> GetTodaysBookingsByUserId(string userId);
+    Task<List<Booking>> GetTodaysBookingsByUserId(string userId);
 }

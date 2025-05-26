@@ -22,10 +22,10 @@ public class AvailabilityRepo(MyDbContext ctx) : IAvailabilityRepository
         return availabilities;
     }
 
-    public ServiceAvailability GetAvailability(Booking booking, int bookingDay)
+    public async Task<ServiceAvailability> GetAvailability(Booking booking, int bookingDay)
     {
-        return ctx.ServiceAvailabilities
-            .FirstOrDefault(sa => sa.ServiceId == booking.ServiceId && sa.DayOfWeek == bookingDay) ?? throw new InvalidOperationException();
+        return await ctx.ServiceAvailabilities
+            .FirstOrDefaultAsync(sa => sa.ServiceId == booking.ServiceId && sa.DayOfWeek == bookingDay) ?? throw new InvalidOperationException();
     }
 
     public ServiceAvailability UpdateAvailability(ServiceAvailability availability)
@@ -57,9 +57,9 @@ public class AvailabilityRepo(MyDbContext ctx) : IAvailabilityRepository
         return deletedAvailability.Entity;
     }
     
-    public ServiceAvailability GetAvailabilityForServiceAndDay(string serviceId, int dayOfWeek)
+    public async Task<ServiceAvailability> GetAvailabilityForServiceAndDay(string serviceId, int dayOfWeek)
     {
-        return ctx.ServiceAvailabilities
-            .FirstOrDefault(a => a.ServiceId == serviceId && a.DayOfWeek == dayOfWeek); 
+        return await ctx.ServiceAvailabilities
+            .FirstOrDefaultAsync(a => a.ServiceId == serviceId && a.DayOfWeek == dayOfWeek); 
     }
 }

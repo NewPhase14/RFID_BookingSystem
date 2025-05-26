@@ -97,4 +97,40 @@ public class AvailabilityService(IAvailabilityRepository repository) : IAvailabi
             UpdatedAt = updateAvailability.UpdatedAt
         };
     }
+    
+    public async Task<List<AvailabiltySlotsDto>> GetAvailabilitySlots(string serviceId)
+    {
+        var today = DateTime.Today;
+        var availabilitySlots = new List<AvailabiltySlotsDto>();
+
+        for (int i = 0; i < 7; i++)
+        {
+            var date = today.AddDays(i);
+            int dayOfWeek = (int)date.DayOfWeek;
+            var availability = await repository.GetAvailabilityForServiceAndDay(serviceId, dayOfWeek);
+
+            if (availability == null)
+                continue;
+
+            var slotStart = availability.AvailableFrom;
+            var slotEnd = availability.AvailableTo;
+
+            for (var time = slotStart; time < slotEnd; time = time.AddHours(1))
+            {
+                var slotDateTime = date.Add(time.ToTimeSpan());
+                
+                if (i == 0 && slotDateTime < DateTime.Now)
+                    continue;
+
+                availabilitySlots.Add(new AvailabiltySlotsDto
+                {
+                    Date = date.ToString("dd-MM-yyyy"),
+                    StartTime = time.ToString("HH:mm"),
+                    EndTime = time.AddHours(1).ToString("HH:mm")
+                });
+            }
+        }
+
+        return availabilitySlots;
+    }
 }
