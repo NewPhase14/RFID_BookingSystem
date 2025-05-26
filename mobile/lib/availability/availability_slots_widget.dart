@@ -5,12 +5,14 @@ class AvailabilitySlotsWidget extends StatelessWidget {
   final Map<String, List<Availability>> slotsByDate;
   final int selectedDayIndex;
   final void Function(int) onDayChanged;
+  final void Function(Availability) onSlotSelected;
 
   const AvailabilitySlotsWidget({
     super.key,
     required this.slotsByDate,
     required this.selectedDayIndex,
     required this.onDayChanged,
+    required this.onSlotSelected,
   });
 
   @override
@@ -80,7 +82,7 @@ class AvailabilitySlotsWidget extends StatelessWidget {
               children:
                   slots.map((slot) {
                     return ElevatedButton(
-                      onPressed: () => {},
+                      onPressed: () => onSlotSelected(slot),
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.symmetric(
                           horizontal: 20,

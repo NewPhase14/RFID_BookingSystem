@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_guid/flutter_guid.dart';
+import '../forgot_password/forgot_password_page.dart';
 import '../models/login.dart';
 import 'login_cubit.dart';
 import 'login_state.dart';
@@ -74,7 +75,7 @@ class _LoginFormState extends State<LoginForm> {
               const SizedBox(height: 16),
               TextButton(
                 onPressed: () {
-                  // Handle forgot password
+                  Navigator.of(context).push(ForgotPasswordPage.route());
                 },
                 child: Text(
                   'Forgot password?',

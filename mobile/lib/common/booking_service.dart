@@ -20,8 +20,9 @@ abstract class BookingService {
   Future<List<Bookings>> getFutureBookingsByUserId(String userId);
   Future<List<Bookings>> getPastBookingsByUserId(String userId);
   Future<List<Availability>> getAvailabilitySlots(String serviceId);
-  Future<Bookings> deleteBooking(String bookingId);
-  Future<Bookings> createBooking(CreateBooking createBooking);
+  Future<void> deleteBooking(String bookingId);
+  Future<void> createBooking(CreateBooking createBooking);
+  Future<void> forgotPassword(String email);
 }
 
 class ApiBookingService extends BookingService {
@@ -192,7 +193,7 @@ class ApiBookingService extends BookingService {
   }
 
   @override
-  Future<Bookings> createBooking(CreateBooking createBooking) async {
+  Future<void> createBooking(CreateBooking createBooking) async {
     final apiUrl = dotenv.env['API_URL'];
 
     final token = await _secureStorage.read(key: 'jwt');
@@ -206,16 +207,13 @@ class ApiBookingService extends BookingService {
       body: jsonEncode(createBooking.toJson()),
     );
 
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      return Bookings.fromJson(json);
-    } else {
+    if (response.statusCode != 200) {
       throw Exception('Failed to create booking: ${response.body}');
     }
   }
 
   @override
-  Future<Bookings> deleteBooking(String bookingId) async {
+  Future<void> deleteBooking(String bookingId) async {
     final apiUrl = dotenv.env['API_URL'];
 
     final token = await _secureStorage.read(key: 'jwt');
@@ -228,11 +226,24 @@ class ApiBookingService extends BookingService {
       headers: {'Authorization': token},
     );
 
-    if (response.statusCode == 200) {
-      final json = jsonDecode(response.body);
-      return Bookings.fromJson(json);
-    } else {
+    if (response.statusCode != 200) {
       throw Exception('Failed to delete booking: ${response.body}');
     }
+  }
+
+  @override
+  Future<void> forgotPassword(String email) {
+    final apiUrl = dotenv.env['API_URL'];
+    return http
+        .post(
+          Uri.parse('$apiUrl/api/auth/ForgotPassword'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({'email': email}),
+        )
+        .then((response) {
+          if (response.statusCode != 200) {
+            throw Exception('Forgot password failed: ${response.body}');
+          }
+        });
   }
 }

@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:mobile/common/booking_service.dart';
 import 'package:mobile/services_detail/services_detail_cubit.dart';
 import 'package:mobile/services_detail/services_detail_state.dart';
 import '../availability/availability_cubit.dart';
 import '../availability/availability_slots_widget.dart';
 import '../availability/availability_state.dart';
+import '../models/availability.dart';
+import '../models/create_booking.dart';
 
 class ServiceDetailPage extends StatefulWidget {
   final String serviceId;
@@ -23,6 +26,46 @@ class _ServiceDetailPageState extends State<ServiceDetailPage> {
     setState(() {
       selectedDayIndex = newIndex;
     });
+  }
+
+  Future<void> _onSlotSelected(Availability slot) async {
+    final bookingService = ApiBookingService();
+
+    final profile = await bookingService.getProfileFromStorage();
+    if (!mounted) return;
+    if (profile == null) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('User profile not found')));
+      return;
+    }
+
+    try {
+      final originalFormat = DateFormat('dd-MM-yyyy');
+      final targetFormat = DateFormat('yyyy-MM-dd');
+      final formattedDate = targetFormat.format(
+        originalFormat.parse(slot.date),
+      );
+
+      final createBooking = CreateBooking(
+        userId: profile.id,
+        serviceId: widget.serviceId,
+        date: formattedDate,
+        startTime: slot.startTime,
+        endTime: slot.endTime,
+      );
+
+      await bookingService.createBooking(createBooking);
+
+      if (!mounted) return;
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('Booking successful!')));
+    } catch (e) {
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Booking failed: $e')));
+    }
   }
 
   @override
@@ -119,6 +162,7 @@ class _ServiceDetailPageState extends State<ServiceDetailPage> {
                               slotsByDate: availabilityState.slots,
                               selectedDayIndex: selectedDayIndex,
                               onDayChanged: _onDayChanged,
+                              onSlotSelected: _onSlotSelected,
                             );
                           }
                           return const SizedBox.shrink();

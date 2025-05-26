@@ -70,8 +70,8 @@ class BookingCubit extends Cubit<BookingState> {
   Future<void> createNewBooking(CreateBooking createBooking) async {
     emit(BookingActionLoading());
     try {
-      final booking = await bookingService.createBooking(createBooking);
-      emit(BookingActionSuccess(booking));
+      await bookingService.createBooking(createBooking);
+      emit(BookingActionSuccess());
     } catch (e) {
       emit(BookingActionError(e.toString()));
     }
@@ -80,9 +80,9 @@ class BookingCubit extends Cubit<BookingState> {
   Future<void> deleteBooking(String bookingId) async {
     emit(BookingActionLoading());
     try {
-      final booking = await bookingService.deleteBooking(bookingId);
+      await bookingService.deleteBooking(bookingId);
 
-      emit(BookingActionSuccess(booking));
+      emit(BookingActionSuccess());
     } catch (e) {
       emit(BookingActionError(e.toString()));
     }

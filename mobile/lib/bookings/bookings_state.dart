@@ -23,8 +23,7 @@ class BookingActionReady extends BookingState {}
 class BookingActionLoading extends BookingState {}
 
 class BookingActionSuccess extends BookingState {
-  final Bookings bookings;
-  BookingActionSuccess(this.bookings);
+  BookingActionSuccess();
 }
 
 class BookingActionError extends BookingState {
