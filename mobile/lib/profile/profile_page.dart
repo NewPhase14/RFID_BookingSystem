@@ -54,7 +54,7 @@ class ProfilePage extends StatelessWidget {
                         child: CircleAvatar(
                           radius: 50,
                           backgroundImage: NetworkImage(
-                            'https://api.dicebear.com/9.x/initials/png?seed=${profile.firstName}',
+                            'https://api.dicebear.com/9.x/initials/png?seed=${profile.firstName} ${profile.lastName}&scale=100&backgroundColor=039be5',
                           ),
                         ),
                       ),
@@ -82,48 +82,48 @@ class ProfilePage extends StatelessWidget {
                             TextField(
                               enabled: false,
                               decoration: InputDecoration(
-                                fillColor: Colors.grey[850], // grey background
+                                fillColor: Colors.black26, // grey background
                               ),
                               controller: TextEditingController(
                                 text: profile.firstName,
                               ),
-                              style: const TextStyle(color: Colors.white54),
+                              style: const TextStyle(color: Colors.white30),
                             ),
                             const SizedBox(height: 20),
 
                             TextField(
                               enabled: false,
                               decoration: InputDecoration(
-                                fillColor: Colors.grey[850], // grey background
+                                fillColor: Colors.black26, // grey background
                               ),
                               controller: TextEditingController(
                                 text: profile.lastName,
                               ),
-                              style: const TextStyle(color: Colors.white54),
+                              style: const TextStyle(color: Colors.white24),
                             ),
                             const SizedBox(height: 20),
 
                             TextField(
                               enabled: false,
                               decoration: InputDecoration(
-                                fillColor: Colors.grey[850], // grey background
+                                fillColor: Colors.black26, // grey background
                               ),
                               controller: TextEditingController(
                                 text: profile.email,
                               ),
-                              style: const TextStyle(color: Colors.white54),
+                              style: const TextStyle(color: Colors.white24),
                             ),
                             const SizedBox(height: 20),
 
                             TextField(
                               enabled: false,
                               decoration: InputDecoration(
-                                fillColor: Colors.grey[850], // grey background
+                                fillColor: Colors.black26, // grey background
                               ),
                               controller: TextEditingController(
                                 text: profile.rfid,
                               ),
-                              style: const TextStyle(color: Colors.white54),
+                              style: const TextStyle(color: Colors.white24),
                             ),
                           ],
                         ),
