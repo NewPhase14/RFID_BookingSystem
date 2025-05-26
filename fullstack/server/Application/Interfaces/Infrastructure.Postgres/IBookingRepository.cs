@@ -2,7 +2,7 @@ using Core.Domain.Entities;
 
 namespace Application.Interfaces.Infrastructure.Postgres;
 
-public interface IBookingDataRepository
+public interface IBookingRepository
 {
     Task<Booking> CreateBooking(Booking booking);
     

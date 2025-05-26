@@ -6,9 +6,9 @@ namespace Application.Services;
 
 public class UserService(IUserRepository userRepository) : IUserService
 {
-    public UserResponseDto GetUserByEmail(string email)
+    public async Task<UserResponseDto> GetUserByEmail(string email)
     {
-        var user = userRepository.GetUserByEmail(email);
+        var user = await userRepository.GetUserByEmail(email);
 
         return new UserResponseDto
         {
@@ -23,9 +23,9 @@ public class UserService(IUserRepository userRepository) : IUserService
         };
     }
 
-    public List<UserResponseDto> GetAllUsers()
+    public async Task<List<UserResponseDto>> GetAllUsers()
     {
-        var users = userRepository.GetAllUsers();
+        var users = await userRepository.GetAllUsers();
 
         return users.Select(user => new UserResponseDto
         {
@@ -40,9 +40,9 @@ public class UserService(IUserRepository userRepository) : IUserService
         }).ToList();
     }
 
-    public UserResponseDto DeleteUser(string id)
+    public async Task<UserResponseDto> DeleteUser(string id)
     {
-    var user = userRepository.DeleteUser(id);
+    var user = await userRepository.DeleteUser(id);
 
         return new UserResponseDto
         {

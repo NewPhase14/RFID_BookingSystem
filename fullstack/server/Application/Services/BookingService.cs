@@ -6,7 +6,7 @@ using Core.Domain.Entities;
 
 namespace Application.Services;
 
-public class BookingService(IBookingDataRepository bookingRepository, IAvailabilityRepository availabilityRepository, IConnectionManager connectionManager) : IBookingService
+public class BookingService(IBookingRepository bookingRepository, IAvailabilityRepository availabilityRepository, IConnectionManager connectionManager) : IBookingService
 {
     public async Task<BookingResponseDto> CreateBooking(BookingCreateRequestDto dto)
     {

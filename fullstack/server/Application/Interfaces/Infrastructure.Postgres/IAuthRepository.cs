@@ -6,7 +6,7 @@ using Core.Domain.Entities;
 
 namespace Application.Interfaces.Infrastructure.Postgres;
 
-public interface IAuthDataRepository
+public interface IAuthRepository
 {
     User? GetUserOrNull(string email);
     Task<User?> GetUserOrNullByPasswordResetTokenId(string tokenId);

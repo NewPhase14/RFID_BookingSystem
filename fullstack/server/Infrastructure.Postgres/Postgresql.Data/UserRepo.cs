@@ -7,11 +7,11 @@ namespace Infrastructure.Postgres.Postgresql.Data;
 
 public class UserRepo(MyDbContext context) : IUserRepository
 {
-    public User GetUserByEmail(string email)
+    public async Task<User> GetUserByEmail(string email)
     {
-        var user = context.Users.
+        var user = await context.Users.
             Include(user => user.Role)
-            .FirstOrDefault(u => u.Email == email);
+            .FirstOrDefaultAsync(u => u.Email == email);
         
         if (user == null)
         {
@@ -21,11 +21,11 @@ public class UserRepo(MyDbContext context) : IUserRepository
         return user;
     }
 
-    public List<User> GetAllUsers()
+    public async Task<List<User>> GetAllUsers()
     {
-        var users = context.Users.
+        var users = await context.Users.
             Include(user => user.Role).
-            Where(user => user.Role.Name == "User").ToList();
+            Where(user => user.Role.Name == "User").ToListAsync();
         if (users == null || users.Count == 0)
         {
             throw new InvalidOperationException("No users found");
@@ -34,16 +34,16 @@ public class UserRepo(MyDbContext context) : IUserRepository
         return users;
     }
 
-    public User DeleteUser(string id)
+    public async Task<User> DeleteUser(string id)
     {
-        var user = context.Users.FirstOrDefault(u => u.Id == id);
+        var user = await context.Users.FirstOrDefaultAsync(u => u.Id == id);
         if (user == null)
         {
             throw new InvalidOperationException("User not found");
         }
         
         context.Users.Remove(user);
-        context.SaveChanges();
+        await context.SaveChangesAsync();
         
         return user;
     }

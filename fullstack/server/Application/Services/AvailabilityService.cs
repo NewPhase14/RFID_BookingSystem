@@ -5,7 +5,7 @@ using Core.Domain.Entities;
 
 namespace Application.Services;
 
-public class AvailabilityService(IAvailabilityRepository availabilityRepository, IBookingDataRepository bookingRepository) : IAvailabilityService
+public class AvailabilityService(IAvailabilityRepository availabilityRepository, IBookingRepository bookingRepository) : IAvailabilityService
 {
     public AvailabilityResponseDto CreateAvailability(AvailabilityCreateRequestDto dto)
     {

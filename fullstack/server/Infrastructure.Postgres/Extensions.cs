@@ -19,8 +19,8 @@ public static class Extensions
             options.EnableSensitiveDataLogging();
         });
 
-        services.AddScoped<IAuthDataRepository, AuthRepo>();
-        services.AddScoped<IBookingDataRepository, BookingRepo>();
+        services.AddScoped<IAuthRepository, AuthRepo>();
+        services.AddScoped<IBookingRepository, BookingRepo>();
         services.AddScoped<IActivityLogsRepository, ActivityLogsRepo>();
         services.AddScoped<IAvailabilityRepository, AvailabilityRepo>();
         services.AddScoped<ICheckingRepository, CheckingRepo>();

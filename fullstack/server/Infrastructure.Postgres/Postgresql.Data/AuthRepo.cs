@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Postgres.Postgresql.Data;
 
-public class AuthRepo(MyDbContext ctx) : IAuthDataRepository
+public class AuthRepo(MyDbContext ctx) : IAuthRepository
 {
     public User? GetUserOrNull(string email)
     {

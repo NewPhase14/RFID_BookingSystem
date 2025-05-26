@@ -18,32 +18,32 @@ public class UserController(IUserService userService, ISecurityService security)
     
     [HttpGet]
     [Route(GetUserByEmailRoute)]
-    public ActionResult<UserResponseDto> GetUserByEmail(string email)
+    public async Task<ActionResult<UserResponseDto>> GetUserByEmail(string email)
     {
-        return Ok(userService.GetUserByEmail(email));
+        return Ok(await userService.GetUserByEmail(email));
     }
     
     [HttpGet]
     [Route(GetAllUsersRoute)]
-    public ActionResult<List<UserResponseDto>> GetAllUsers([FromHeader] string authorization)
+    public async Task<ActionResult<List<UserResponseDto>>> GetAllUsers([FromHeader] string authorization)
     {
         var jwt = security.VerifyJwtOrThrow(authorization);
         if (jwt.Role != "Admin")
         {
             return Unauthorized();
         }
-        return Ok(userService.GetAllUsers());
+        return Ok(await userService.GetAllUsers());
     }
     
     [HttpDelete]
     [Route(DeleteUserRoute)]
-    public ActionResult<UserResponseDto> DeleteUser(string id, [FromHeader] string authorization)
+    public async Task<ActionResult<UserResponseDto>> DeleteUser(string id, [FromHeader] string authorization)
     {
         var jwt = security.VerifyJwtOrThrow(authorization);
         if (jwt.Role != "Admin")
         {
             return Unauthorized();
         }
-        return Ok(userService.DeleteUser(id));
+        return Ok(await userService.DeleteUser(id));
     }
 }

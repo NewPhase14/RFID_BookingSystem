@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Postgres.Postgresql.Data;
 
-public class BookingRepo(MyDbContext ctx) : IBookingDataRepository
+public class BookingRepo(MyDbContext ctx) : IBookingRepository
 {
     public async Task<Booking> CreateBooking(Booking booking)
     {
