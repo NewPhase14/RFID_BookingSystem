@@ -15,9 +15,20 @@ class AvailabilitySlotsWidget extends StatelessWidget {
     required this.onSlotSelected,
   });
 
+  DateTime _parseDate(String dateStr) {
+    final parts = dateStr.split('-');
+    return DateTime(
+      int.parse(parts[2]), // year
+      int.parse(parts[1]), // month
+      int.parse(parts[0]), // day
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    final availableDates = slotsByDate.keys.toList()..sort();
+    final availableDates =
+        slotsByDate.keys.toList()
+          ..sort((a, b) => _parseDate(a).compareTo(_parseDate(b)));
 
     if (availableDates.isEmpty) {
       return const Center(
