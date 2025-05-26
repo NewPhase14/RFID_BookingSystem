@@ -15,16 +15,16 @@ public class ActivityLogsController(IActivityLogService activityLogService) : Co
     
     [HttpGet]
     [Route(GetAllActivityLogsRoute)]
-    public ActionResult<List<ActivityLogResponseDto>> GetAllActivityLogs()
+    public async Task<ActionResult<List<ActivityLogResponseDto>>> GetAllActivityLogs()
     {
-        return Ok(activityLogService.GetAllActivityLogs());
+        return Ok(await activityLogService.GetAllActivityLogs());
     }
     
     [HttpGet]
     [Route(GetLatestActivityLogsRoute)]
-    public ActionResult<List<ActivityLogResponseDto>> GetLatestActivityLogs()
+    public async Task<ActionResult<List<ActivityLogResponseDto>>> GetLatestActivityLogs()
     {
-        return Ok(activityLogService.GetLatestActivityLogs());
+        return Ok(await activityLogService.GetLatestActivityLogs());
     }
     
     

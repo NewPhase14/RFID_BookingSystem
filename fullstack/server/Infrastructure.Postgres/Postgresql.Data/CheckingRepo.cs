@@ -8,13 +8,13 @@ namespace Infrastructure.Postgres.Postgresql.Data;
 
 public class CheckingRepo(MyDbContext ctx) : ICheckingRepository
 {
-    public CheckingBookingResponseDto CheckBookingRequestDto(string rfid, string serviceId)
+    public async Task<CheckingBookingResponseDto> CheckBookingRequestDto(string rfid, string serviceId)
     {
         bool isValid = false;
         var status = "failed";
 
-        var user = ctx.Users.Include(user => user.Bookings)
-            .FirstOrDefault(u => u.Rfid == rfid);
+        var user = await ctx.Users.Include(user => user.Bookings)
+            .FirstOrDefaultAsync(u => u.Rfid == rfid);
 
         if (user == null)
         {

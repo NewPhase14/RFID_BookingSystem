@@ -11,7 +11,7 @@ public class CheckingService(ICheckingRepository checkingRepository, IActivityLo
 {
     public async Task<CheckingResponseDto> CheckIfValid(CheckBookingRequestDto dto)
     {
-        var activity = checkingRepository.CheckBookingRequestDto(dto.Rfid, dto.ServiceId);
+        var activity = await checkingRepository.CheckBookingRequestDto(dto.Rfid, dto.ServiceId);
 
         var activityLog = new ActivityLog
         {
@@ -22,9 +22,9 @@ public class CheckingService(ICheckingRepository checkingRepository, IActivityLo
             Status = activity.Status,
         };
 
-        activityLogsRepository.CreateActivityLogs(activityLog);
+        await activityLogsRepository.CreateActivityLogs(activityLog);
 
-        var latestActivityLogs = activityLogsRepository.GetLatestActivityLogs();
+        var latestActivityLogs = await activityLogsRepository.GetLatestActivityLogs();
 
         var activityLogsToBroadcast = latestActivityLogs.Select(log => new ActivityLogResponseDto
         {

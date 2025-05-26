@@ -13,8 +13,8 @@ public class CheckingController(ICheckingService checkingService) : ControllerBa
     
     [HttpPost]
     [Route(CheckBookingRequestRoute)]
-    public ActionResult<CheckingResponseDto> CheckBookingRequest([FromBody] CheckBookingRequestDto dto)
+    public async Task<ActionResult<CheckingResponseDto>> CheckBookingRequest([FromBody] CheckBookingRequestDto dto)
     {
-        return Ok(checkingService.CheckIfValid(dto));
+        return Ok(await checkingService.CheckIfValid(dto));
     }
 }

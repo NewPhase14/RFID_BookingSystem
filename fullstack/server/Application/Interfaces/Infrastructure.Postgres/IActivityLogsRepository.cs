@@ -5,10 +5,10 @@ namespace Application.Interfaces.Infrastructure.Postgres;
 
 public interface IActivityLogsRepository
 {
-    void CreateActivityLogs(ActivityLog activityLog);
+    Task CreateActivityLogs(ActivityLog activityLog);
     
-    List<ActivityLog> GetActivityLogs();
+    Task<List<ActivityLog>> GetActivityLogs();
     
-    List<ActivityLog> GetLatestActivityLogs();
+    Task<List<ActivityLog>> GetLatestActivityLogs();
     
 }

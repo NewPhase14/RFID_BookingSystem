@@ -4,5 +4,5 @@ namespace Application.Interfaces.Infrastructure.Postgres;
 
 public interface ICheckingRepository
 {
-    CheckingBookingResponseDto CheckBookingRequestDto(string rfid, string serviceId);
+    Task<CheckingBookingResponseDto> CheckBookingRequestDto(string rfid, string serviceId);
 }

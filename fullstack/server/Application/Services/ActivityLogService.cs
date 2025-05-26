@@ -6,9 +6,9 @@ namespace Application.Services;
 
 public class ActivityLogService(IActivityLogsRepository activityLogsRepository) : IActivityLogService
 {
-    public List<ActivityLogResponseDto> GetAllActivityLogs()
+    public async Task<List<ActivityLogResponseDto>> GetAllActivityLogs()
     {
-        var activityLogs = activityLogsRepository.GetActivityLogs();
+        var activityLogs = await activityLogsRepository.GetActivityLogs();
 
         return activityLogs.Select(activityLog => new ActivityLogResponseDto
         {
@@ -21,9 +21,9 @@ public class ActivityLogService(IActivityLogsRepository activityLogsRepository) 
         }).ToList();
     }
 
-    public List<ActivityLogResponseDto> GetLatestActivityLogs()
+    public async Task<List<ActivityLogResponseDto>> GetLatestActivityLogs()
     {
-        var latestActivityLogs = activityLogsRepository.GetLatestActivityLogs();
+        var latestActivityLogs = await activityLogsRepository.GetLatestActivityLogs();
 
         return latestActivityLogs.Select(activityLog => new ActivityLogResponseDto
         {

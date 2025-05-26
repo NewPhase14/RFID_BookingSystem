@@ -8,30 +8,30 @@ namespace Infrastructure.Postgres.Postgresql.Data;
 
 public class ActivityLogsRepo(MyDbContext ctx) : IActivityLogsRepository
 {
-    public void CreateActivityLogs(ActivityLog activityLog)
+    public async Task CreateActivityLogs(ActivityLog activityLog)
     {
         ctx.ActivityLogs.Add(activityLog);
     
-        ctx.SaveChanges();
+        await ctx.SaveChangesAsync();
     }
 
-    public List<ActivityLog> GetActivityLogs()
+    public async Task<List<ActivityLog>> GetActivityLogs()
     {
-        var activityLogs = ctx.ActivityLogs
+        var activityLogs = await ctx.ActivityLogs
             .Include(u => u.User)
             .Include(s => s.Service)
-            .OrderByDescending(x => x.AttemptedAt).ToList();
+            .OrderByDescending(x => x.AttemptedAt).ToListAsync();
         return activityLogs;
     }
     
-    public List<ActivityLog> GetLatestActivityLogs()
+    public async Task<List<ActivityLog>> GetLatestActivityLogs()
     {
-        var activityLogs = ctx.ActivityLogs
+        var activityLogs = await ctx.ActivityLogs
             .Include(u => u.User)
             .Include(s => s.Service)
             .OrderByDescending(x => x.AttemptedAt)
             .Take(5)
-            .ToList();
+            .ToListAsync();
         
         return activityLogs;
     }
