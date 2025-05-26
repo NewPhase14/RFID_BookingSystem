@@ -45,111 +45,150 @@ class ProfilePage extends StatelessWidget {
                     horizontal: 20,
                     vertical: 16,
                   ),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 40),
-
-                      // Cartoon avatar from DiceBear
-                      Center(
-                        child: CircleAvatar(
-                          radius: 50,
-                          backgroundImage: NetworkImage(
-                            'https://api.dicebear.com/9.x/initials/png?seed=${profile.firstName} ${profile.lastName}&scale=100&backgroundColor=039be5',
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Center(
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundImage: NetworkImage(
+                              'https://api.dicebear.com/9.x/initials/png?seed=${profile.firstName} ${profile.lastName}&scale=100&backgroundColor=039be5',
+                            ),
                           ),
                         ),
-                      ),
-
-                      const SizedBox(height: 40),
-
-                      // Profile info card
-                      Container(
-                        padding: const EdgeInsets.all(24),
-                        decoration: BoxDecoration(
-                          color: Colors.grey[900],
-                          borderRadius: BorderRadius.circular(16),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 10,
-                              offset: const Offset(0, 5),
-                            ),
-                          ],
-                        ),
-
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            TextField(
-                              enabled: false,
-                              decoration: InputDecoration(
-                                fillColor: Colors.black26, // grey background
-                              ),
-                              controller: TextEditingController(
-                                text: profile.firstName,
-                              ),
-                              style: const TextStyle(color: Colors.white30),
-                            ),
-                            const SizedBox(height: 20),
-
-                            TextField(
-                              enabled: false,
-                              decoration: InputDecoration(
-                                fillColor: Colors.black26, // grey background
-                              ),
-                              controller: TextEditingController(
-                                text: profile.lastName,
-                              ),
-                              style: const TextStyle(color: Colors.white24),
-                            ),
-                            const SizedBox(height: 20),
-
-                            TextField(
-                              enabled: false,
-                              decoration: InputDecoration(
-                                fillColor: Colors.black26, // grey background
-                              ),
-                              controller: TextEditingController(
-                                text: profile.email,
-                              ),
-                              style: const TextStyle(color: Colors.white24),
-                            ),
-                            const SizedBox(height: 20),
-
-                            TextField(
-                              enabled: false,
-                              decoration: InputDecoration(
-                                fillColor: Colors.black26, // grey background
-                              ),
-                              controller: TextEditingController(
-                                text: profile.rfid,
-                              ),
-                              style: const TextStyle(color: Colors.white24),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(height: 40),
-
-                      SizedBox(
-                        width: 160,
-                        height: 48,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey[850], // dark grey
-                            foregroundColor: Colors.orange, // orange text
+                        const SizedBox(height: 32),
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          decoration: BoxDecoration(
+                            color: Colors.grey[850],
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          onPressed: () {
-                            context.read<ProfileCubit>().logout();
-                          },
-                          child: const Text(
-                            'Logout',
-                            style: TextStyle(fontWeight: FontWeight.bold),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'First Name',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              TextField(
+                                enabled: false,
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.black26,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 10,
+                                    horizontal: 12,
+                                  ),
+                                ),
+                                controller: TextEditingController(
+                                  text: profile.firstName,
+                                ),
+                                style: const TextStyle(color: Colors.white38),
+                              ),
+                              const SizedBox(height: 16),
+
+                              const Text(
+                                'Last Name',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              TextField(
+                                enabled: false,
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.black26,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 10,
+                                    horizontal: 12,
+                                  ),
+                                ),
+                                controller: TextEditingController(
+                                  text: profile.lastName,
+                                ),
+                                style: const TextStyle(color: Colors.white38),
+                              ),
+                              const SizedBox(height: 16),
+
+                              const Text(
+                                'Email',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              TextField(
+                                enabled: false,
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.black26,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 10,
+                                    horizontal: 12,
+                                  ),
+                                ),
+                                controller: TextEditingController(
+                                  text: profile.email,
+                                ),
+                                style: const TextStyle(color: Colors.white38),
+                              ),
+                              const SizedBox(height: 16),
+
+                              const Text(
+                                'RFID',
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              TextField(
+                                enabled: false,
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: Colors.black26,
+                                  contentPadding: EdgeInsets.symmetric(
+                                    vertical: 10,
+                                    horizontal: 12,
+                                  ),
+                                ),
+                                controller: TextEditingController(
+                                  text: profile.rfid,
+                                ),
+                                style: const TextStyle(color: Colors.white38),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 30),
-                    ],
+
+                        const SizedBox(height: 32),
+
+                        SizedBox(
+                          width: 160,
+                          height: 48,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.grey[850],
+                              foregroundColor: Colors.orange,
+                            ),
+                            onPressed: () {
+                              context.read<ProfileCubit>().logout();
+                            },
+                            child: const Text(
+                              'Logout',
+                              style: TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
