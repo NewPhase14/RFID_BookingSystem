@@ -19,4 +19,6 @@ public interface IBookingDataRepository
     Task<List<Booking>> GetPastBookingsByUserId(string userId);
     
     Task<List<Booking>> GetTodaysBookingsByUserId(string userId);
+
+    Task<List<Booking>> GetBookingsForServiceAndDate(string serviceId, DateOnly date);
 }

@@ -5,11 +5,11 @@ using Core.Domain.Entities;
 
 namespace Application.Services;
 
-public class AvailabilityService(IAvailabilityRepository repository) : IAvailabilityService
+public class AvailabilityService(IAvailabilityRepository availabilityRepository, IBookingDataRepository bookingRepository) : IAvailabilityService
 {
     public AvailabilityResponseDto CreateAvailability(AvailabilityCreateRequestDto dto)
     {
-        var createdAvailability = repository.CreateAvailability(new ServiceAvailability()
+        var createdAvailability = availabilityRepository.CreateAvailability(new ServiceAvailability()
             {
             Id = Guid.NewGuid().ToString(),
             ServiceId = dto.ServiceId,
@@ -46,7 +46,7 @@ public class AvailabilityService(IAvailabilityRepository repository) : IAvailabi
             }
         ).ToList();
 
-        var createdAvailabilities = repository.CreateAllAvailabilities(availabilities);
+        var createdAvailabilities = availabilityRepository.CreateAllAvailabilities(availabilities);
         return createdAvailabilities.Select(createdAvailability => new AvailabilityResponseDto()
             {
                 Id = createdAvailability.Id,
@@ -62,7 +62,7 @@ public class AvailabilityService(IAvailabilityRepository repository) : IAvailabi
 
     public AvailabilityResponseDto DeleteAvailability(string id)
     {
-        var deletedAvailability = repository.DeleteAvailability(id);
+        var deletedAvailability = availabilityRepository.DeleteAvailability(id);
         return new AvailabilityResponseDto()
         {
             Id = deletedAvailability.Id,
@@ -85,7 +85,7 @@ public class AvailabilityService(IAvailabilityRepository repository) : IAvailabi
             AvailableFrom = dto.AvailableFrom,
             AvailableTo = dto.AvailableTo,
         };
-        var updateAvailability = repository.UpdateAvailability(availability);
+        var updateAvailability = availabilityRepository.UpdateAvailability(availability);
         return new AvailabilityResponseDto()
         {
             Id = updateAvailability.Id,
@@ -107,26 +107,37 @@ public class AvailabilityService(IAvailabilityRepository repository) : IAvailabi
         {
             var date = today.AddDays(i);
             int dayOfWeek = (int)date.DayOfWeek;
-            var availability = await repository.GetAvailabilityForServiceAndDay(serviceId, dayOfWeek);
+            var availability = await availabilityRepository.GetAvailabilityForServiceAndDay(serviceId, dayOfWeek);
 
             if (availability == null)
                 continue;
 
             var slotStart = availability.AvailableFrom;
             var slotEnd = availability.AvailableTo;
+            
+            var bookings = await bookingRepository.GetBookingsForServiceAndDate(serviceId, DateOnly.FromDateTime(date));
 
             for (var time = slotStart; time < slotEnd; time = time.AddHours(1))
             {
+                var slotStartTime = time;
+                var slotEndTime = time.AddHours(1);
                 var slotDateTime = date.Add(time.ToTimeSpan());
                 
                 if (i == 0 && slotDateTime < DateTime.Now)
                     continue;
 
+                bool isOverlapping = bookings.Any(b =>
+                    slotStartTime < b.EndTime && b.StartTime < slotEndTime
+                );
+
+                if (isOverlapping)
+                    continue;
+
                 availabilitySlots.Add(new AvailabiltySlotsDto
                 {
                     Date = date.ToString("dd-MM-yyyy"),
-                    StartTime = time.ToString("HH:mm"),
-                    EndTime = time.AddHours(1).ToString("HH:mm")
+                    StartTime = slotStartTime.ToString("HH:mm"),
+                    EndTime = slotEndTime.ToString("HH:mm")
                 });
             }
         }

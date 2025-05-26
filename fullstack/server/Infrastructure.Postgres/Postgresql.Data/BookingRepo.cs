@@ -109,6 +109,13 @@ public class BookingRepo(MyDbContext ctx) : IBookingDataRepository
 
         return bookings;
     }
-    
-       
+
+    public async Task<List<Booking>> GetBookingsForServiceAndDate(string serviceId, DateOnly date)
+    {
+        var bookings = await ctx.Bookings.
+            Where(b => b.ServiceId == serviceId && b.Date == date)
+            .ToListAsync();
+        
+        return bookings;
+    }
 }
