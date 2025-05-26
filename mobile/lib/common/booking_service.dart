@@ -179,7 +179,7 @@ class ApiBookingService extends BookingService {
     final apiUrl = dotenv.env['API_URL'];
     final response = await http.get(
       Uri.parse(
-        '$apiUrl/api/booking/GetAvailabilitySlots?serviceId=$serviceId',
+        '$apiUrl/api/availability/GetAvailabilitySlots?serviceId=$serviceId',
       ),
       headers: {'Content-Type': 'application/json'},
     );
