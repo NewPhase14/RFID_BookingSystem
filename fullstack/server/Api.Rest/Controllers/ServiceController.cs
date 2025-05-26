@@ -34,16 +34,16 @@ public class ServiceController(IServiceService serviceService, ISecurityService 
     
     [HttpDelete]
     [Route(DeleteServiceRoute)]
-    public ActionResult<ServiceResponseDto> DeleteService(string id)
+    public async Task<ActionResult<ServiceResponseDto>> DeleteService(string id)
     {
-        return Ok(serviceService.DeleteService(id));
+        return Ok(await serviceService.DeleteService(id));
     }
     
     [HttpPut]
     [Route(UpdateServiceRoute)]
-    public ActionResult<ServiceResponseDto> UpdateService([FromBody] ServiceUpdateRequestDto dto)
+    public async Task<ActionResult<ServiceResponseDto>> UpdateService([FromBody] ServiceUpdateRequestDto dto)
     {
-        return Ok(serviceService.UpdateService(dto));
+        return Ok(await serviceService.UpdateService(dto));
     }
     
     [HttpGet]
@@ -55,8 +55,8 @@ public class ServiceController(IServiceService serviceService, ISecurityService 
     
     [HttpGet]
     [Route(GetServiceByIdRoute)]
-    public ActionResult<ServiceResponseDto> GetServiceById(string id)
+    public async Task<ActionResult<ServiceResponseDto>> GetServiceById(string id)
     {
-        return Ok(serviceService.GetServiceById(id));
+        return Ok(await serviceService.GetServiceById(id));
     }
 }

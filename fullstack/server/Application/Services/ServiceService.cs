@@ -42,7 +42,7 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
             UpdatedAt = DateTime.Now
         };
         
-        var createdService = serviceRepository.CreateService(service);
+        var createdService = await serviceRepository.CreateService(service);
         return new ServiceResponseDto()
         {
             Id = createdService.Id,
@@ -55,9 +55,9 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
         };
     }
 
-    public ServiceResponseDto DeleteService(string id)
+    public async Task<ServiceResponseDto> DeleteService(string id)
     {
-        var service = serviceRepository.DeleteService(id);
+        var service = await serviceRepository.DeleteService(id);
         
         if (service == null)
         {
@@ -65,7 +65,7 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
         }
         
         // Delete the image from Cloudinary using the public IDx
-        cloudinaryImageService.DeleteImageAsync(service.PublicId);
+        await cloudinaryImageService.DeleteImageAsync(service.PublicId);
         
         return new ServiceResponseDto()
         {
@@ -79,7 +79,7 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
         };
     }
 
-    public ServiceResponseDto UpdateService(ServiceUpdateRequestDto dto)
+    public async Task<ServiceResponseDto> UpdateService(ServiceUpdateRequestDto dto)
     {
         var service = new Service()
         {
@@ -90,7 +90,7 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
             PublicId = dto.PublicId,
             UpdatedAt = DateTime.Now
         };
-        var updatedService = serviceRepository.UpdateService(service);
+        var updatedService = await serviceRepository.UpdateService(service);
         return new ServiceResponseDto()
         {
             Id = updatedService.Id,
@@ -121,9 +121,9 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
         
     }
 
-    public ServiceResponseDto GetServiceById(string id)
+    public async Task<ServiceResponseDto> GetServiceById(string id)
     {
-        var services = serviceRepository.GetServiceById(id);
+        var services = await serviceRepository.GetServiceById(id);
         
         return new ServiceResponseDto()
         {

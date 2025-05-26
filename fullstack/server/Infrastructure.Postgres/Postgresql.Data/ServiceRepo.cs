@@ -7,29 +7,29 @@ namespace Infrastructure.Postgres.Postgresql.Data;
 
 public class ServiceRepo(MyDbContext ctx) : IServiceRepository
 {
-    public Service CreateService(Service service)
+    public async Task<Service> CreateService(Service service)
     {
-        var createdService = ctx.Services.Add(service);
-        ctx.SaveChanges();
+        var createdService = await ctx.Services.AddAsync(service);
+        await ctx.SaveChangesAsync();
         return createdService.Entity;
     }
 
-    public Service DeleteService(string id)
+    public async Task<Service> DeleteService(string id)
     {
-        var service = ctx.Services.FirstOrDefault(s => s.Id == id);
+        var service = await ctx.Services.FirstOrDefaultAsync(s => s.Id == id);
         if (service == null)
         {
             throw new InvalidOperationException("Service not found");
         }
         ctx.Services.Remove(service);
-        ctx.SaveChanges();
+        await ctx.SaveChangesAsync();
         
         return service;
     }
 
-    public Service UpdateService(Service service)
+    public async Task<Service> UpdateService(Service service)
     {
-        var existingService = ctx.Services.FirstOrDefault(s => s.Id == service.Id);
+        var existingService = await ctx.Services.FirstOrDefaultAsync(s => s.Id == service.Id);
         if (existingService == null)
         {
             throw new InvalidOperationException("Service not found");
@@ -39,7 +39,7 @@ public class ServiceRepo(MyDbContext ctx) : IServiceRepository
         existingService.ImageUrl = service.ImageUrl;
         existingService.UpdatedAt = DateTime.Now;
         var updatedService = ctx.Services.Update(existingService);
-        ctx.SaveChanges();
+        await ctx.SaveChangesAsync();
         return updatedService.Entity;
     }
 
@@ -53,9 +53,9 @@ public class ServiceRepo(MyDbContext ctx) : IServiceRepository
         return services;
     }
 
-    public Service GetServiceById(string id)
+    public async Task<Service> GetServiceById(string id)
     {
-        var service = ctx.Services.FirstOrDefault(s => s.Id == id);
+        var service = await ctx.Services.FirstOrDefaultAsync(s => s.Id == id);
         if (service == null)
         {
             throw new InvalidOperationException("Service not found");

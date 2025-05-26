@@ -4,9 +4,9 @@ namespace Application.Interfaces.Infrastructure.Postgres;
 
 public interface IServiceRepository
 {
-    Service CreateService(Service service);
-    Service DeleteService(string id);
-    Service UpdateService(Service service);
+    Task<Service> CreateService(Service service);
+    Task<Service> DeleteService(string id);
+    Task<Service> UpdateService(Service service);
     Task<List<Service>> GetAllServices();
-    Service GetServiceById(string id);
+    Task<Service> GetServiceById(string id);
 }

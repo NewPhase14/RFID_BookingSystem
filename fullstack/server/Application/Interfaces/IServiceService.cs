@@ -4,13 +4,13 @@ namespace Application.Interfaces;
 
 public interface IServiceService
 {
-    public Task<ServiceResponseDto> CreateService(ServiceCreateRequestDto dto);
+    Task<ServiceResponseDto> CreateService(ServiceCreateRequestDto dto);
 
-    public ServiceResponseDto DeleteService(string id);
+    Task<ServiceResponseDto> DeleteService(string id);
     
-    public ServiceResponseDto UpdateService(ServiceUpdateRequestDto dto);
+    Task<ServiceResponseDto> UpdateService(ServiceUpdateRequestDto dto);
     
-    public Task<List<ServiceResponseDto>> GetAllServices();
+    Task<List<ServiceResponseDto>> GetAllServices();
     
-    public ServiceResponseDto GetServiceById(string id);
+    Task<ServiceResponseDto> GetServiceById(string id);
 }
