@@ -11,6 +11,8 @@ export const AdminAtom = atom<UserResponseDto>();
 
 export const UsersAtom = atom<UserResponseDto[]>([]);
 
+export const UserAtom = atom<UserResponseDto>();
+
 export const BookingsAtom = atom<BookingResponseDto[]>([]);
 
 export const ServicesAtom = atom<ServiceResponseDto[]>([]);

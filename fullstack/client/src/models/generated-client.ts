@@ -1232,6 +1232,44 @@ export class UserClient {
         }
         return Promise.resolve<UserResponseDto>(null as any);
     }
+
+    updateUser(dto: UserUpdateRequestDto, authorization: string | undefined): Promise<UserResponseDto> {
+        let url_ = this.baseUrl + "/api/user/UpdateUser";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(dto);
+
+        let options_: RequestInit = {
+            body: content_,
+            method: "PUT",
+            headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            }
+        };
+
+        return this.http.fetch(url_, options_).then((_response: Response) => {
+            return this.processUpdateUser(_response);
+        });
+    }
+
+    protected processUpdateUser(response: Response): Promise<UserResponseDto> {
+        const status = response.status;
+        let _headers: any = {}; if (response.headers && response.headers.forEach) { response.headers.forEach((v: any, k: any) => _headers[k] = v); };
+        if (status === 200) {
+            return response.text().then((_responseText) => {
+            let result200: any = null;
+            result200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver) as UserResponseDto;
+            return result200;
+            });
+        } else if (status !== 200 && status !== 204) {
+            return response.text().then((_responseText) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            });
+        }
+        return Promise.resolve<UserResponseDto>(null as any);
+    }
 }
 
 export interface ActivityLogResponseDto {
@@ -1329,8 +1367,6 @@ export interface AvailabilityUpdateRequestDto {
     availableFrom?: string;
     availableTo?: string;
     dayOfWeek?: number;
-    createdAt?: Date;
-    updatedAt?: Date;
 }
 
 export interface AvailabiltySlotsDto {
@@ -1390,6 +1426,13 @@ export interface ServiceUpdateRequestDto {
     description: string;
     imageUrl: string;
     publicId: string;
+}
+
+export interface UserUpdateRequestDto {
+    id?: string;
+    firstName?: string;
+    lastName?: string;
+    rfid?: string;
 }
 
 

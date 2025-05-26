@@ -1,6 +1,7 @@
+using Application.Interfaces;
 using Application.Interfaces.Infrastructure.Postgres;
-using Application.Interfaces.Infrastructure.Websocket;
 using Application.Models.Dtos.User;
+using Core.Domain.Entities;
 
 namespace Application.Services;
 
@@ -47,6 +48,29 @@ public class UserService(IUserRepository userRepository) : IUserService
         return new UserResponseDto
         {
             Id = user.Id
+        };
+    }
+
+    public async Task<UserResponseDto> UpdateUser(UserUpdateRequestDto dto)
+    {
+        var user = new User()
+        {
+            Id = dto.Id,
+            FirstName = dto.FirstName,
+            LastName = dto.LastName,
+            Rfid = dto.Rfid
+        };
+        var updatedUser = await userRepository.UpdateUser(user);
+        return new UserResponseDto()
+        {
+            Id = updatedUser.Id,
+            Email = updatedUser.Email,
+            FirstName = updatedUser.FirstName,
+            LastName = updatedUser.LastName,
+            Rfid = updatedUser.Rfid,
+            RoleName = updatedUser.Role.Name,
+            CreatedAt = updatedUser.CreatedAt.ToString("dd-MM-yyyy HH:mm"),
+            UpdatedAt = updatedUser.UpdatedAt.ToString("dd-MM-yyyy HH:mm"),
         };
     }
 }

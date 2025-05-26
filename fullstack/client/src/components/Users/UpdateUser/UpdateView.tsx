@@ -1,37 +1,33 @@
-import {AuthRegisterRequestDto} from "../../../models/generated-client.ts";
-import {useState} from "react";
-import {authClient} from "../../../apiControllerClients.ts";
+import React, {useState} from 'react'
 import {useAtom} from "jotai";
-import {UsersAtom} from "../../../atoms/atoms.ts";
+import {JwtAtom, UserAtom, UsersAtom} from "../../../atoms/atoms.ts";
+import {userClient} from "../../../apiControllerClients.ts";
+import {AuthRegisterRequestDto, UserUpdateRequestDto} from "../../../models/generated-client.ts";
 import toast from "react-hot-toast";
-import {UserRoute} from "../../../helpers/routeConstants.tsx";
 import {useNavigate} from "react-router";
+import {UserRoute} from "../../../helpers/routeConstants.tsx";
 
-const RegisterView = () => {
-    const [email, setEmail] = useState("");
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [rfid, setRfid] = useState("");
-    const [role, setRole] = useState("");
+export const UpdateView = () => {
+    const [user] = useAtom(UserAtom);
+    const [jwt] = useAtom(JwtAtom);
     const [users, setUsers] = useAtom(UsersAtom);
+    const [id] = useState(user!.id);
+    const [firstName, setFirstName] = useState(user!.firstName);
+    const [lastName, setLastName] = useState(user!.lastName);
+    const [rfid, setRfid] = useState(user!.rfid);
     const navigate = useNavigate();
 
-
-    const registerRequestDto: AuthRegisterRequestDto = {
-        email: email,
+    const userUpdateRequestDto: UserUpdateRequestDto = {
+        id: id,
         firstName: firstName,
         lastName: lastName,
         rfid: rfid,
-        role: role
     }
-
     return (
-        <div className="flex items-center justify-center min-h-screen">
-            <div className="bg-background-grey border border-white/10 rounded-2xl p-10 max-w-lg w-full">
-
-                <h2 className="text-center text-white text-xl mb-6">Create User</h2>
-
-                <div className="space-y-6">
+        <div className="flex items-center justify-center">
+            <div className="bg-background-grey border border-white/10 rounded-2xl p-10 max-w-4xl w-full">
+                <h2 className="text-center text-white text-xl mb-6">Update User</h2>
+                <div className="grid grid-cols-2 gap-6">
                     <div>
                         <label className="block mb-2 text-sm text-text-grey">RFID</label>
                         <input
@@ -46,9 +42,8 @@ const RegisterView = () => {
                     <div>
                         <label className="block mb-2 text-sm text-text-grey">Email</label>
                         <input
-                            type="email"
-                            value={email}
-                            onChange={(e) => setEmail(e.target.value)}
+                            disabled
+                            value={user!.email}
                             required
                             className="w-full px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
                         />
@@ -75,43 +70,54 @@ const RegisterView = () => {
                     </div>
 
                     <div>
-                        <label className="block mb-2 text-sm text-text-grey">Role</label>
-                        <select
-                            value={role}
-                            onChange={(e) => setRole(e.target.value)}
-                            required
+                        <label className="block mb-2 text-sm text-text-grey">Created at</label>
+                        <input
+                            disabled
+                            value={user!.createdAt}
                             className="w-full px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
-                        >
-                            <option value="" disabled>Select role</option>
-                            <option value="User">User</option>
-                            <option value="Admin">Admin</option>
-                        </select>
+                        />
                     </div>
 
                     <div>
+                        <label className="block mb-2 text-sm text-text-grey">Updated at</label>
+                        <input
+                            disabled
+                            value={user!.updatedAt}
+                            className="w-full px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
+                        />
+                    </div>
+
+                    <div className="col-span-2">
+                        <label className="block mb-2 text-sm text-text-grey">Role</label>
+                        <input
+                            disabled
+                            value={user!.roleName}
+                            className="w-full px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
+                        />
+                    </div>
+
+                    <div className="col-span-2">
                         <button
                             onClick={() => {
-                                authClient.register(registerRequestDto)
+                                userClient.updateUser(userUpdateRequestDto, jwt)
                                     .then(r => {
-                                        toast.success("User created successfully");
-                                        if (r.roleName !== "Admin") {
-                                            setUsers([...users, r]);
-                                        }
+                                        toast.success("User Updated Successfully");
+                                        const updatedUsers = users.filter((u) => u.id !== r.id);
+                                        setUsers([...updatedUsers, r]);
                                         navigate(UserRoute);
                                     })
                                     .catch(() => {
-                                        toast.error("Could not create user!");
+                                        toast.error("User Update Failed");
+                                        console.log(userUpdateRequestDto);
                                     });
                             }}
                             className="w-full py-3 rounded-md text-[var(--color-background-black)] bg-[--color-button-grey] hover:bg-blue-500 hover:text-white"
                         >
-                            Create User
+                            Update User
                         </button>
                     </div>
                 </div>
             </div>
         </div>
     );
-};
-
-export default RegisterView;
+}

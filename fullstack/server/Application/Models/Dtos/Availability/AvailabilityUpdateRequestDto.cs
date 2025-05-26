@@ -7,6 +7,4 @@ public class AvailabilityUpdateRequestDto
     public TimeOnly AvailableFrom { get; set; }
     public TimeOnly AvailableTo { get; set; }
     public int DayOfWeek { get; set; }
-    public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
 }

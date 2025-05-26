@@ -1,7 +1,7 @@
-import "../styles.css";
+import "../../styles.css";
 import {FiUserPlus} from "react-icons/fi";
 import {useNavigate} from "react-router";
-import {RegisterUserRoute} from "../../helpers/routeConstants.tsx";
+import {RegisterUserRoute} from "../../../helpers/routeConstants.tsx";
 
 export const TopBar = () => {
     const navigate = useNavigate();
