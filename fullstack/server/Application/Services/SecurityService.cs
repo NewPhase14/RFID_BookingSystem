@@ -23,9 +23,9 @@ namespace Application.Services;
 
 public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRepository repository, IFluentEmail fluentEmail, IConnectionManager connectionManager) : ISecurityService
 {
-    public AuthResponseDto Login(AuthLoginRequestDto dto)
+    public async Task<AuthResponseDto> Login(AuthLoginRequestDto dto)
     {
-        var user = repository.GetUserOrNull(dto.Email) ?? throw new ValidationException("Username not found");
+        var user = await repository.GetUserOrNull(dto.Email) ?? throw new ValidationException("Username not found");
         
         if (user.ConfirmedEmail == false) throw new ValidationException("Account must be activated before logging in");
         
@@ -49,7 +49,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRe
 
     public async Task<UserResponseDto> Register(AuthRegisterRequestDto dto)
     {
-        var existingUser = repository.GetUserOrNull(dto.Email);
+        var existingUser = await repository.GetUserOrNull(dto.Email);
         if (existingUser is not null) throw new ValidationException("User already exists");
         
         var randomPassword = Guid.NewGuid().ToString();
@@ -57,7 +57,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRe
         var salt = GenerateSalt();
         var hash = HashPassword(randomPassword + salt);
         
-        var userRole = repository.GetRole(dto.Role);
+        var userRole = await repository.GetRole(dto.Role);
         
         if (userRole is null) throw new ValidationException("User role not found");
         
@@ -82,7 +82,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRe
 
         try
         {
-            newUser = repository.AddUser(newUser);
+            newUser = await repository.AddUser(newUser);
         }
         catch (Exception e)
         {
@@ -156,7 +156,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRe
         user.Salt = salt;
         user.UpdatedAt = DateTime.Now;
 
-        repository.UpdateUser(user);
+        await repository.UpdateUser(user);
         
         await repository.RemoveInviteToken(dto.TokenId);
         
@@ -168,7 +168,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRe
 
     public async Task<ResendInviteEmailResponseDto> ResendInviteEmail(ResendInviteEmailRequestDto dto)
     {
-        var user = repository.GetUserOrNull(dto.Email);
+        var user = await repository.GetUserOrNull(dto.Email);
         if (user is null) throw new ValidationException("User not found");
         
         if (user.ConfirmedEmail == true) throw new ValidationException("Account already activated");
@@ -206,7 +206,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRe
 
     public async Task<ForgotPasswordResponseDto> ForgotPassword(ForgotPasswordRequestDto dto)
     {
-        var user = repository.GetUserOrNull(dto.Email);
+        var user = await repository.GetUserOrNull(dto.Email);
         if (user is null) throw new ValidationException("User not found");
         
         if (user.ConfirmedEmail == false) throw new ValidationException("Account must be activated before resetting password");
@@ -268,7 +268,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRe
         user.Salt = salt;
         user.UpdatedAt = DateTime.Now;
 
-        repository.UpdateUser(user);
+        await repository.UpdateUser(user);
         
         await repository.RemovePasswordResetToken(dto.TokenId);
 

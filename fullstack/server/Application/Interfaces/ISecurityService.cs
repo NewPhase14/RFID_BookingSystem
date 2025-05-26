@@ -9,15 +9,15 @@ namespace Application.Interfaces;
 
 public interface ISecurityService
 {
-    public string HashPassword(string password);
-    public void VerifyPasswordOrThrow(string password, string hashedPassword);
-    public string GenerateSalt();
-    public string GenerateJwt(JwtClaims claims);
-    public AuthResponseDto Login(AuthLoginRequestDto dto);
-    public Task<UserResponseDto> Register(AuthRegisterRequestDto dto);
-    public Task<AccountActivationResponseDto> AccountActivation(AccountActivationRequestDto dto);
-    public Task<ResendInviteEmailResponseDto> ResendInviteEmail(ResendInviteEmailRequestDto dto);
-    public Task<ForgotPasswordResponseDto> ForgotPassword(ForgotPasswordRequestDto dto);
-    public Task<ResetPasswordResponseDto> ResetPassword(ResetPasswordRequestDto dto);
-    public JwtClaims VerifyJwtOrThrow(string jwt);
+    string HashPassword(string password);
+    void VerifyPasswordOrThrow(string password, string hashedPassword);
+    string GenerateSalt();
+    string GenerateJwt(JwtClaims claims);
+    Task<AuthResponseDto> Login(AuthLoginRequestDto dto);
+    Task<UserResponseDto> Register(AuthRegisterRequestDto dto);
+    Task<AccountActivationResponseDto> AccountActivation(AccountActivationRequestDto dto);
+    Task<ResendInviteEmailResponseDto> ResendInviteEmail(ResendInviteEmailRequestDto dto);
+    Task<ForgotPasswordResponseDto> ForgotPassword(ForgotPasswordRequestDto dto);
+    Task<ResetPasswordResponseDto> ResetPassword(ResetPasswordRequestDto dto);
+    JwtClaims VerifyJwtOrThrow(string jwt);
 }

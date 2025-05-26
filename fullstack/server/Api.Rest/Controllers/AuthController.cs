@@ -35,9 +35,9 @@ public class AuthController(ISecurityService securityService,
 
     [HttpPost]
     [Route(LoginRoute)]
-    public ActionResult<AuthResponseDto> Login([FromBody] AuthLoginRequestDto dto)
+    public async Task<ActionResult<AuthResponseDto>> Login([FromBody] AuthLoginRequestDto dto)
     {
-        return Ok(securityService.Login(dto));
+        return Ok(await securityService.Login(dto));
     }
 
     [Route(RegisterRoute)]

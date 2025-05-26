@@ -11,9 +11,9 @@ namespace Infrastructure.Postgres.Postgresql.Data;
 
 public class AuthRepo(MyDbContext ctx) : IAuthRepository
 {
-    public User? GetUserOrNull(string email)
+    public async Task<User?> GetUserOrNull(string email)
     {
-        return ctx.Users.Include(u => u.Role).FirstOrDefault(u => u.Email == email);
+        return await ctx.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Email == email);
     }
 
     public async Task<User?> GetUserOrNullByPasswordResetTokenId(string tokenId)
@@ -34,22 +34,22 @@ public class AuthRepo(MyDbContext ctx) : IAuthRepository
         return token?.User;
     }
 
-    public User AddUser(User user)
+    public async Task<User> AddUser(User user)
     {
         ctx.Users.Add(user);
-        ctx.SaveChanges();
+        await ctx.SaveChangesAsync();
         return user;
     }
 
-    public void UpdateUser(User user)
+    public async Task UpdateUser(User user)
     {
         ctx.Users.Update(user);
-        ctx.SaveChanges();
+        await ctx.SaveChangesAsync();
     }
 
-    public Role GetRole(string roleName)
+    public async Task<Role> GetRole(string roleName)
     {
-        return ctx.Roles.FirstOrDefault(r => r.Name == roleName) ?? throw new InvalidOperationException("Role not found");
+        return await ctx.Roles.FirstOrDefaultAsync(r => r.Name == roleName) ?? throw new InvalidOperationException("Role not found");
     }
     
     public async Task<InviteToken> AddInviteToken(InviteToken token)

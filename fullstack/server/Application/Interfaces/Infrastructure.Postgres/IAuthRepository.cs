@@ -8,12 +8,12 @@ namespace Application.Interfaces.Infrastructure.Postgres;
 
 public interface IAuthRepository
 {
-    User? GetUserOrNull(string email);
+    Task<User?> GetUserOrNull(string email);
     Task<User?> GetUserOrNullByPasswordResetTokenId(string tokenId);
     Task<User?> GetUserOrNullByInviteTokenId(string tokenId);
-    User AddUser(User user);
-    void UpdateUser(User user);
-    Role GetRole(string roleName);
+    Task<User> AddUser(User user);
+    Task UpdateUser(User user);
+    Task<Role> GetRole(string roleName);
     Task<InviteToken> AddInviteToken(InviteToken token); 
     Task<VerifyInviteEmailResponseDto> VerifyInviteToken(VerifyInviteEmailRequestDto dto);
     Task<PasswordResetToken> AddPasswordResetToken(PasswordResetToken token);
