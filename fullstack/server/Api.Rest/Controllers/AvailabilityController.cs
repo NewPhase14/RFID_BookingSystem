@@ -54,9 +54,9 @@ public class AvailabilityController(IAvailabilityService availabilityService) : 
     
     [HttpGet]
     [Route(GetAvailabilitySlotsRoute)]
-    public ActionResult<List<AvailabiltySlotsDto>> GetAvailabilitySlots(string serviceId)
+    public async Task<ActionResult<List<AvailabiltySlotsDto>>> GetAvailabilitySlots(string serviceId)
     {
-        return Ok(availabilityService.GetAvailabilitySlots(serviceId));
+        return Ok(await availabilityService.GetAvailabilitySlots(serviceId));
     }
     
     
