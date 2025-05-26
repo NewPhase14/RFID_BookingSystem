@@ -62,7 +62,8 @@ public class BookingRepo(MyDbContext ctx) : IBookingRepository
 
     public async Task<List<Booking>> GetFutureBookingsByUserId(string userId)
     {
-        var now = DateTime.Now;
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
         var today = DateOnly.FromDateTime(now);
         var currentTime = TimeOnly.FromDateTime(now);
 
@@ -80,7 +81,8 @@ public class BookingRepo(MyDbContext ctx) : IBookingRepository
 
     public async Task<List<Booking>> GetPastBookingsByUserId(string userId)
     {
-        var now = DateTime.Now;
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
         var today = DateOnly.FromDateTime(now);
         var currentTime = TimeOnly.FromDateTime(now);
 
@@ -99,7 +101,8 @@ public class BookingRepo(MyDbContext ctx) : IBookingRepository
 
     public async Task<List<Booking>> GetTodaysBookingsByUserId(string userId)
     {
-        var now = DateTime.Now;
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
         var today = DateOnly.FromDateTime(now);
         var currentTime = TimeOnly.FromDateTime(now);
 
