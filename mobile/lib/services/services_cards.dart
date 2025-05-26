@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../availability/availability_cubit.dart';
+import '../common/booking_service.dart';
 import '../models/services.dart';
+import '../services_detail/services_detail_cubit.dart';
 import '../services_detail/services_detail_page.dart';
 
 class ServiceCard extends StatelessWidget {
@@ -14,7 +18,24 @@ class ServiceCard extends StatelessWidget {
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => ServiceDetailPage(serviceId: service.id),
+            builder:
+                (context) => MultiBlocProvider(
+                  providers: [
+                    BlocProvider(
+                      create:
+                          (_) =>
+                              ServiceDetailCubit(ApiBookingService())
+                                ..loadServiceById(service.id),
+                    ),
+                    BlocProvider(
+                      create:
+                          (_) =>
+                              AvailabilityCubit(ApiBookingService())
+                                ..loadAvailabilitySlots(service.id),
+                    ),
+                  ],
+                  child: ServiceDetailPage(serviceId: service.id),
+                ),
           ),
         );
       },
