@@ -1,3 +1,4 @@
+using System.Drawing.Printing;
 using Application.Interfaces.Infrastructure.Postgres;
 using Core.Domain.Entities;
 using Infrastructure.Postgres.Scaffolding;
@@ -87,7 +88,7 @@ public class BookingRepo(MyDbContext ctx) : IBookingRepository
             .Include(b => b.Service)
             .Include(b => b.User)
             .Where(b => b.UserId == userId &&
-                        (b.Date < today || (b.Date == today && b.EndTime < currentTime)))
+                        (b.Date < today || (b.Date == today && b.EndTime <= currentTime)))
             .OrderByDescending(b => b.Date)
             .ThenByDescending(b => b.StartTime)
             .ToListAsync();
@@ -98,12 +99,14 @@ public class BookingRepo(MyDbContext ctx) : IBookingRepository
 
     public async Task<List<Booking>> GetTodaysBookingsByUserId(string userId)
     {
-        var today = DateOnly.FromDateTime(DateTime.Now);
+        var now = DateTime.Now;
+        var today = DateOnly.FromDateTime(now);
+        var currentTime = TimeOnly.FromDateTime(now);
 
         var bookings = await ctx.Bookings
             .Include(b => b.Service)
             .Include(b => b.User)
-            .Where(b => b.UserId == userId && b.Date == today)
+            .Where(b => b.UserId == userId && b.Date == today && b.EndTime > currentTime)
             .OrderBy(b => b.StartTime)
             .ToListAsync();
 
