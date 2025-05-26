@@ -8,17 +8,17 @@ namespace Infrastructure.Postgres.Postgresql.Data;
 
 public class AvailabilityRepo(MyDbContext ctx) : IAvailabilityRepository 
 {
-    public ServiceAvailability CreateAvailability(ServiceAvailability availability)
+    public async Task<ServiceAvailability> CreateAvailability(ServiceAvailability availability)
     {
         var addedAvailability = ctx.ServiceAvailabilities.Add(availability);
-        ctx.SaveChanges();
+        await ctx.SaveChangesAsync();
         return addedAvailability.Entity;
     }
 
-    public List<ServiceAvailability> CreateAllAvailabilities(List<ServiceAvailability> availabilities)
+    public async Task<List<ServiceAvailability>> CreateAllAvailabilities(List<ServiceAvailability> availabilities)
     {
-        ctx.ServiceAvailabilities.AddRange(availabilities);
-        ctx.SaveChanges();
+        await ctx.ServiceAvailabilities.AddRangeAsync(availabilities);
+        await ctx.SaveChangesAsync();
         return availabilities;
     }
 
@@ -28,10 +28,10 @@ public class AvailabilityRepo(MyDbContext ctx) : IAvailabilityRepository
             .FirstOrDefaultAsync(sa => sa.ServiceId == booking.ServiceId && sa.DayOfWeek == bookingDay) ?? throw new InvalidOperationException();
     }
 
-    public ServiceAvailability UpdateAvailability(ServiceAvailability availability)
+    public async Task<ServiceAvailability> UpdateAvailability(ServiceAvailability availability)
     {
-        var existingAvailability = ctx.ServiceAvailabilities
-            .FirstOrDefault(a => a.Id == availability.Id);
+        var existingAvailability = await ctx.ServiceAvailabilities
+            .FirstOrDefaultAsync(a => a.Id == availability.Id);
         if (existingAvailability == null)
         {
             throw new InvalidOperationException("Availability not found");
@@ -41,19 +41,19 @@ public class AvailabilityRepo(MyDbContext ctx) : IAvailabilityRepository
         existingAvailability.AvailableFrom = availability.AvailableFrom;
         existingAvailability.AvailableTo = availability.AvailableTo;
         var updatedAvailability = ctx.ServiceAvailabilities.Update(existingAvailability);
-        ctx.SaveChanges();
+        await ctx.SaveChangesAsync();
         return updatedAvailability.Entity;
     }
 
-    public ServiceAvailability DeleteAvailability(string id)
+    public async Task<ServiceAvailability> DeleteAvailability(string id)
     {
-        var availability = ctx.ServiceAvailabilities.FirstOrDefault(a => a.Id == id);
+        var availability = await ctx.ServiceAvailabilities.FirstOrDefaultAsync(a => a.Id == id);
         if (availability == null)
         {
             throw new InvalidOperationException("Availability not found");
         }
         var deletedAvailability = ctx.ServiceAvailabilities.Remove(availability);
-        ctx.SaveChanges();
+        await ctx.SaveChangesAsync();
         return deletedAvailability.Entity;
     }
     

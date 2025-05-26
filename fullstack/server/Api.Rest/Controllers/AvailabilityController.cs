@@ -25,31 +25,31 @@ public class AvailabilityController(IAvailabilityService availabilityService) : 
 
     [HttpPost]
     [Route(CreateAvailabilityRoute)]
-    public ActionResult<AvailabilityResponseDto> CreateAvailability([FromBody] AvailabilityCreateRequestDto dto)
+    public async Task<ActionResult<AvailabilityResponseDto>> CreateAvailability([FromBody] AvailabilityCreateRequestDto dto)
     {
-        return Ok(availabilityService.CreateAvailability(dto));
+        return Ok(await availabilityService.CreateAvailability(dto));
     }
     
     [HttpPost]
     [Route(CreateAllAvailabilitiesRoute)]
-    public ActionResult<List<AvailabilityResponseDto>> CreateAllAvailabilities([FromBody] List<AvailabilityCreateRequestDto> dtos)
+    public async Task<ActionResult<List<AvailabilityResponseDto>>> CreateAllAvailabilities([FromBody] List<AvailabilityCreateRequestDto> dtos)
     {
-        return Ok(availabilityService.CreateAllAvailabilities(dtos));
+        return Ok(await availabilityService.CreateAllAvailabilities(dtos));
     }
     
     
     [HttpDelete]
     [Route(DeleteAvailabilityRoute)]
-    public ActionResult<AvailabilityResponseDto> DeleteAvailability(string id)
+    public async Task<ActionResult<AvailabilityResponseDto>> DeleteAvailability(string id)
     {
-        return Ok(availabilityService.DeleteAvailability(id));
+        return Ok(await availabilityService.DeleteAvailability(id));
     }
     
     [HttpPut]
     [Route(UpdateAvailabilityRoute)]
-    public ActionResult<AvailabilityResponseDto> UpdateAvailability([FromBody] AvailabilityUpdateRequestDto dto)
+    public async Task<ActionResult<AvailabilityResponseDto>> UpdateAvailability([FromBody] AvailabilityUpdateRequestDto dto)
     {
-        return Ok(availabilityService.UpdateAvailability(dto));
+        return Ok(await availabilityService.UpdateAvailability(dto));
     }
     
     [HttpGet]
@@ -58,6 +58,4 @@ public class AvailabilityController(IAvailabilityService availabilityService) : 
     {
         return Ok(await availabilityService.GetAvailabilitySlots(serviceId));
     }
-    
-    
 }

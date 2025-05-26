@@ -7,9 +7,9 @@ namespace Application.Services;
 
 public class AvailabilityService(IAvailabilityRepository availabilityRepository, IBookingRepository bookingRepository) : IAvailabilityService
 {
-    public AvailabilityResponseDto CreateAvailability(AvailabilityCreateRequestDto dto)
+    public async Task<AvailabilityResponseDto> CreateAvailability(AvailabilityCreateRequestDto dto)
     {
-        var createdAvailability = availabilityRepository.CreateAvailability(new ServiceAvailability()
+        var createdAvailability = await availabilityRepository.CreateAvailability(new ServiceAvailability()
             {
             Id = Guid.NewGuid().ToString(),
             ServiceId = dto.ServiceId,
@@ -32,7 +32,7 @@ public class AvailabilityService(IAvailabilityRepository availabilityRepository,
         };
     }
 
-    public List<AvailabilityResponseDto> CreateAllAvailabilities(List<AvailabilityCreateRequestDto> dtos)
+    public async Task<List<AvailabilityResponseDto>> CreateAllAvailabilities(List<AvailabilityCreateRequestDto> dtos)
     {
         var availabilities = dtos.Select(dto => new ServiceAvailability()
             {
@@ -46,7 +46,7 @@ public class AvailabilityService(IAvailabilityRepository availabilityRepository,
             }
         ).ToList();
 
-        var createdAvailabilities = availabilityRepository.CreateAllAvailabilities(availabilities);
+        var createdAvailabilities = await availabilityRepository.CreateAllAvailabilities(availabilities);
         return createdAvailabilities.Select(createdAvailability => new AvailabilityResponseDto()
             {
                 Id = createdAvailability.Id,
@@ -60,9 +60,9 @@ public class AvailabilityService(IAvailabilityRepository availabilityRepository,
         ).ToList();
     }
 
-    public AvailabilityResponseDto DeleteAvailability(string id)
+    public async Task<AvailabilityResponseDto> DeleteAvailability(string id)
     {
-        var deletedAvailability = availabilityRepository.DeleteAvailability(id);
+        var deletedAvailability = await availabilityRepository.DeleteAvailability(id);
         return new AvailabilityResponseDto()
         {
             Id = deletedAvailability.Id,
@@ -75,7 +75,7 @@ public class AvailabilityService(IAvailabilityRepository availabilityRepository,
         };
     }
 
-    public AvailabilityResponseDto UpdateAvailability(AvailabilityUpdateRequestDto dto)
+    public async Task<AvailabilityResponseDto> UpdateAvailability(AvailabilityUpdateRequestDto dto)
     {
         var availability = new ServiceAvailability()
         {
@@ -85,7 +85,7 @@ public class AvailabilityService(IAvailabilityRepository availabilityRepository,
             AvailableFrom = dto.AvailableFrom,
             AvailableTo = dto.AvailableTo,
         };
-        var updateAvailability = availabilityRepository.UpdateAvailability(availability);
+        var updateAvailability = await availabilityRepository.UpdateAvailability(availability);
         return new AvailabilityResponseDto()
         {
             Id = updateAvailability.Id,

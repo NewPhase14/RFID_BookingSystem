@@ -5,15 +5,15 @@ namespace Application.Interfaces.Infrastructure.Postgres;
 
 public interface IAvailabilityRepository
 {
-    ServiceAvailability CreateAvailability(ServiceAvailability availability);
+    Task<ServiceAvailability> CreateAvailability(ServiceAvailability availability);
     
-    List<ServiceAvailability> CreateAllAvailabilities(List<ServiceAvailability> availabilities);
+    Task<List<ServiceAvailability>> CreateAllAvailabilities(List<ServiceAvailability> availabilities);
     
     Task<ServiceAvailability> GetAvailability(Booking booking, int bookingDay);
     
-    ServiceAvailability UpdateAvailability(ServiceAvailability availability);
+    Task<ServiceAvailability> UpdateAvailability(ServiceAvailability availability);
     
-    ServiceAvailability DeleteAvailability(string id);     
+    Task<ServiceAvailability> DeleteAvailability(string id);     
     
     Task<ServiceAvailability> GetAvailabilityForServiceAndDay(string serviceId, int dayOfWeek);
 }
