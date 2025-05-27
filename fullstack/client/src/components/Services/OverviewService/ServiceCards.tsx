@@ -1,6 +1,6 @@
 import React from 'react'
 import {useAtom} from "jotai";
-import {ServiceAtom, ServicesAtom} from "../../../atoms/atoms.ts";
+import {JwtAtom, ServiceAtom, ServicesAtom} from "../../../atoms/atoms.ts";
 import {FiEdit, FiTrash} from "react-icons/fi";
 import {serviceClient} from "../../../apiControllerClients.ts";
 import toast from "react-hot-toast";
@@ -24,6 +24,7 @@ const Card = ({id, title, description, img}: {
 }) => {
     const [services, setServices] = useAtom(ServicesAtom);
     const [, setService] = useAtom(ServiceAtom);
+    const [jwt] = useAtom(JwtAtom);
     const navigate = useNavigate();
 
 
@@ -36,13 +37,13 @@ const Card = ({id, title, description, img}: {
                             <h2 className="card-title">{title}</h2>
                             <div className="flex space-x-2">
                                 <button onClick={() => {
-                                    serviceClient.getServiceById(id).then((r) => {
+                                    serviceClient.getServiceById(id, jwt).then((r) => {
                                         setService(r);
                                         navigate(UpdateServiceRoute);
                                     })
                                 }} className="btn btn-sm"><FiEdit/></button>
                                 <button onClick={() => {
-                                    serviceClient.deleteService(id).then(() => {
+                                    serviceClient.deleteService(id, jwt).then(() => {
                                         toast.success("Service deleted successfully");
                                         setServices(services.filter(service => service.id !== id));
                                     })

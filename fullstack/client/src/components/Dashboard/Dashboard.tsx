@@ -17,13 +17,6 @@ import {
 
 
 const Dashboard = () => {
-    const [users] = useAtom(UsersAtom);
-    const [services] = useAtom(ServicesAtom);
-    const [activityLogs] = useAtom(ActivityLogsAtom);
-    const [latestActivityLogs] = useAtom(LatestActivityLogsAtom);
-    const [bookings] = useAtom(BookingsAtom);
-    const [latestBookings] = useAtom(LatestBookingsAtom);
-
     useInitializeData();
 
     return <div className="bg-background-grey rounded-lg pb-4 shadow">

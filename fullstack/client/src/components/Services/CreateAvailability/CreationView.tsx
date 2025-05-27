@@ -1,5 +1,5 @@
 import { useAtom } from "jotai";
-import { CreatedServiceAtom } from "../../../atoms/atoms.ts";
+import {CreatedServiceAtom, JwtAtom} from "../../../atoms/atoms.ts";
 import React, { useState } from "react";
 import { availabilityClient } from "../../../apiControllerClients.ts";
 import {useNavigate} from "react-router";
@@ -21,6 +21,7 @@ export const CreationView = () => {
     ];
 
     const [createdService] = useAtom(CreatedServiceAtom);
+    const [jwt] = useAtom(JwtAtom);
     const [times, setTimes] = useState<{ [key: number]: { start?: string; end?: string } }>({});
     const navigate = useNavigate();
 
@@ -49,7 +50,7 @@ export const CreationView = () => {
             }));
 
         if (dtos.length > 0) {
-            availabilityClient.createAllAvailabilities(dtos).then(() => {
+            availabilityClient.createAllAvailabilities(dtos, jwt).then(() => {
                 toast.success("Availabilities created successfully");
                 navigate(ServiceRoute);
             });

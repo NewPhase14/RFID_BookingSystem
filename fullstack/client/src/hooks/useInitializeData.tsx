@@ -20,17 +20,17 @@ import { randomUid } from "../components/App.tsx";
 import toast from "react-hot-toast";
 
 export default function useInitializeData() {
-    const [users, setUsers] = useAtom(UsersAtom);
-    const [services, setServices] = useAtom(ServicesAtom);
-    const [activityLogs, setActivityLogs] = useAtom(ActivityLogsAtom);
-    const [latestActivityLogs, setLatestActivityLogs] = useAtom(LatestActivityLogsAtom);
-    const [bookings, setBookings] = useAtom(BookingsAtom);
-    const [latestBookings, setLatestBookings] = useAtom(LatestBookingsAtom);
+    const [, setUsers] = useAtom(UsersAtom);
+    const [, setServices] = useAtom(ServicesAtom);
+    const [, setActivityLogs] = useAtom(ActivityLogsAtom);
+    const [, setLatestActivityLogs] = useAtom(LatestActivityLogsAtom);
+    const [, setBookings] = useAtom(BookingsAtom);
+    const [, setLatestBookings] = useAtom(LatestBookingsAtom);
     const [topicAtom, setTopicAtom] = useAtom(TopicAtom);
     const [jwt] = useAtom(JwtAtom);
 
     useEffect(() => {
-            serviceClient.getAllServices().then(setServices);
+            serviceClient.getAllServices(jwt).then(setServices);
     }, [setServices]);
 
     useEffect(() => {
@@ -38,11 +38,11 @@ export default function useInitializeData() {
     }, [setUsers]);
 
     useEffect(() => {
-            activityLogsClient.getAllActivityLogs().then(setActivityLogs);
+            activityLogsClient.getAllActivityLogs(jwt).then(setActivityLogs);
     }, [setActivityLogs]);
 
     useEffect(() => {
-        activityLogsClient.getLatestActivityLogs().then(setLatestActivityLogs);
+        activityLogsClient.getLatestActivityLogs(jwt).then(setLatestActivityLogs);
     }, [setLatestActivityLogs]);
 
     useEffect(() => {

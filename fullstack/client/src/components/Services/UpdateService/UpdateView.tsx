@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router";
 
 export const UpdateView = () => {
+    const [jwt] = useAtom(JwtAtom);
     const [service] = useAtom(ServiceAtom);
     const [services, setServices] = useAtom(ServicesAtom);
     const [title, setTitle] = useState(service!.name);
@@ -104,7 +105,7 @@ export const UpdateView = () => {
                         ${isLoading ? 'bg-gray-600 cursor-not-allowed' : 'bg-gray-800 hover:bg-gray-700 hover:text-[--color-text-baby-blue]'}`}
                     onClick={() => {
                         setIsLoading(true);
-                        serviceClient.updateService(updateServiceDto).then(r => {
+                        serviceClient.updateService(updateServiceDto, jwt).then(r => {
                             toast.success("Service updated successfully");
                             const updatedServices = services.filter((s => s.id !== r.id));
                             setUpdatedService(r);
