@@ -9,6 +9,10 @@ public class CheckingRepo(MyDbContext ctx) : ICheckingRepository
 {
     public async Task<CheckingBookingResponseDto> CheckBookingRequestDto(string rfid, string serviceId)
     {
+        
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
+        
         var isValid = false;
         var status = "failed";
 
@@ -20,10 +24,9 @@ public class CheckingRepo(MyDbContext ctx) : ICheckingRepository
         foreach (var booking in user.Bookings)
             if (booking.ServiceId == serviceId)
             {
-                var today = DateTime.Now;
-                if (booking.StartTime > TimeOnly.FromDateTime(today) ||
-                    booking.EndTime < TimeOnly.FromDateTime(today) ||
-                    booking.Date != DateOnly.FromDateTime(today)) continue;
+                if (booking.StartTime > TimeOnly.FromDateTime(now) ||
+                    booking.EndTime < TimeOnly.FromDateTime(now) ||
+                    booking.Date != DateOnly.FromDateTime(now)) continue;
                 isValid = true;
                 status = "success";
             }

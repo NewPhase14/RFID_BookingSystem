@@ -13,6 +13,9 @@ public class BookingService(
 {
     public async Task<BookingResponseDto> CreateBooking(BookingCreateRequestDto dto)
     {
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
+        
         var booking = new Booking
         {
             Id = Guid.NewGuid().ToString(),
@@ -21,8 +24,8 @@ public class BookingService(
             Date = dto.Date,
             StartTime = dto.StartTime,
             EndTime = dto.EndTime,
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now
+            CreatedAt = now,
+            UpdatedAt = now
         };
         if (!await CanCreateBooking(booking)) throw new InvalidOperationException("Booking could not be created.");
 

@@ -10,6 +10,9 @@ public class AvailabilityService(IAvailabilityRepository availabilityRepository,
 {
     public async Task<AvailabilityResponseDto> CreateAvailability(AvailabilityCreateRequestDto dto)
     {
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
+        
         var createdAvailability = await availabilityRepository.CreateAvailability(new ServiceAvailability
             {
                 Id = Guid.NewGuid().ToString(),
@@ -17,8 +20,8 @@ public class AvailabilityService(IAvailabilityRepository availabilityRepository,
                 DayOfWeek = dto.DayOfWeek,
                 AvailableFrom = dto.AvailableFrom,
                 AvailableTo = dto.AvailableTo,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                CreatedAt = now,
+                UpdatedAt = now
             }
         );
         return new AvailabilityResponseDto
@@ -35,6 +38,9 @@ public class AvailabilityService(IAvailabilityRepository availabilityRepository,
 
     public async Task<List<AvailabilityResponseDto>> CreateAllAvailabilities(List<AvailabilityCreateRequestDto> dtos)
     {
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
+        
         var availabilities = dtos.Select(dto => new ServiceAvailability
             {
                 Id = Guid.NewGuid().ToString(),
@@ -42,8 +48,8 @@ public class AvailabilityService(IAvailabilityRepository availabilityRepository,
                 DayOfWeek = dto.DayOfWeek,
                 AvailableFrom = dto.AvailableFrom,
                 AvailableTo = dto.AvailableTo,
-                CreatedAt = DateTime.Now,
-                UpdatedAt = DateTime.Now
+                CreatedAt = now,
+                UpdatedAt = now
             }
         ).ToList();
 

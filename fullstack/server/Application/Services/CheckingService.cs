@@ -14,13 +14,16 @@ public class CheckingService(
 {
     public async Task<CheckingResponseDto> CheckIfValid(CheckBookingRequestDto dto)
     {
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
+        
         var activity = await checkingRepository.CheckBookingRequestDto(dto.Rfid, dto.ServiceId);
 
         var activityLog = new ActivityLog
         {
             Id = Guid.NewGuid().ToString(),
             ServiceId = dto.ServiceId,
-            AttemptedAt = DateTime.Now,
+            AttemptedAt = now,
             UserId = activity.UserId,
             Status = activity.Status
         };

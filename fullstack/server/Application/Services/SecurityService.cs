@@ -68,6 +68,9 @@ public class SecurityService(
         var normalizedFirstName = char.ToUpper(dto.FirstName[0]) + dto.FirstName[1..].ToLower();
 
         var normalizedLastName = char.ToUpper(dto.LastName[0]) + dto.LastName[1..].ToLower();
+        
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
 
         var newUser = new User
         {
@@ -80,8 +83,8 @@ public class SecurityService(
             HashedPassword = hash,
             FirstName = normalizedFirstName,
             LastName = normalizedLastName,
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now
+            CreatedAt = now,
+            UpdatedAt = now
         };
 
         try
@@ -98,8 +101,8 @@ public class SecurityService(
         {
             Id = Guid.NewGuid().ToString(),
             UserId = newUser.Id,
-            CreatedAt = DateTime.Now,
-            ExpiresAt = DateTime.Now.AddDays(1)
+            CreatedAt = now,
+            ExpiresAt = now.AddDays(1)
         };
 
 
@@ -134,6 +137,9 @@ public class SecurityService(
 
     public async Task<AccountActivationResponseDto> AccountActivation(AccountActivationRequestDto dto)
     {
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
+        
         var response = await repository.VerifyInviteToken(new VerifyInviteEmailRequestDto
         {
             TokenId = dto.TokenId
@@ -154,7 +160,7 @@ public class SecurityService(
 
         user.HashedPassword = hash;
         user.Salt = salt;
-        user.UpdatedAt = DateTime.Now;
+        user.UpdatedAt = now;
 
         await repository.UpdateUser(user);
 
@@ -168,6 +174,9 @@ public class SecurityService(
 
     public async Task<ResendInviteEmailResponseDto> ResendInviteEmail(ResendInviteEmailRequestDto dto)
     {
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
+        
         var user = await repository.GetUserOrNull(dto.Email);
         if (user is null) throw new ValidationException("User not found");
 
@@ -180,8 +189,8 @@ public class SecurityService(
         {
             Id = Guid.NewGuid().ToString(),
             UserId = user.Id,
-            CreatedAt = DateTime.Now,
-            ExpiresAt = DateTime.Now.AddDays(1)
+            CreatedAt = now,
+            ExpiresAt = now.AddDays(1)
         };
 
         var newToken = await repository.AddInviteToken(inviteToken);
@@ -208,6 +217,9 @@ public class SecurityService(
 
     public async Task<ForgotPasswordResponseDto> ForgotPassword(ForgotPasswordRequestDto dto)
     {
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
+        
         var user = await repository.GetUserOrNull(dto.Email);
         if (user is null) throw new ValidationException("User not found");
 
@@ -221,8 +233,8 @@ public class SecurityService(
         {
             Id = Guid.NewGuid().ToString(),
             UserId = user.Id,
-            CreatedAt = DateTime.Now,
-            ExpiresAt = DateTime.Now.AddDays(1)
+            CreatedAt = now,
+            ExpiresAt = now.AddDays(1)
         };
 
         var newToken = await repository.AddPasswordResetToken(token);
@@ -247,6 +259,9 @@ public class SecurityService(
 
     public async Task<ResetPasswordResponseDto> ResetPassword(ResetPasswordRequestDto dto)
     {
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
+        
         var response = await repository.VerifyPasswordToken(new VerifyPasswordTokenRequestDto
         {
             TokenId = dto.TokenId
@@ -263,7 +278,7 @@ public class SecurityService(
 
         user.HashedPassword = hash;
         user.Salt = salt;
-        user.UpdatedAt = DateTime.Now;
+        user.UpdatedAt = now;
 
         await repository.UpdateUser(user);
 

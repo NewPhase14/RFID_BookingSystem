@@ -39,11 +39,14 @@ public class UserRepo(MyDbContext context) : IUserRepository
 
     public async Task<User> UpdateUser(User user)
     {
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
+        
         var existingUser = await context.Users
             .Include(u => u.Role)
             .FirstOrDefaultAsync(u => u.Id == user.Id);
         if (existingUser == null) throw new InvalidOperationException("User not found");
-        existingUser.UpdatedAt = DateTime.Now;
+        existingUser.UpdatedAt = now;
         existingUser.FirstName = user.FirstName;
         existingUser.LastName = user.LastName;
         existingUser.Rfid = user.Rfid;
