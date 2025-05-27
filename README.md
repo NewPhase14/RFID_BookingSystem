@@ -1,0 +1,75 @@
+HOW TO GET STARTED
+
+Link to deployed web app for admin users:
+https://bookit-rfid.web.app/
+
+If you want to run it locally:
+Inside the fullstack folder there is a docker-compose.yml file. Run it while docker is up and running.
+
+Inside the fullstack/server/Infrastructure.Postgres.Scaffolding. Run the current_schema.sql script into your newly created local database.
+
+Inside the fullstack/server/Startup
+You have to change the appsettings.Development.json to:
+```C#
+{
+  "AllowedHosts": "*",
+  "AppOptions": {
+    "JwtSecret": "2039b14ecb9b34d559fad04e8ffb5522b0b0cce6fb07df79cb8a49b355fa4cb313f314538abf2201ae1d39ff2b32d0c0d737779d8d6528f2c54a4ed7c4fc22be66414d7118c842b96547d311b20e9d11fb021583ed1141033fabc6757d312123ad1870c6856eaf8476766464bfe511c04ad28bbe314a686f6211cd24d68c5a989a714070b5ede8797e0628c6f3a0a743b470df12885d37211edaf85c7675ee8df65b9d9d0e38598a158bbc93e38b7c57fc0874bf0a55d2999a68f129e3d103898a2d98921f8c3157e1fca890298ad21b32de73e1ac8a622f37f04a879b6891f8bc58e7ec756878c512b56a0dde5f35a89bc42a955e0c740c0795acbd051626e1",
+    "DbConnectionString": "Server=localhost;Database=testdb;User Id=testuser;Password=testpass;",
+    "Seed": false,
+    "PORT": 8080,
+    "WS_PORT": 8181,
+    "REST_PORT": 5001,
+    "MQTT_BROKER_HOST": "",
+    "MQTT_USERNAME": "",
+    "MQTT_PASSWORD": ""
+  },
+  "EmailOptions": {
+    "SenderEmail": "bookit@noreply.com",
+    "SenderName": "bookit",
+    "Host": "localhost",
+    "Port": 25
+  },
+  "CloudinaryOptions": {
+    "CloudName": "",
+    "ApiKey": "",
+    "ApiSecret": ""
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information"
+    }
+  }
+}
+```
+You can run the server without MQTT and CloudinaryOptions.
+But you will need CloudinaryOptions to create a service.
+
+You can create a cloudinary account here:
+https://cloudinary.com/users/register_free
+
+SETUP MQTT
+
+To use MQTT you have to create an account and a cluster at HiveMQ:
+https://www.hivemq.com/company/get-hivemq/
+
+Inside the iot/ReadNUID
+You have to create a credentialsdev.h file with the following, or put all the variables directly into your ReadNUID.ino file:
+```C++
+#ifndef CREDENTIALSDEV_H_
+#define CREDENTIALSDEV_H_
+
+const char* ssid = "";
+const char* password = "";
+
+const char* mqtt_broker = "";
+const int mqtt_port = ;
+const char* mqtt_username = "";
+const char* mqtt_password = "";
+
+const char* serviceid = "";
+
+#endif
+```
+
+
