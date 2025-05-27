@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Core.Domain.Entities;
+﻿using Core.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Postgres.Scaffolding;
@@ -166,7 +164,8 @@ public partial class MyDbContext : DbContext
 
             entity.ToTable("service_availability");
 
-            entity.HasIndex(e => new { e.ServiceId, e.DayOfWeek }, "service_availability_service_id_day_of_week_key").IsUnique();
+            entity.HasIndex(e => new { e.ServiceId, e.DayOfWeek }, "service_availability_service_id_day_of_week_key")
+                .IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
             entity.Property(e => e.AvailableFrom).HasColumnName("available_from");

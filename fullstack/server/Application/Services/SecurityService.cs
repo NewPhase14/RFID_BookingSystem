@@ -21,16 +21,20 @@ using Microsoft.Extensions.Options;
 
 namespace Application.Services;
 
-public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRepository repository, IFluentEmail fluentEmail, IConnectionManager connectionManager) : ISecurityService
+public class SecurityService(
+    IOptionsMonitor<AppOptions> optionsMonitor,
+    IAuthRepository repository,
+    IFluentEmail fluentEmail,
+    IConnectionManager connectionManager) : ISecurityService
 {
     public async Task<AuthResponseDto> Login(AuthLoginRequestDto dto)
     {
         var user = await repository.GetUserOrNull(dto.Email) ?? throw new ValidationException("Username not found");
-        
+
         if (user.ConfirmedEmail == false) throw new ValidationException("Account must be activated before logging in");
-        
+
         VerifyPasswordOrThrow(dto.Password + user.Salt, user.HashedPassword);
-        
+
         var userRole = user.Role.Name;
 
         return new AuthResponseDto
@@ -51,18 +55,18 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRe
     {
         var existingUser = await repository.GetUserOrNull(dto.Email);
         if (existingUser is not null) throw new ValidationException("User already exists");
-        
+
         var randomPassword = Guid.NewGuid().ToString();
-        
+
         var salt = GenerateSalt();
         var hash = HashPassword(randomPassword + salt);
-        
+
         var userRole = await repository.GetRole(dto.Role);
-        
+
         if (userRole is null) throw new ValidationException("User role not found");
-        
+
         var normalizedFirstName = char.ToUpper(dto.FirstName[0]) + dto.FirstName[1..].ToLower();
-        
+
         var normalizedLastName = char.ToUpper(dto.LastName[0]) + dto.LastName[1..].ToLower();
 
         var newUser = new User
@@ -100,23 +104,22 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRe
 
 
         var newToken = await repository.AddInviteToken(inviteToken);
-       
+
 
         var verificationLink = $"https://bookit-rfid.web.app/activate?token={newToken.Id}";
-        
+
         var email = fluentEmail
             .To(newUser.Email, $"{newUser.FirstName} {newUser.LastName}")
             .Subject("Account activation for bookit")
-            .Body($"Hello {newUser.FirstName}, thank you for registering at bookit. <br> To activate your account <a href='{verificationLink}'>click here</a>", true);
+            .Body(
+                $"Hello {newUser.FirstName}, thank you for registering at bookit. <br> To activate your account <a href='{verificationLink}'>click here</a>",
+                true);
 
         var response = await email.SendAsync();
 
-        if (!response.Successful)
-        {
-            Console.WriteLine("Failed to send email.");
-        }
+        if (!response.Successful) Console.WriteLine("Failed to send email.");
 
-        return new UserResponseDto()
+        return new UserResponseDto
         {
             Id = newUser.Id,
             Rfid = newUser.Rfid,
@@ -131,36 +134,33 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRe
 
     public async Task<AccountActivationResponseDto> AccountActivation(AccountActivationRequestDto dto)
     {
-       var response = await repository.VerifyInviteToken(new VerifyInviteEmailRequestDto()
+        var response = await repository.VerifyInviteToken(new VerifyInviteEmailRequestDto
         {
             TokenId = dto.TokenId
         });
 
-        if (response.IsExpired)
-        {
-            throw new ValidationException("Token is invalid or expired");
-        }
+        if (response.IsExpired) throw new ValidationException("Token is invalid or expired");
 
         Console.WriteLine("Token ID: " + dto.TokenId);
-      
+
         var user = await repository.GetUserOrNullByInviteTokenId(dto.TokenId);
-        
+
         if (user is null) throw new ValidationException("User not found");
-        
+
         user.ConfirmedEmail = true;
-        
+
         var salt = GenerateSalt();
         var hash = HashPassword(dto.Password + salt);
-        
+
         user.HashedPassword = hash;
         user.Salt = salt;
         user.UpdatedAt = DateTime.Now;
 
         await repository.UpdateUser(user);
-        
+
         await repository.RemoveInviteToken(dto.TokenId);
-        
-        return new AccountActivationResponseDto()
+
+        return new AccountActivationResponseDto
         {
             Message = "Account was activated successfully."
         };
@@ -170,7 +170,7 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRe
     {
         var user = await repository.GetUserOrNull(dto.Email);
         if (user is null) throw new ValidationException("User not found");
-        
+
         if (user.ConfirmedEmail == true) throw new ValidationException("Account already activated");
 
         //Delete previous tokens if they exist, no matter if they are expired or not
@@ -183,22 +183,24 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRe
             CreatedAt = DateTime.Now,
             ExpiresAt = DateTime.Now.AddDays(1)
         };
-        
+
         var newToken = await repository.AddInviteToken(inviteToken);
-        
+
         var verificationLink = $"https://bookit-rfid.web.app/activate?token={newToken.Id}";
-        
+
         var email = fluentEmail
             .To(user.Email, $"{user.FirstName} {user.LastName}")
             .Subject("(Resend) Account activation for bookit")
-            .Body($"Hello {user.FirstName}, thank you for registering at bookit. <br> To activate your account <a href='{verificationLink}'>click here</a>", true);
+            .Body(
+                $"Hello {user.FirstName}, thank you for registering at bookit. <br> To activate your account <a href='{verificationLink}'>click here</a>",
+                true);
 
-        
+
         var response = await email.SendAsync();
-        
+
         if (!response.Successful) throw new ApplicationException("Failed to send email.");
-        
-        return new ResendInviteEmailResponseDto()
+
+        return new ResendInviteEmailResponseDto
         {
             Message = "Activation email sent successfully."
         };
@@ -208,13 +210,14 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRe
     {
         var user = await repository.GetUserOrNull(dto.Email);
         if (user is null) throw new ValidationException("User not found");
-        
-        if (user.ConfirmedEmail == false) throw new ValidationException("Account must be activated before resetting password");
-        
+
+        if (user.ConfirmedEmail == false)
+            throw new ValidationException("Account must be activated before resetting password");
+
         //Delete previous tokens if they exist, no matter if they are expired or not
         await repository.RemovePreviousPasswordResetToken(user.Id);
 
-        var token = new PasswordResetToken()
+        var token = new PasswordResetToken
         {
             Id = Guid.NewGuid().ToString(),
             UserId = user.Id,
@@ -223,22 +226,20 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRe
         };
 
         var newToken = await repository.AddPasswordResetToken(token);
-        
+
         var verificationLink = $"https://bookit-rfid.web.app/reset-password?token={newToken.Id}";
-        
+
         var email = fluentEmail
             .To(dto.Email, $"{user.FirstName} {user.LastName}")
             .Subject("Reset password for bookit")
-            .Body($"Hello {user.FirstName}, <br> To reset your password <a href='{verificationLink}'>click here</a>", true);
+            .Body($"Hello {user.FirstName}, <br> To reset your password <a href='{verificationLink}'>click here</a>",
+                true);
 
         var response = await email.SendAsync();
 
-        if (!response.Successful)
-        {
-            Console.WriteLine("Failed to send email.");
-        }
+        if (!response.Successful) Console.WriteLine("Failed to send email.");
 
-        return new ForgotPasswordResponseDto()
+        return new ForgotPasswordResponseDto
         {
             Message = "Reset password email was sent successfully."
         };
@@ -246,38 +247,32 @@ public class SecurityService(IOptionsMonitor<AppOptions> optionsMonitor, IAuthRe
 
     public async Task<ResetPasswordResponseDto> ResetPassword(ResetPasswordRequestDto dto)
     {
-
-       var response = await repository.VerifyPasswordToken(new VerifyPasswordTokenRequestDto()
+        var response = await repository.VerifyPasswordToken(new VerifyPasswordTokenRequestDto
         {
             TokenId = dto.TokenId
         });
 
-        if (response.IsExpired)
-        {
-            throw new ValidationException("Token is invalid or expired");
-        }
+        if (response.IsExpired) throw new ValidationException("Token is invalid or expired");
 
         var user = await repository.GetUserOrNullByPasswordResetTokenId(dto.TokenId);
-        
+
         if (user is null) throw new ValidationException("User not found");
 
         var salt = GenerateSalt();
         var hash = HashPassword(dto.Password + salt);
-        
+
         user.HashedPassword = hash;
         user.Salt = salt;
         user.UpdatedAt = DateTime.Now;
 
         await repository.UpdateUser(user);
-        
+
         await repository.RemovePasswordResetToken(dto.TokenId);
 
-        return new ResetPasswordResponseDto()
+        return new ResetPasswordResponseDto
         {
             Message = "Password reset successfully."
         };
-        
-        
     }
 
 

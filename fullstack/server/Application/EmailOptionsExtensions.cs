@@ -1,3 +1,5 @@
+using System.Net;
+using System.Net.Mail;
 using Application.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -13,29 +15,23 @@ public static class EmailOptionsExtensions
         var emailOptions = configuration.GetSection("EmailOptions").Get<EmailOptions>();
 
         if (emailOptions.Password == null || emailOptions.Username == null)
-        {
             services
                 .AddFluentEmail(emailOptions.SenderEmail, emailOptions.SenderName)
-                .AddSmtpSender(new System.Net.Mail.SmtpClient
+                .AddSmtpSender(new SmtpClient
                 {
                     Host = emailOptions.Host,
-                    Port = emailOptions.Port,
+                    Port = emailOptions.Port
                 });
-        }
         else
-        {
             services
                 .AddFluentEmail(emailOptions.SenderEmail, emailOptions.SenderName)
-                .AddSmtpSender(new System.Net.Mail.SmtpClient
+                .AddSmtpSender(new SmtpClient
                 {
                     Host = emailOptions.Host,
                     Port = emailOptions.Port,
-                    Credentials = new System.Net.NetworkCredential(emailOptions.Username, emailOptions.Password),
+                    Credentials = new NetworkCredential(emailOptions.Username, emailOptions.Password),
                     EnableSsl = true
                 });
-        }
         return services;
     }
-    
-
 }

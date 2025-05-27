@@ -11,5 +11,4 @@ public class ForgotPasswordValidator : AbstractValidator<ForgotPasswordRequestDt
             .NotEmpty().WithMessage("Email is required.")
             .EmailAddress().WithMessage("Invalid email format.");
     }
-    
 }

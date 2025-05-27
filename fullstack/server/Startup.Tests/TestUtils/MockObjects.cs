@@ -6,9 +6,6 @@ public static class MockObjects
 {
     public static User GetUser(string? role = null)
     {
-        return new User
-        {
-            
-        };
+        return new User();
     }
 }

@@ -1,17 +1,15 @@
 using Application.Interfaces;
-using Application.Interfaces.Infrastructure.Websocket;
 using Application.Services;
 using Application.Validators.Auth;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
-
 
 namespace Application;
 
 public static class Extensions
 {
     public static IServiceCollection RegisterApplicationServices(this IServiceCollection services)
-    {    
+    {
         services.AddScoped<ISecurityService, SecurityService>();
         services.AddScoped<ISubscriptionService, SubscriptionService>();
         services.AddScoped<IBookingService, BookingService>();

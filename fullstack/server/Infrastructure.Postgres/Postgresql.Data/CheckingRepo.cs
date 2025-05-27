@@ -1,6 +1,5 @@
 using Application.Interfaces.Infrastructure.Postgres;
 using Application.Models.Dtos.Checking;
-using Core.Domain.Entities;
 using Infrastructure.Postgres.Scaffolding;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,29 +9,24 @@ public class CheckingRepo(MyDbContext ctx) : ICheckingRepository
 {
     public async Task<CheckingBookingResponseDto> CheckBookingRequestDto(string rfid, string serviceId)
     {
-        bool isValid = false;
+        var isValid = false;
         var status = "failed";
 
         var user = await ctx.Users.Include(user => user.Bookings)
             .FirstOrDefaultAsync(u => u.Rfid == rfid);
 
-        if (user == null)
-        {
-            throw new InvalidOperationException("User not found");
-        }
-        
-        foreach (Booking booking in user.Bookings)
-        {
+        if (user == null) throw new InvalidOperationException("User not found");
+
+        foreach (var booking in user.Bookings)
             if (booking.ServiceId == serviceId)
             {
-                DateTime today = DateTime.Now;
+                var today = DateTime.Now;
                 if (booking.StartTime > TimeOnly.FromDateTime(today) ||
                     booking.EndTime < TimeOnly.FromDateTime(today) ||
                     booking.Date != DateOnly.FromDateTime(today)) continue;
                 isValid = true;
                 status = "success";
             }
-        }
 
         var activity = new CheckingBookingResponseDto
         {
@@ -41,7 +35,7 @@ public class CheckingRepo(MyDbContext ctx) : ICheckingRepository
             UserId = user.Id,
             Status = status
         };
-        
+
         return activity;
     }
 }

@@ -43,7 +43,7 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public async Task<UserResponseDto> DeleteUser(string id)
     {
-    var user = await userRepository.DeleteUser(id);
+        var user = await userRepository.DeleteUser(id);
 
         return new UserResponseDto
         {
@@ -53,7 +53,7 @@ public class UserService(IUserRepository userRepository) : IUserService
 
     public async Task<UserResponseDto> UpdateUser(UserUpdateRequestDto dto)
     {
-        var user = new User()
+        var user = new User
         {
             Id = dto.Id,
             FirstName = dto.FirstName,
@@ -61,7 +61,7 @@ public class UserService(IUserRepository userRepository) : IUserService
             Rfid = dto.Rfid
         };
         var updatedUser = await userRepository.UpdateUser(user);
-        return new UserResponseDto()
+        return new UserResponseDto
         {
             Id = updatedUser.Id,
             Email = updatedUser.Email,
@@ -70,7 +70,7 @@ public class UserService(IUserRepository userRepository) : IUserService
             Rfid = updatedUser.Rfid,
             RoleName = updatedUser.Role.Name,
             CreatedAt = updatedUser.CreatedAt.ToString("dd-MM-yyyy HH:mm"),
-            UpdatedAt = updatedUser.UpdatedAt.ToString("dd-MM-yyyy HH:mm"),
+            UpdatedAt = updatedUser.UpdatedAt.ToString("dd-MM-yyyy HH:mm")
         };
     }
 }

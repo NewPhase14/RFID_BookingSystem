@@ -1,6 +1,4 @@
 ﻿using Application.Interfaces.Infrastructure.Postgres;
-using Application.Models.Dtos;
-using Application.Models.Dtos.Auth;
 using Application.Models.Dtos.Auth.Invite;
 using Application.Models.Dtos.Auth.Password;
 using Core.Domain.Entities;
@@ -21,7 +19,7 @@ public class AuthRepo(MyDbContext ctx) : IAuthRepository
         var token = await ctx.PasswordResetTokens
             .Include(p => p.User)
             .FirstOrDefaultAsync(p => p.Id == tokenId);
-        
+
         return token?.User;
     }
 
@@ -30,7 +28,7 @@ public class AuthRepo(MyDbContext ctx) : IAuthRepository
         var token = await ctx.InviteTokens
             .Include(i => i.User)
             .FirstOrDefaultAsync(i => i.Id == tokenId);
-        
+
         return token?.User;
     }
 
@@ -49,9 +47,10 @@ public class AuthRepo(MyDbContext ctx) : IAuthRepository
 
     public async Task<Role> GetRole(string roleName)
     {
-        return await ctx.Roles.FirstOrDefaultAsync(r => r.Name == roleName) ?? throw new InvalidOperationException("Role not found");
+        return await ctx.Roles.FirstOrDefaultAsync(r => r.Name == roleName) ??
+               throw new InvalidOperationException("Role not found");
     }
-    
+
     public async Task<InviteToken> AddInviteToken(InviteToken token)
     {
         ctx.InviteTokens.Add(token);
@@ -66,14 +65,12 @@ public class AuthRepo(MyDbContext ctx) : IAuthRepository
             .FirstOrDefaultAsync(e => e.Id == dto.TokenId);
 
         if (token is null || token.ExpiresAt < DateTime.Now)
-        {
-            return new VerifyInviteEmailResponseDto()
+            return new VerifyInviteEmailResponseDto
             {
                 IsExpired = true
             };
-        }
 
-        return new VerifyInviteEmailResponseDto()
+        return new VerifyInviteEmailResponseDto
         {
             IsExpired = false
         };
@@ -91,18 +88,16 @@ public class AuthRepo(MyDbContext ctx) : IAuthRepository
         var token = await ctx.PasswordResetTokens
             .Include(u => u.User)
             .FirstOrDefaultAsync(e => e.Id == dto.TokenId);
-        
-        if (token is null || token.ExpiresAt < DateTime.Now)
-        {
-            return new VerifyPasswordTokenResponseDto()
-            {
-                IsExpired = true,
-            };
-        }
 
-        return new VerifyPasswordTokenResponseDto()
+        if (token is null || token.ExpiresAt < DateTime.Now)
+            return new VerifyPasswordTokenResponseDto
+            {
+                IsExpired = true
+            };
+
+        return new VerifyPasswordTokenResponseDto
         {
-            IsExpired = false,
+            IsExpired = false
         };
     }
 

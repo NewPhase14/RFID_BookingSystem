@@ -1,4 +1,3 @@
-using System.Drawing.Printing;
 using Application.Interfaces.Infrastructure.Postgres;
 using Core.Domain.Entities;
 using Infrastructure.Postgres.Scaffolding;
@@ -42,10 +41,7 @@ public class BookingRepo(MyDbContext ctx) : IBookingRepository
             .Include(b => b.Service)
             .Include(b => b.User)
             .FirstOrDefaultAsync(b => b.Id == id);
-        if (booking == null)
-        {
-            throw new InvalidOperationException("Booking not found");
-        }
+        if (booking == null) throw new InvalidOperationException("Booking not found");
         ctx.Bookings.Remove(booking);
         await ctx.SaveChangesAsync();
         return booking;
@@ -118,10 +114,9 @@ public class BookingRepo(MyDbContext ctx) : IBookingRepository
 
     public async Task<List<Booking>> GetBookingsForServiceAndDate(string serviceId, DateOnly date)
     {
-        var bookings = await ctx.Bookings.
-            Where(b => b.ServiceId == serviceId && b.Date == date)
+        var bookings = await ctx.Bookings.Where(b => b.ServiceId == serviceId && b.Date == date)
             .ToListAsync();
-        
+
         return bookings;
     }
 }

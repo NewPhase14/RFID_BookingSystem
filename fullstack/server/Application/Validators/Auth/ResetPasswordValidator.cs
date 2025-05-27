@@ -17,5 +17,4 @@ public class ResetPasswordValidator : AbstractValidator<ResetPasswordRequestDto>
             .Matches("[!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~]").WithMessage(
                 "Password must contain at least one special character.");
     }
-    
 }

@@ -6,5 +6,4 @@ public class CheckingBookingResponseDto
     public string ServiceId { get; set; } = null!;
     public string UserId { get; set; } = null!;
     public string Status { get; set; } = null!;
-
 }

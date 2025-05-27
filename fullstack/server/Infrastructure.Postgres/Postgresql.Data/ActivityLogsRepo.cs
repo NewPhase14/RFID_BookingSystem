@@ -1,5 +1,4 @@
 using Application.Interfaces.Infrastructure.Postgres;
-using Application.Models.Dtos.ActivityLog;
 using Core.Domain.Entities;
 using Infrastructure.Postgres.Scaffolding;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +10,7 @@ public class ActivityLogsRepo(MyDbContext ctx) : IActivityLogsRepository
     public async Task CreateActivityLogs(ActivityLog activityLog)
     {
         ctx.ActivityLogs.Add(activityLog);
-    
+
         await ctx.SaveChangesAsync();
     }
 
@@ -23,7 +22,7 @@ public class ActivityLogsRepo(MyDbContext ctx) : IActivityLogsRepository
             .OrderByDescending(x => x.AttemptedAt).ToListAsync();
         return activityLogs;
     }
-    
+
     public async Task<List<ActivityLog>> GetLatestActivityLogs()
     {
         var activityLogs = await ctx.ActivityLogs
@@ -32,8 +31,7 @@ public class ActivityLogsRepo(MyDbContext ctx) : IActivityLogsRepository
             .OrderByDescending(x => x.AttemptedAt)
             .Take(5)
             .ToListAsync();
-        
+
         return activityLogs;
     }
-    
 }

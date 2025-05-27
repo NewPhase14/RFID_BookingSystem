@@ -7,7 +7,10 @@ using Core.Domain.Entities;
 
 namespace Application.Services;
 
-public class CheckingService(ICheckingRepository checkingRepository, IActivityLogsRepository activityLogsRepository, IConnectionManager connectionManager) : ICheckingService
+public class CheckingService(
+    ICheckingRepository checkingRepository,
+    IActivityLogsRepository activityLogsRepository,
+    IConnectionManager connectionManager) : ICheckingService
 {
     public async Task<CheckingResponseDto> CheckIfValid(CheckBookingRequestDto dto)
     {
@@ -19,7 +22,7 @@ public class CheckingService(ICheckingRepository checkingRepository, IActivityLo
             ServiceId = dto.ServiceId,
             AttemptedAt = DateTime.Now,
             UserId = activity.UserId,
-            Status = activity.Status,
+            Status = activity.Status
         };
 
         await activityLogsRepository.CreateActivityLogs(activityLog);
@@ -33,7 +36,7 @@ public class CheckingService(ICheckingRepository checkingRepository, IActivityLo
             Date = log.AttemptedAt.ToString("dd-MM-yyyy"),
             Time = log.AttemptedAt.ToString("HH:mm:ss"),
             Fullname = log.User.FirstName + " " + log.User.LastName,
-            Status = log.Status,
+            Status = log.Status
         }).ToList();
 
         var activityLogsBroadcastDto = new ActivityLogsBroadcastDto
@@ -42,8 +45,8 @@ public class CheckingService(ICheckingRepository checkingRepository, IActivityLo
             activityLogs = activityLogsToBroadcast
         };
 
-        await connectionManager.BroadcastToTopic("dashboard", activityLogsBroadcastDto); 
-            
+        await connectionManager.BroadcastToTopic("dashboard", activityLogsBroadcastDto);
+
         return new CheckingResponseDto
         {
             Message = activity.IsValid ? "Valid" : "Invalid"

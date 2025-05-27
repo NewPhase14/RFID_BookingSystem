@@ -9,5 +9,4 @@ public class AuthRegisterRequestDto
     [Required] public string FirstName { get; set; } = null!;
     [Required] public string LastName { get; set; } = null!;
     [Required] public string Role { get; set; } = null!;
-
 }

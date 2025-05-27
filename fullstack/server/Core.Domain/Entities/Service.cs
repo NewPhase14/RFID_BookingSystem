@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿namespace Core.Domain.Entities;
 
-namespace Core.Domain.Entities;
-
-public partial class Service
+public class Service
 {
     public string Id { get; set; } = null!;
 
@@ -23,5 +20,6 @@ public partial class Service
 
     public virtual ICollection<Booking> Bookings { get; set; } = new List<Booking>();
 
-    public virtual ICollection<ServiceAvailability> ServiceAvailabilities { get; set; } = new List<ServiceAvailability>();
+    public virtual ICollection<ServiceAvailability> ServiceAvailabilities { get; set; } =
+        new List<ServiceAvailability>();
 }

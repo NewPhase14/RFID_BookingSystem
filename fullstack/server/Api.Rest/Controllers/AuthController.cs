@@ -11,7 +11,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Rest.Controllers;
 
 [ApiController]
-public class AuthController(ISecurityService securityService, 
+public class AuthController(
+    ISecurityService securityService,
     IValidator<AccountActivationRequestDto> accountActivationValidator,
     IValidator<ForgotPasswordRequestDto> forgotPasswordValidator,
     IValidator<ResetPasswordRequestDto> resetPasswordValidator) : ControllerBase
@@ -19,17 +20,17 @@ public class AuthController(ISecurityService securityService,
     public const string ControllerRoute = "api/auth/";
 
     public const string LoginRoute = ControllerRoute + nameof(Login);
-    
+
     public const string RegisterRoute = ControllerRoute + nameof(Register);
-    
+
     public const string AccountActivationRoute = ControllerRoute + nameof(AccountActivation);
-    
+
     public const string ResendInviteEmailRoute = ControllerRoute + nameof(ResendInviteEmail);
 
     public const string ForgotPasswordRoute = ControllerRoute + nameof(ForgotPassword);
-    
+
     public const string ResetPasswordRoute = ControllerRoute + nameof(ResetPassword);
-    
+
     public const string SecuredRoute = ControllerRoute + nameof(Secured);
 
 
@@ -42,26 +43,22 @@ public class AuthController(ISecurityService securityService,
 
     [Route(RegisterRoute)]
     [HttpPost]
-    public async Task<ActionResult<UserResponseDto>> Register([FromBody] AuthRegisterRequestDto dto, [FromHeader] string authorization)
+    public async Task<ActionResult<UserResponseDto>> Register([FromBody] AuthRegisterRequestDto dto,
+        [FromHeader] string authorization)
     {
         var jwt = securityService.VerifyJwtOrThrow(authorization);
-        if (jwt.Role != "Admin")
-        {
-            return Unauthorized();
-        }
+        if (jwt.Role != "Admin") return Unauthorized();
         return Ok(await securityService.Register(dto));
     }
 
     [HttpPost]
     [Route(AccountActivationRoute)]
-    public async Task<ActionResult<AccountActivationResponseDto>> AccountActivation([FromBody] AccountActivationRequestDto dto)
+    public async Task<ActionResult<AccountActivationResponseDto>> AccountActivation(
+        [FromBody] AccountActivationRequestDto dto)
     {
         var validationResult = await accountActivationValidator.ValidateAsync(dto);
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors);
-        }
-        
+        if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
+
         return Ok(await securityService.AccountActivation(dto));
     }
 
@@ -78,27 +75,21 @@ public class AuthController(ISecurityService securityService,
     public async Task<ActionResult<ForgotPasswordResponseDto>> ForgotPassword([FromBody] ForgotPasswordRequestDto dto)
     {
         var validationResult = await forgotPasswordValidator.ValidateAsync(dto);
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors);
-        }
-        
+        if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
+
         return Ok(await securityService.ForgotPassword(dto));
     }
-    
+
     [HttpPost]
-    [Route (ResetPasswordRoute)]
+    [Route(ResetPasswordRoute)]
     public async Task<ActionResult<ResetPasswordResponseDto>> ResetPassword([FromBody] ResetPasswordRequestDto dto)
     {
         var validationResult = await resetPasswordValidator.ValidateAsync(dto);
-        if (!validationResult.IsValid)
-        {
-            return BadRequest(validationResult.Errors);
-        }
-        
+        if (!validationResult.IsValid) return BadRequest(validationResult.Errors);
+
         return Ok(await securityService.ResetPassword(dto));
     }
-    
+
     [HttpGet]
     [Route(SecuredRoute)]
     public ActionResult Secured()

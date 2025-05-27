@@ -17,5 +17,4 @@ public class AccountActivationValidator : AbstractValidator<AccountActivationReq
             .Matches("[!\"#$%&'()*+,-./:;<=>?@[\\]^_`{|}~]").WithMessage(
                 "Password must contain at least one special character.");
     }
-    
 }

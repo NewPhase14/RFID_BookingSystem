@@ -1,19 +1,18 @@
 using Application.Interfaces;
 using Application.Interfaces.Infrastructure.Postgres;
 using Application.Models.Dtos.Service;
-using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
 using Core.Domain.Entities;
 
 namespace Application.Services;
 
-public class ServiceService(IServiceRepository serviceRepository, ICloudinaryImageService cloudinaryImageService) : IServiceService
+public class ServiceService(IServiceRepository serviceRepository, ICloudinaryImageService cloudinaryImageService)
+    : IServiceService
 {
     public async Task<ServiceResponseDto> CreateService(ServiceCreateRequestDto dto)
     {
         var imageUrl = string.Empty;
         var publicId = string.Empty;
-        
+
         // This allows inserting a base64 string with the request for testing purposes,
         // This should be changed to a file upload in the future
 
@@ -30,8 +29,8 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
             imageUrl = uploadResult.SecureUrl;
             publicId = uploadResult.PublicId;
         }
-        
-        var service = new Service()
+
+        var service = new Service
         {
             Id = Guid.NewGuid().ToString(),
             Name = dto.Name,
@@ -41,9 +40,9 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
             CreatedAt = DateTime.Now,
             UpdatedAt = DateTime.Now
         };
-        
+
         var createdService = await serviceRepository.CreateService(service);
-        return new ServiceResponseDto()
+        return new ServiceResponseDto
         {
             Id = createdService.Id,
             Name = createdService.Name,
@@ -58,16 +57,13 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
     public async Task<ServiceResponseDto> DeleteService(string id)
     {
         var service = await serviceRepository.DeleteService(id);
-        
-        if (service == null)
-        {
-            throw new InvalidOperationException("Service not found");
-        }
-        
+
+        if (service == null) throw new InvalidOperationException("Service not found");
+
         // Delete the image from Cloudinary using the public IDx
         await cloudinaryImageService.DeleteImageAsync(service.PublicId);
-        
-        return new ServiceResponseDto()
+
+        return new ServiceResponseDto
         {
             Id = service.Id,
             Name = service.Name,
@@ -81,7 +77,6 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
 
     public async Task<ServiceResponseDto> UpdateService(ServiceUpdateRequestDto dto)
     {
-        
         var imageUrl = dto.ImageUrl;
         var publicId = dto.PublicId;
         if (!string.IsNullOrEmpty(dto.ImageUrl))
@@ -96,7 +91,8 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
             imageUrl = uploadResult.SecureUrl;
             publicId = uploadResult.PublicId;
         }
-        var service = new Service()
+
+        var service = new Service
         {
             Id = dto.Id,
             Name = dto.Name,
@@ -105,9 +101,9 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
             PublicId = publicId,
             UpdatedAt = DateTime.Now
         };
-        
+
         var updatedService = await serviceRepository.UpdateService(service);
-        return new ServiceResponseDto()
+        return new ServiceResponseDto
         {
             Id = updatedService.Id,
             Name = updatedService.Name,
@@ -122,8 +118,8 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
     public async Task<List<ServiceResponseDto>> GetAllServices()
     {
         var services = await serviceRepository.GetAllServices();
-        
-        return services.Select(service => new ServiceResponseDto()
+
+        return services.Select(service => new ServiceResponseDto
         {
             Id = service.Id,
             Name = service.Name,
@@ -132,16 +128,14 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
             PublicId = service.PublicId,
             CreatedAt = service.CreatedAt,
             UpdatedAt = service.UpdatedAt
-           
         }).ToList();
-        
     }
 
     public async Task<ServiceResponseDto> GetServiceById(string id)
     {
         var services = await serviceRepository.GetServiceById(id);
-        
-        return new ServiceResponseDto()
+
+        return new ServiceResponseDto
         {
             Id = services.Id,
             Name = services.Name,

@@ -1,17 +1,12 @@
-using System.Text.Json;
 using Api.Rest;
 using Api.Websocket;
 using Application;
 using Application.Interfaces;
 using Application.Interfaces.Infrastructure.MQTT;
 using Application.Models;
-using Core.Domain.Entities;
 using Infrastructure.MQTT;
 using Infrastructure.Postgres;
-using Infrastructure.Postgres.Scaffolding;
 using Infrastructure.Websocket;
-using Microsoft.AspNetCore.HttpOverrides;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using NSwag.Generation;
 using Scalar.AspNetCore;
@@ -25,13 +20,13 @@ public class Program
     public static async Task Main()
     {
         var builder = WebApplication.CreateBuilder();
-        
-        var port = Environment.GetEnvironmentVariable("PORT") ?? "5001"; 
+
+        var port = Environment.GetEnvironmentVariable("PORT") ?? "5001";
         var url = $"http://0.0.0.0:{port}";
-        
+
         ConfigureServices(builder.Services, builder.Configuration);
         var app = builder.Build();
-        
+
         await ConfigureMiddleware(app);
         await app.RunAsync(url);
     }
@@ -45,13 +40,13 @@ public class Program
         services.AddEmailOptions(configuration);
 
         services.AddCloudinaryOptions(configuration);
-        
+
         services.AddDataSourceAndRepositories();
         services.AddWebsocketInfrastructure();
 
         services.RegisterWebsocketApiServices();
         services.RegisterRestApiServices();
-        
+
         if (!string.IsNullOrEmpty(appOptions.MQTT_BROKER_HOST))
         {
             services.RegisterMqttInfrastructure();
@@ -62,7 +57,7 @@ public class Program
             services.AddSingleton<IMqttPublisher, MockMqttPublisher>();
         }
 
-        
+
         services.AddOpenApiDocument(conf =>
         {
             conf.DocumentProcessors.Add(new AddAllDerivedTypesProcessor());
@@ -83,7 +78,7 @@ public class Program
 
         //app.Urls.Clear();
         //app.Urls.Add($"http://0.0.0.0:{appOptions.REST_PORT}");
-        
+
         app.Services.GetRequiredService<IProxyConfig>()
             .StartProxyServer(appOptions.PORT, appOptions.REST_PORT, appOptions.WS_PORT);
 
@@ -103,7 +98,7 @@ public class Program
             settings.Path = "/swagger";
             settings.DocumentPath = "/openapi/v1.json";
         });
-        
+
         var document = await app.Services.GetRequiredService<IOpenApiDocumentGenerator>().GenerateAsync("v1");
         var json = document.ToJson();
         await File.WriteAllTextAsync("openapi.json", json);
@@ -111,6 +106,4 @@ public class Program
 
         app.GenerateTypeScriptClient("/../../client/src/models/generated-client.ts").GetAwaiter().GetResult();
     }
-    
-    
 }

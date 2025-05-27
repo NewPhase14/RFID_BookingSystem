@@ -1,5 +1,3 @@
-using Application.Models.Dtos;
-using Application.Models.Dtos.Auth;
 using Application.Models.Dtos.Auth.Invite;
 using Application.Models.Dtos.Auth.Password;
 using Core.Domain.Entities;
@@ -14,7 +12,7 @@ public interface IAuthRepository
     Task<User> AddUser(User user);
     Task UpdateUser(User user);
     Task<Role> GetRole(string roleName);
-    Task<InviteToken> AddInviteToken(InviteToken token); 
+    Task<InviteToken> AddInviteToken(InviteToken token);
     Task<VerifyInviteEmailResponseDto> VerifyInviteToken(VerifyInviteEmailRequestDto dto);
     Task<PasswordResetToken> AddPasswordResetToken(PasswordResetToken token);
     Task<VerifyPasswordTokenResponseDto> VerifyPasswordToken(VerifyPasswordTokenRequestDto dto);

@@ -10,7 +10,6 @@ public class CloudinaryImageService(Cloudinary cloudinary) : ICloudinaryImageSer
     // Uploads an image asynchronously to Cloudinary and returns the image URL (URL is the link to the uploaded image)
     public async Task<CloudinaryUploadResultDto> UploadImageAsync(Stream fileStream, string fileName)
     {
-
         var uploadParams = new ImageUploadParams
         {
             File = new FileDescription(fileName, fileStream),
@@ -19,17 +18,11 @@ public class CloudinaryImageService(Cloudinary cloudinary) : ICloudinaryImageSer
             PublicId = fileName
         };
 
-        if (uploadParams == null)
-        {
-            throw new ArgumentNullException(nameof(uploadParams));
-        }
-        
+        if (uploadParams == null) throw new ArgumentNullException(nameof(uploadParams));
+
         var uploadResult = await cloudinary.UploadAsync(uploadParams);
-        if (uploadResult == null)
-        {
-            throw new InvalidOperationException("Upload failed");
-        }
-        
+        if (uploadResult == null) throw new InvalidOperationException("Upload failed");
+
         // Return the dto with HTTPS URL of the uploaded image and the public ID, so the values can be used in database
         return new CloudinaryUploadResultDto
         {
@@ -44,11 +37,8 @@ public class CloudinaryImageService(Cloudinary cloudinary) : ICloudinaryImageSer
         {
             ResourceType = ResourceType.Image
         };
-        
+
         var deletionResult = await cloudinary.DestroyAsync(deleteParams);
-        if (deletionResult == null)
-        {
-            throw new InvalidOperationException("Image deletion failed");
-        }
+        if (deletionResult == null) throw new InvalidOperationException("Image deletion failed");
     }
 }

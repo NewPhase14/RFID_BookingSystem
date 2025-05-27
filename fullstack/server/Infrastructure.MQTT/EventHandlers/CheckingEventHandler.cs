@@ -15,7 +15,6 @@ public class CheckingEventHandler(ICheckingService checkingService, IMqttPublish
 
     public async Task Handle(object? sender, OnMessageReceivedEventArgs args)
     {
-        
         var dto = JsonSerializer.Deserialize<CheckBookingRequestDto>(args.PublishMessage.PayloadAsString,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
@@ -30,18 +29,16 @@ public class CheckingEventHandler(ICheckingService checkingService, IMqttPublish
             Rfid = dto.Rfid,
             ServiceId = dto.ServiceId
         };
-        
+
         var response = await checkingService.CheckIfValid(check);
-        
+
         try
         {
-           
             await publisher.Publish(response, "access/response");
         }
         catch (Exception ex)
         {
             Console.WriteLine($"MQTT publish error: {ex.Message}");
         }
-
     }
 }

@@ -4,5 +4,4 @@ public class AccountActivationRequestDto
 {
     public string TokenId { get; set; } = null!;
     public string Password { get; set; } = null!;
-    
 }

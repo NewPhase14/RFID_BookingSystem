@@ -8,9 +8,9 @@ namespace Api.Rest.Controllers;
 public class CheckingController(ICheckingService checkingService) : ControllerBase
 {
     public const string ControllerRoute = "api/checking/";
-    
+
     public const string CheckBookingRequestRoute = ControllerRoute + nameof(CheckBookingRequest);
-    
+
     [HttpPost]
     [Route(CheckBookingRequestRoute)]
     public async Task<ActionResult<CheckingResponseDto>> CheckBookingRequest([FromBody] CheckBookingRequestDto dto)

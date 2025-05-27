@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Application.Models.Dtos.Booking;
 
 public class BookingsBroadcastDto

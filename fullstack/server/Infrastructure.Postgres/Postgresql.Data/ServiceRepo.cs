@@ -17,29 +17,20 @@ public class ServiceRepo(MyDbContext ctx) : IServiceRepository
     public async Task<Service> DeleteService(string id)
     {
         var service = await ctx.Services.FirstOrDefaultAsync(s => s.Id == id);
-        if (service == null)
-        {
-            throw new InvalidOperationException("Service not found");
-        }
+        if (service == null) throw new InvalidOperationException("Service not found");
         ctx.Services.Remove(service);
         await ctx.SaveChangesAsync();
-        
+
         return service;
     }
 
     public async Task<Service> UpdateService(Service service)
     {
         var existingService = await ctx.Services.FirstOrDefaultAsync(s => s.Id == service.Id);
-        if (existingService == null)
-        {
-            throw new InvalidOperationException("Service not found");
-        }
+        if (existingService == null) throw new InvalidOperationException("Service not found");
         existingService.Name = service.Name;
         existingService.Description = service.Description;
-        if (service.ImageUrl.Length != 0)
-        {
-            existingService.ImageUrl = service.ImageUrl;
-        }
+        if (service.ImageUrl.Length != 0) existingService.ImageUrl = service.ImageUrl;
         existingService.PublicId = service.PublicId;
         existingService.UpdatedAt = DateTime.Now;
         var updatedService = ctx.Services.Update(existingService);
@@ -50,20 +41,14 @@ public class ServiceRepo(MyDbContext ctx) : IServiceRepository
     public async Task<List<Service>> GetAllServices()
     {
         var services = await ctx.Services.ToListAsync();
-        if (services == null || services.Count == 0)
-        {
-            throw new InvalidOperationException("No services found");
-        }
+        if (services == null || services.Count == 0) throw new InvalidOperationException("No services found");
         return services;
     }
 
     public async Task<Service> GetServiceById(string id)
     {
         var service = await ctx.Services.FirstOrDefaultAsync(s => s.Id == id);
-        if (service == null)
-        {
-            throw new InvalidOperationException("Service not found");
-        }
+        if (service == null) throw new InvalidOperationException("Service not found");
         return service;
     }
 }
