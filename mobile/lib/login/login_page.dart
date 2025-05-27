@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../bookings/bookings_cubit.dart';
 import '../common/navigation.dart';
+import '../profile/profile_cubit.dart';
 import '../services/services_cubit.dart';
 import 'login_cubit.dart';
 import 'login_form.dart';
@@ -22,26 +22,10 @@ class LoginPage extends StatelessWidget {
       child: BlocConsumer<LoginCubit, LoginState>(
         listener: (context, state) {
           if (state is LoggedIn) {
+            context.read<ProfileCubit>().loadProfile();
+            context.read<ServicesCubit>().loadAllServices();
             Navigator.of(context).pushReplacement(
-              MaterialPageRoute(
-                builder:
-                    (_) => MultiBlocProvider(
-                      providers: [
-                        BlocProvider(
-                          create:
-                              (context) =>
-                                  ServicesCubit(context.read<BookingService>())
-                                    ..loadAllServices(),
-                        ),
-                        BlocProvider(
-                          create:
-                              (context) =>
-                                  BookingCubit(context.read<BookingService>()),
-                        ),
-                      ],
-                      child: const BottomNavBar(),
-                    ),
-              ),
+              MaterialPageRoute(builder: (_) => const BottomNavBar()),
             );
           } else if (state is LoginError) {
             ScaffoldMessenger.of(context).showSnackBar(

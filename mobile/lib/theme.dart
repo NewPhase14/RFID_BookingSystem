@@ -7,6 +7,8 @@ const Color navbarBackground = Color(0xFF181818);
 final ThemeData appTheme = ThemeData(
   brightness: Brightness.dark,
 
+  progressIndicatorTheme: ProgressIndicatorThemeData(color: Colors.white),
+
   // Custom AppBar theme.
   appBarTheme: AppBarTheme(
     backgroundColor: backgroundDark,

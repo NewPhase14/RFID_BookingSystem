@@ -67,7 +67,7 @@ class _LoginFormState extends State<LoginForm> {
                           },
                   child:
                       state is LoginLoading
-                          ? CircularProgressIndicator(color: Colors.white)
+                          ? CircularProgressIndicator()
                           : Text('Sign in'),
                 ),
               ),

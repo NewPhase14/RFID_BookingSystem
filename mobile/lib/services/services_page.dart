@@ -13,7 +13,7 @@ class ServicesPage extends StatelessWidget {
       appBar: AppBar(title: const Text("Bookit")),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(16),
+          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
           child: BlocBuilder<ServicesCubit, ServicesState>(
             builder: (context, state) {
               if (state is ServicesLoading) {

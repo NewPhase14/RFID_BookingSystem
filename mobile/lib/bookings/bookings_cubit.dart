@@ -1,6 +1,5 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:mobile/common/booking_service.dart';
-import '../models/bookings.dart';
 import '../models/create_booking.dart';
 import 'bookings_state.dart';
 
@@ -12,18 +11,12 @@ class BookingCubit extends Cubit<BookingState> {
   Future<void> loadUpcomingBookings() async {
     emit(BookingsLoading());
     try {
-      final profile =
-          await (bookingService as ApiBookingService).getProfileFromStorage();
-
-      if (profile == null) {
-        emit(BookingsError('User profile not found'));
-        return;
-      }
-
-      final booking = await bookingService.getFutureBookingsByUserId(
+      final profile = await bookingService.getProfileFromStorage();
+      if (profile == null) throw Exception('User profile not found');
+      final bookings = await bookingService.getFutureBookingsByUserId(
         profile.id,
       );
-      emit(BookingsLoaded(booking));
+      emit(BookingsLoaded(bookings));
     } catch (e) {
       emit(BookingsError(e.toString()));
     }
@@ -32,14 +25,8 @@ class BookingCubit extends Cubit<BookingState> {
   Future<void> loadPastBookings() async {
     emit(BookingsLoading());
     try {
-      final profile =
-          await (bookingService as ApiBookingService).getProfileFromStorage();
-
-      if (profile == null) {
-        emit(BookingsError('User profile not found'));
-        return;
-      }
-
+      final profile = await bookingService.getProfileFromStorage();
+      if (profile == null) throw Exception('User profile not found');
       final bookings = await bookingService.getPastBookingsByUserId(profile.id);
       emit(BookingsLoaded(bookings));
     } catch (e) {
@@ -50,14 +37,8 @@ class BookingCubit extends Cubit<BookingState> {
   Future<void> loadTodaysBookings() async {
     emit(BookingsLoading());
     try {
-      final profile =
-          await (bookingService as ApiBookingService).getProfileFromStorage();
-
-      if (profile == null) {
-        emit(BookingsError('User profile not found'));
-        return;
-      }
-
+      final profile = await bookingService.getProfileFromStorage();
+      if (profile == null) throw Exception('User profile not found');
       final bookings = await bookingService.getTodaysBookingsByUserId(
         profile.id,
       );
@@ -81,7 +62,6 @@ class BookingCubit extends Cubit<BookingState> {
     emit(BookingActionLoading());
     try {
       await bookingService.deleteBooking(bookingId);
-
       emit(BookingActionSuccess());
     } catch (e) {
       emit(BookingActionError(e.toString()));
