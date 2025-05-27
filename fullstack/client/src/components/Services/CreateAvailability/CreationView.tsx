@@ -45,14 +45,16 @@ export const CreationView = () => {
             .map(([day, t]) => ({
                 serviceId: createdService!.id,
                 dayOfWeek: parseInt(day, 10),
-                availableFrom: t.start!,
-                availableTo: t.end!,
+                availableFrom: t.start! + ":00:00",
+                availableTo: t.end! + ":00:00",
             }));
 
         if (dtos.length > 0) {
             availabilityClient.createAllAvailabilities(dtos, jwt).then(() => {
                 toast.success("Availabilities created successfully");
                 navigate(ServiceRoute);
+            }).catch(() => {
+                toast.error("Availability creation failed");
             });
         }
     }
@@ -68,25 +70,28 @@ export const CreationView = () => {
                         <label className="w-24">{weekDay.dayName}</label>
                         <div className="flex items-center gap-2 flex-1">
                             <input
-                                type="time"
+                                type="text"
+                                placeholder="HH"
                                 value={times[weekDay.dayNumber]?.start || ""}
                                 onChange={(e) =>
                                     handleTimeChange(weekDay.dayNumber, "start", e.target.value)
                                 }
-                                className="w-full px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
+                                className="w-14 px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
                             />
                             <span>-</span>
                             <input
-                                type="time"
+                                type="text"
+                                placeholder="HH"
                                 value={times[weekDay.dayNumber]?.end || ""}
                                 onChange={(e) =>
                                     handleTimeChange(weekDay.dayNumber, "end", e.target.value)
                                 }
-                                className="w-full px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
+                                className="w-14 px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
                             />
                         </div>
                         <div className="absolute bottom-6 right-6">
                             <button
+                                tabIndex={-1}
                                 className="flex text-sm items-center gap-2 bg-gray-800 hover:bg-gray-700 hover:text-[--color-text-baby-blue] transition-colors rounded px-3 py-1.5"
                                 onClick={createAvailability}
                             >
