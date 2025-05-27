@@ -100,12 +100,16 @@ public class AvailabilityService(IAvailabilityRepository availabilityRepository,
     
     public async Task<List<AvailabiltySlotsDto>> GetAvailabilitySlots(string serviceId)
     {
-        var today = DateTime.Today;
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTime(DateTime.UtcNow, europeanTime);
+        var today = DateOnly.FromDateTime(now);
+        
         var availabilitySlots = new List<AvailabiltySlotsDto>();
 
         for (int i = 0; i < 7; i++)
         {
             var date = today.AddDays(i);
+            Console.WriteLine(date);
             int dayOfWeek = (int)date.DayOfWeek;
             var availability = await availabilityRepository.GetAvailabilityForServiceAndDay(serviceId, dayOfWeek);
 
@@ -115,15 +119,15 @@ public class AvailabilityService(IAvailabilityRepository availabilityRepository,
             var slotStart = availability.AvailableFrom;
             var slotEnd = availability.AvailableTo;
             
-            var bookings = await bookingRepository.GetBookingsForServiceAndDate(serviceId, DateOnly.FromDateTime(date));
+            var bookings = await bookingRepository.GetBookingsForServiceAndDate(serviceId, date);
 
             for (var time = slotStart; time < slotEnd; time = time.AddHours(1))
             {
                 var slotStartTime = time;
                 var slotEndTime = time.AddHours(1);
-                var slotDateTime = date.Add(time.ToTimeSpan());
+                var slotDateTime = date.ToDateTime(time);
                 
-                if (i == 0 && slotDateTime < DateTime.Now)
+                if (i == 0 && slotDateTime < now)
                     continue;
 
                 bool isOverlapping = bookings.Any(b =>
