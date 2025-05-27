@@ -75,9 +75,15 @@ class ApiBookingService extends BookingService {
   @override
   Future<List<Services>> services() async {
     final apiUrl = dotenv.env['API_URL'];
+
+    final token = await _secureStorage.read(key: 'jwt');
+    if (token == null) {
+      throw Exception('User is not authenticated');
+    }
+
     final response = await http.get(
       Uri.parse('$apiUrl/api/service/GetAllServices'),
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'application/json', 'Authorization': token},
     );
 
     if (response.statusCode == 200) {
@@ -91,9 +97,15 @@ class ApiBookingService extends BookingService {
   @override
   Future<Services> getServiceById(String id) async {
     final apiUrl = dotenv.env['API_URL'];
+
+    final token = await _secureStorage.read(key: 'jwt');
+    if (token == null) {
+      throw Exception('User is not authenticated');
+    }
+
     final response = await http.get(
       Uri.parse('$apiUrl/api/service/GetServiceById?id=$id'),
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'application/json', 'Authorization': token},
     );
 
     if (response.statusCode == 200) {
@@ -107,9 +119,15 @@ class ApiBookingService extends BookingService {
   @override
   Future<List<Bookings>> getFutureBookingsByUserId(String userId) async {
     final apiUrl = dotenv.env['API_URL'];
+
+    final token = await _secureStorage.read(key: 'jwt');
+    if (token == null) {
+      throw Exception('User is not authenticated');
+    }
+
     final response = await http.get(
       Uri.parse('$apiUrl/api/booking/GetFutureBookingsByUserId?userId=$userId'),
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'application/json', 'Authorization': token},
     );
 
     if (response.statusCode == 200) {
@@ -125,9 +143,15 @@ class ApiBookingService extends BookingService {
   @override
   Future<List<Bookings>> getPastBookingsByUserId(String userId) async {
     final apiUrl = dotenv.env['API_URL'];
+
+    final token = await _secureStorage.read(key: 'jwt');
+    if (token == null) {
+      throw Exception('User is not authenticated');
+    }
+
     final response = await http.get(
       Uri.parse('$apiUrl/api/booking/GetPastBookingsByUserId?userId=$userId'),
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'application/json', 'Authorization': token},
     );
 
     if (response.statusCode == 200) {
@@ -143,9 +167,15 @@ class ApiBookingService extends BookingService {
   @override
   Future<List<Bookings>> getTodaysBookingsByUserId(String userId) async {
     final apiUrl = dotenv.env['API_URL'];
+
+    final token = await _secureStorage.read(key: 'jwt');
+    if (token == null) {
+      throw Exception('User is not authenticated');
+    }
+
     final response = await http.get(
       Uri.parse('$apiUrl/api/booking/GetTodaysBookingsByUserId?userId=$userId'),
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'application/json', 'Authorization': token},
     );
 
     if (response.statusCode == 200) {
@@ -161,9 +191,15 @@ class ApiBookingService extends BookingService {
   @override
   Future<Profile> getUserByEmail(String email) async {
     final apiUrl = dotenv.env['API_URL'];
+
+    final token = await _secureStorage.read(key: 'jwt');
+    if (token == null) {
+      throw Exception('User is not authenticated');
+    }
+
     final response = await http.get(
       Uri.parse('$apiUrl/api/user/GetUserByEmail?email=$email'),
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'application/json', 'Authorization': token},
     );
 
     if (response.statusCode == 200) {
@@ -177,11 +213,17 @@ class ApiBookingService extends BookingService {
   @override
   Future<List<Availability>> getAvailabilitySlots(String serviceId) async {
     final apiUrl = dotenv.env['API_URL'];
+
+    final token = await _secureStorage.read(key: 'jwt');
+    if (token == null) {
+      throw Exception('User is not authenticated');
+    }
+
     final response = await http.get(
       Uri.parse(
         '$apiUrl/api/availability/GetAvailabilitySlots?serviceId=$serviceId',
       ),
-      headers: {'Content-Type': 'application/json'},
+      headers: {'Content-Type': 'application/json', 'Authorization': token},
     );
 
     if (response.statusCode == 200) {
