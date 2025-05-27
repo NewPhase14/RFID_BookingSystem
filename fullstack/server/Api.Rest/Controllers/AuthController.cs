@@ -42,8 +42,13 @@ public class AuthController(ISecurityService securityService,
 
     [Route(RegisterRoute)]
     [HttpPost]
-    public async Task<ActionResult<UserResponseDto>> Register([FromBody] AuthRegisterRequestDto dto)
+    public async Task<ActionResult<UserResponseDto>> Register([FromBody] AuthRegisterRequestDto dto, [FromHeader] string authorization)
     {
+        var jwt = securityService.VerifyJwtOrThrow(authorization);
+        if (jwt.Role != "Admin")
+        {
+            return Unauthorized();
+        }
         return Ok(await securityService.Register(dto));
     }
 

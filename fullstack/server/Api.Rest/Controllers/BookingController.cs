@@ -74,23 +74,37 @@ public class BookingController(IBookingService bookingService, ISecurityService 
     
     [HttpGet]
     [Route(GetTodaysBookingsByUserIdRoute)]
-    public async Task<ActionResult<List<BookingResponseDto>>> GetTodaysBookingsByUserId(string userId)
+    public async Task<ActionResult<List<BookingResponseDto>>> GetTodaysBookingsByUserId(string userId, [FromHeader] string authorization)
     {
-        
+        var jwt = security.VerifyJwtOrThrow(authorization);
+        if (jwt.Role != "User")
+        {
+            return Unauthorized();
+        }
         return Ok(await bookingService.GetTodaysBookingsByUserId(userId));
     }
     
     [HttpGet]
     [Route(GetFutureBookingsByUserIdRoute)]
-    public async Task<ActionResult<List<BookingResponseDto>>> GetFutureBookingsByUserId(string userId)
+    public async Task<ActionResult<List<BookingResponseDto>>> GetFutureBookingsByUserId(string userId, [FromHeader] string authorization)
     {
+        var jwt = security.VerifyJwtOrThrow(authorization);
+        if (jwt.Role != "User")
+        {
+            return Unauthorized();
+        }
         return Ok(await bookingService.GetFutureBookingsByUserId(userId));
     }
     
     [HttpGet]
     [Route(GetPastBookingsByUserIdRoute)]
-    public async Task<ActionResult<List<BookingResponseDto>>> GetPastBookingsByUserId(string userId)
+    public async Task<ActionResult<List<BookingResponseDto>>> GetPastBookingsByUserId(string userId, [FromHeader] string authorization)
     {
+        var jwt = security.VerifyJwtOrThrow(authorization);
+        if (jwt.Role != "User")
+        {
+            return Unauthorized();
+        }
         return Ok(await bookingService.GetPastBookingsByUserId(userId));
     }
 }

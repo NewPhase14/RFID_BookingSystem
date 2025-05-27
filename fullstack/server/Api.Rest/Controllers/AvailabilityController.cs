@@ -7,7 +7,7 @@ namespace Api.Rest.Controllers;
 
 [ApiController]
 
-public class AvailabilityController(IAvailabilityService availabilityService) : ControllerBase
+public class AvailabilityController(IAvailabilityService availabilityService, ISecurityService securityService) : ControllerBase
 {
     public const string ControllerRoute = "api/availability/";
     
@@ -25,37 +25,62 @@ public class AvailabilityController(IAvailabilityService availabilityService) : 
 
     [HttpPost]
     [Route(CreateAvailabilityRoute)]
-    public async Task<ActionResult<AvailabilityResponseDto>> CreateAvailability([FromBody] AvailabilityCreateRequestDto dto)
+    public async Task<ActionResult<AvailabilityResponseDto>> CreateAvailability([FromBody] AvailabilityCreateRequestDto dto, [FromHeader] string authorization)
     {
+        var jwt = securityService.VerifyJwtOrThrow(authorization);
+        if (jwt.Role != "Admin")
+        {
+            return Unauthorized();
+        }
         return Ok(await availabilityService.CreateAvailability(dto));
     }
     
     [HttpPost]
     [Route(CreateAllAvailabilitiesRoute)]
-    public async Task<ActionResult<List<AvailabilityResponseDto>>> CreateAllAvailabilities([FromBody] List<AvailabilityCreateRequestDto> dtos)
+    public async Task<ActionResult<List<AvailabilityResponseDto>>> CreateAllAvailabilities([FromBody] List<AvailabilityCreateRequestDto> dtos, [FromHeader] string authorization)
     {
+        var jwt = securityService.VerifyJwtOrThrow(authorization);
+        if (jwt.Role != "Admin")
+        {
+            return Unauthorized();
+        }
         return Ok(await availabilityService.CreateAllAvailabilities(dtos));
     }
     
     
     [HttpDelete]
     [Route(DeleteAvailabilityRoute)]
-    public async Task<ActionResult<AvailabilityResponseDto>> DeleteAvailability(string id)
+    public async Task<ActionResult<AvailabilityResponseDto>> DeleteAvailability(string id, [FromHeader] string authorization)
     {
+        var jwt = securityService.VerifyJwtOrThrow(authorization);
+        if (jwt.Role != "Admin")
+        {
+            return Unauthorized();
+        }
         return Ok(await availabilityService.DeleteAvailability(id));
     }
     
     [HttpPut]
     [Route(UpdateAvailabilityRoute)]
-    public async Task<ActionResult<AvailabilityResponseDto>> UpdateAvailability([FromBody] AvailabilityUpdateRequestDto dto)
+    public async Task<ActionResult<AvailabilityResponseDto>> UpdateAvailability([FromBody] AvailabilityUpdateRequestDto dto, [FromHeader] string authorization)
     {
+        var jwt = securityService.VerifyJwtOrThrow(authorization);
+        if (jwt.Role != "Admin")
+        {
+            return Unauthorized();
+        }
         return Ok(await availabilityService.UpdateAvailability(dto));
     }
     
     [HttpGet]
     [Route(GetAvailabilitySlotsRoute)]
-    public async Task<ActionResult<List<AvailabiltySlotsDto>>> GetAvailabilitySlots(string serviceId)
+    public async Task<ActionResult<List<AvailabiltySlotsDto>>> GetAvailabilitySlots(string serviceId, [FromHeader] string authorization)
     {
+        var jwt = securityService.VerifyJwtOrThrow(authorization);
+        if (jwt.Role != "User")
+        {
+            return Unauthorized();
+        }
         return Ok(await availabilityService.GetAvailabilitySlots(serviceId));
     }
 }

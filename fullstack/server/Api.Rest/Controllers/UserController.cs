@@ -20,8 +20,9 @@ public class UserController(IUserService userService, ISecurityService security)
     
     [HttpGet]
     [Route(GetUserByEmailRoute)]
-    public async Task<ActionResult<UserResponseDto>> GetUserByEmail(string email)
+    public async Task<ActionResult<UserResponseDto>> GetUserByEmail(string email, [FromHeader] string authorization)
     {
+        security.VerifyJwtOrThrow(authorization);
         return Ok(await userService.GetUserByEmail(email));
     }
     

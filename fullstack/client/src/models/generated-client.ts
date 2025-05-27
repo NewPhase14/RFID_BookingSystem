@@ -19,13 +19,14 @@ export class ActivityLogsClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    getAllActivityLogs(): Promise<ActivityLogResponseDto[]> {
+    getAllActivityLogs(authorization: string | undefined): Promise<ActivityLogResponseDto[]> {
         let url_ = this.baseUrl + "/api/activity-logs/GetAllActivityLogs";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
             method: "GET",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Accept": "application/json"
             }
         };
@@ -52,13 +53,14 @@ export class ActivityLogsClient {
         return Promise.resolve<ActivityLogResponseDto[]>(null as any);
     }
 
-    getLatestActivityLogs(): Promise<ActivityLogResponseDto[]> {
+    getLatestActivityLogs(authorization: string | undefined): Promise<ActivityLogResponseDto[]> {
         let url_ = this.baseUrl + "/api/activity-logs/GetLatestActivityLogs";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
             method: "GET",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Accept": "application/json"
             }
         };
@@ -133,7 +135,7 @@ export class AuthClient {
         return Promise.resolve<AuthResponseDto>(null as any);
     }
 
-    register(dto: AuthRegisterRequestDto): Promise<UserResponseDto> {
+    register(dto: AuthRegisterRequestDto, authorization: string | undefined): Promise<UserResponseDto> {
         let url_ = this.baseUrl + "/api/auth/Register";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -143,6 +145,7 @@ export class AuthClient {
             body: content_,
             method: "POST",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             }
@@ -367,7 +370,7 @@ export class AvailabilityClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    createAvailability(dto: AvailabilityCreateRequestDto): Promise<AvailabilityResponseDto> {
+    createAvailability(dto: AvailabilityCreateRequestDto, authorization: string | undefined): Promise<AvailabilityResponseDto> {
         let url_ = this.baseUrl + "/api/availability/CreateAvailability";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -377,6 +380,7 @@ export class AvailabilityClient {
             body: content_,
             method: "POST",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             }
@@ -404,7 +408,7 @@ export class AvailabilityClient {
         return Promise.resolve<AvailabilityResponseDto>(null as any);
     }
 
-    createAllAvailabilities(dtos: AvailabilityCreateRequestDto[]): Promise<AvailabilityResponseDto[]> {
+    createAllAvailabilities(dtos: AvailabilityCreateRequestDto[], authorization: string | undefined): Promise<AvailabilityResponseDto[]> {
         let url_ = this.baseUrl + "/api/availability/CreateAllAvailabilities";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -414,6 +418,7 @@ export class AvailabilityClient {
             body: content_,
             method: "POST",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             }
@@ -441,7 +446,7 @@ export class AvailabilityClient {
         return Promise.resolve<AvailabilityResponseDto[]>(null as any);
     }
 
-    deleteAvailability(id: string | undefined): Promise<AvailabilityResponseDto> {
+    deleteAvailability(id: string | undefined, authorization: string | undefined): Promise<AvailabilityResponseDto> {
         let url_ = this.baseUrl + "/api/availability/DeleteAvailability?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -452,6 +457,7 @@ export class AvailabilityClient {
         let options_: RequestInit = {
             method: "DELETE",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Accept": "application/json"
             }
         };
@@ -478,7 +484,7 @@ export class AvailabilityClient {
         return Promise.resolve<AvailabilityResponseDto>(null as any);
     }
 
-    updateAvailability(dto: AvailabilityUpdateRequestDto): Promise<AvailabilityResponseDto> {
+    updateAvailability(dto: AvailabilityUpdateRequestDto, authorization: string | undefined): Promise<AvailabilityResponseDto> {
         let url_ = this.baseUrl + "/api/availability/UpdateAvailability";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -488,6 +494,7 @@ export class AvailabilityClient {
             body: content_,
             method: "PUT",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             }
@@ -515,7 +522,7 @@ export class AvailabilityClient {
         return Promise.resolve<AvailabilityResponseDto>(null as any);
     }
 
-    getAvailabilitySlots(serviceId: string | undefined): Promise<AvailabiltySlotsDto[]> {
+    getAvailabilitySlots(serviceId: string | undefined, authorization: string | undefined): Promise<AvailabiltySlotsDto[]> {
         let url_ = this.baseUrl + "/api/availability/GetAvailabilitySlots?";
         if (serviceId === null)
             throw new Error("The parameter 'serviceId' cannot be null.");
@@ -526,6 +533,7 @@ export class AvailabilityClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Accept": "application/json"
             }
         };
@@ -707,7 +715,7 @@ export class BookingClient {
         return Promise.resolve<BookingResponseDto>(null as any);
     }
 
-    getTodaysBookingsByUserId(userId: string | undefined): Promise<BookingResponseDto[]> {
+    getTodaysBookingsByUserId(userId: string | undefined, authorization: string | undefined): Promise<BookingResponseDto[]> {
         let url_ = this.baseUrl + "/api/booking/GetTodaysBookingsByUserId?";
         if (userId === null)
             throw new Error("The parameter 'userId' cannot be null.");
@@ -718,6 +726,7 @@ export class BookingClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Accept": "application/json"
             }
         };
@@ -744,7 +753,7 @@ export class BookingClient {
         return Promise.resolve<BookingResponseDto[]>(null as any);
     }
 
-    getFutureBookingsByUserId(userId: string | undefined): Promise<BookingResponseDto[]> {
+    getFutureBookingsByUserId(userId: string | undefined, authorization: string | undefined): Promise<BookingResponseDto[]> {
         let url_ = this.baseUrl + "/api/booking/GetFutureBookingsByUserId?";
         if (userId === null)
             throw new Error("The parameter 'userId' cannot be null.");
@@ -755,6 +764,7 @@ export class BookingClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Accept": "application/json"
             }
         };
@@ -781,7 +791,7 @@ export class BookingClient {
         return Promise.resolve<BookingResponseDto[]>(null as any);
     }
 
-    getPastBookingsByUserId(userId: string | undefined): Promise<BookingResponseDto[]> {
+    getPastBookingsByUserId(userId: string | undefined, authorization: string | undefined): Promise<BookingResponseDto[]> {
         let url_ = this.baseUrl + "/api/booking/GetPastBookingsByUserId?";
         if (userId === null)
             throw new Error("The parameter 'userId' cannot be null.");
@@ -792,6 +802,7 @@ export class BookingClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Accept": "application/json"
             }
         };
@@ -915,7 +926,7 @@ export class ServiceClient {
         return Promise.resolve<ServiceResponseDto>(null as any);
     }
 
-    deleteService(id: string | undefined): Promise<ServiceResponseDto> {
+    deleteService(id: string | undefined, authorization: string | undefined): Promise<ServiceResponseDto> {
         let url_ = this.baseUrl + "/api/service/DeleteService?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -926,6 +937,7 @@ export class ServiceClient {
         let options_: RequestInit = {
             method: "DELETE",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Accept": "application/json"
             }
         };
@@ -952,7 +964,7 @@ export class ServiceClient {
         return Promise.resolve<ServiceResponseDto>(null as any);
     }
 
-    updateService(dto: ServiceUpdateRequestDto): Promise<ServiceResponseDto> {
+    updateService(dto: ServiceUpdateRequestDto, authorization: string | undefined): Promise<ServiceResponseDto> {
         let url_ = this.baseUrl + "/api/service/UpdateService";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -962,6 +974,7 @@ export class ServiceClient {
             body: content_,
             method: "PUT",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Content-Type": "application/json",
                 "Accept": "application/json"
             }
@@ -989,13 +1002,14 @@ export class ServiceClient {
         return Promise.resolve<ServiceResponseDto>(null as any);
     }
 
-    getAllServices(): Promise<ServiceResponseDto[]> {
+    getAllServices(authorization: string | undefined): Promise<ServiceResponseDto[]> {
         let url_ = this.baseUrl + "/api/service/GetAllServices";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_: RequestInit = {
             method: "GET",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Accept": "application/json"
             }
         };
@@ -1022,7 +1036,7 @@ export class ServiceClient {
         return Promise.resolve<ServiceResponseDto[]>(null as any);
     }
 
-    getServiceById(id: string | undefined): Promise<ServiceResponseDto> {
+    getServiceById(id: string | undefined, authorization: string | undefined): Promise<ServiceResponseDto> {
         let url_ = this.baseUrl + "/api/service/GetServiceById?";
         if (id === null)
             throw new Error("The parameter 'id' cannot be null.");
@@ -1033,6 +1047,7 @@ export class ServiceClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Accept": "application/json"
             }
         };
@@ -1124,7 +1139,7 @@ export class UserClient {
         this.baseUrl = baseUrl ?? "";
     }
 
-    getUserByEmail(email: string | undefined): Promise<UserResponseDto> {
+    getUserByEmail(email: string | undefined, authorization: string | undefined): Promise<UserResponseDto> {
         let url_ = this.baseUrl + "/api/user/GetUserByEmail?";
         if (email === null)
             throw new Error("The parameter 'email' cannot be null.");
@@ -1135,6 +1150,7 @@ export class UserClient {
         let options_: RequestInit = {
             method: "GET",
             headers: {
+                "authorization": authorization !== undefined && authorization !== null ? "" + authorization : "",
                 "Accept": "application/json"
             }
         };
