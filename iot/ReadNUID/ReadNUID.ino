@@ -6,7 +6,7 @@
 #include <MFRC522.h>
 #include <ArduinoJson.h>
 #include <LiquidCrystal_I2C.h>
-#include "credentialsdev.h"
+#include "credentialsprod.h"
 
 #define SS_PIN 4
 #define RST_PIN 22
