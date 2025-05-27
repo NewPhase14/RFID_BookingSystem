@@ -1424,7 +1424,7 @@ export interface ServiceUpdateRequestDto {
     id: string;
     name: string;
     description: string;
-    imageUrl: string;
+    imageUrl?: string;
     publicId: string;
 }
 

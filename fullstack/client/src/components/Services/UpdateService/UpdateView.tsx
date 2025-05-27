@@ -1,33 +1,36 @@
 import React, { useState } from 'react'
-import {CreateAvailabilityRoute} from "../../../helpers/routeConstants.tsx";
-import {serviceClient} from "../../../apiControllerClients.ts";
-import {useAtom} from "jotai";
-import {CreatedServiceAtom, JwtAtom, ServicesAtom} from "../../../atoms/atoms.ts";
-import {ServiceCreateRequestDto} from "../../../models/generated-client.ts";
+import { ServiceRoute} from "../../../helpers/routeConstants.tsx";
+import { serviceClient } from "../../../apiControllerClients.ts";
+import { useAtom } from "jotai";
+import { CreatedServiceAtom, JwtAtom, ServiceAtom, ServicesAtom } from "../../../atoms/atoms.ts";
+import { ServiceUpdateRequestDto } from "../../../models/generated-client.ts";
 import toast from "react-hot-toast";
-import {useNavigate} from "react-router";
+import { useNavigate } from "react-router";
 
-export const CreationView = () => {
-    const [title, setTitle] = useState("");
-    const [description, setDescription] = useState("");
-    const [image, setImage] = useState("");
-    const [jwt] = useAtom(JwtAtom);
-    const [, setCreatedService] = useAtom(CreatedServiceAtom);
+export const UpdateView = () => {
+    const [service] = useAtom(ServiceAtom);
     const [services, setServices] = useAtom(ServicesAtom);
+    const [title, setTitle] = useState(service!.name);
+    const [description, setDescription] = useState(service!.description);
+    const [image, setImage] = useState(service!.imageUrl);
+    const [, setUpdatedService] = useAtom(CreatedServiceAtom);
     const navigate = useNavigate();
     const [base64, setBase64] = useState("");
-    const [isLoading, setIsLoading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false); // <-- NEW
 
-    const createServiceDto: ServiceCreateRequestDto = {
+    const updateServiceDto: ServiceUpdateRequestDto = {
+        id: service!.id,
         name: title,
         description: description,
         imageUrl: base64,
+        publicId: service!.publicId
     }
-
 
     return (
         <div className="px-4">
+
             <div className="flex flex-col md:flex-row gap-6">
+
                 <div className="w-full md:w-1/3 space-y-4">
                     <div>
                         <label htmlFor="title" className="block mb-2 text-sm text-text-grey">Title</label>
@@ -95,27 +98,29 @@ export const CreationView = () => {
             </div>
 
             <div className="absolute bottom-6 right-6">
-                <button className="flex text-sm items-center gap-2 bg-gray-800 hover:bg-gray-700 hover:text-[--color-text-baby-blue] transition-colors rounded px-3 py-1.5"
-                        onClick={() => {
-                            setIsLoading(true);
-                            serviceClient.createService(createServiceDto, jwt)
-                                .then(r => {
-                                    toast.success("Service created successfully");
-                                    setCreatedService(r);
-                                    setServices([...services, r]);
-                                    navigate(CreateAvailabilityRoute);
-                                })
-                                .catch(() => {
-                                    toast.error("Could not create service");
-                                })
-                                .finally(() => {
-                                    setIsLoading(false);
-                                });
-                        }
-                }>
-                    <span>{isLoading ? "Creating..." : "Choose available time slots"}</span>
+                <button
+                    disabled={isLoading}
+                    className={`flex text-sm items-center gap-2 rounded px-3 py-1.5 transition-colors
+                        ${isLoading ? 'bg-gray-600 cursor-not-allowed' : 'bg-gray-800 hover:bg-gray-700 hover:text-[--color-text-baby-blue]'}`}
+                    onClick={() => {
+                        setIsLoading(true);
+                        serviceClient.updateService(updateServiceDto).then(r => {
+                            toast.success("Service updated successfully");
+                            const updatedServices = services.filter((s => s.id !== r.id));
+                            setUpdatedService(r);
+                            setServices([...updatedServices, r]);
+                            navigate(ServiceRoute);
+                        }).catch(() => {
+                            toast.error("Could not update service");
+                        }).finally(() => {
+                            setIsLoading(false);
+                        });
+                    }}
+                >
+                    <span>{isLoading ? "Updating..." : "Update service"}</span>
                 </button>
             </div>
+
             {isLoading && (
                 <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
                     <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-b-4 border-[--color-text-baby-blue]"></div>

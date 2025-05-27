@@ -9,7 +9,7 @@ import {
     SignInRoute,
     LogsRoute,
     ServiceRoute,
-    UserRoute, CreateServiceRoute, CreateAvailabilityRoute, RegisterUserRoute, UpdateUserRoute,
+    UserRoute, CreateServiceRoute, CreateAvailabilityRoute, RegisterUserRoute, UpdateUserRoute, UpdateServiceRoute,
 } from "../helpers/routeConstants.tsx";
 import { useAtom } from "jotai";
 import { useEffect } from "react";
@@ -19,6 +19,7 @@ import {CreateAvailability} from "./Services/CreateAvailability/CreateAvailabili
 import "./styles.css"
 import {RegisterUser} from "./Users/RegisterUser/RegisterUser.tsx";
 import {UpdateUser} from "./Users/UpdateUser/UpdateUser.tsx";
+import {UpdateService} from "./Services/UpdateService/UpdateService.tsx";
 
 const Home = () => {
     const navigate = useNavigate();
@@ -44,6 +45,7 @@ const Home = () => {
                 <Route element={<AllLogs />} path={LogsRoute} />
                 <Route element={<CreateService/>} path={CreateServiceRoute} />
                 <Route element={<CreateAvailability/>} path={CreateAvailabilityRoute}/>
+                <Route element={<UpdateService/>} path={UpdateServiceRoute}/>
                 <Route element={<Navigate to={DashboardRoute}/>} path="*" />
             </Routes>
         </main>

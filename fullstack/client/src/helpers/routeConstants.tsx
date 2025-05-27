@@ -1,12 +1,14 @@
 export const DashboardRoute = '/';
 export const ServiceRoute = '/services';
 export const CreateServiceRoute = '/services/create';
+export const UpdateServiceRoute = '/services/update';
 export const SignInRoute = '/signin';
 export const LogsRoute= '/logs';
 export const UserRoute = '/users';
 export const RegisterUserRoute = '/users/register';
 export const UpdateUserRoute = '/users/update';
 export const CreateAvailabilityRoute = '/services/availability';
+export const UpdateAvailabilityRoute = '/services/availability/update';
 export const AccountActivationRoute = '/activate';
 export const ResetPasswordRoute = '/reset-password';
 export const ForgotPasswordRoute = '/forgot-password';

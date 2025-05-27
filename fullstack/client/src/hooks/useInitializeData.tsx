@@ -30,40 +30,28 @@ export default function useInitializeData() {
     const [jwt] = useAtom(JwtAtom);
 
     useEffect(() => {
-        if (!services || services.length === 0) {
             serviceClient.getAllServices().then(setServices);
-        }
-    }, [services, setServices]);
+    }, [setServices]);
 
     useEffect(() => {
-        if (!users || users.length === 0) {
             userClient.getAllUsers(jwt).then(setUsers);
-        }
-    }, [users, jwt, setUsers]);
+    }, [setUsers]);
 
     useEffect(() => {
-        if (!activityLogs || activityLogs.length === 0) {
             activityLogsClient.getAllActivityLogs().then(setActivityLogs);
-        }
-    }, [activityLogs, setActivityLogs]);
+    }, [setActivityLogs]);
 
     useEffect(() => {
-        if (!latestActivityLogs || latestActivityLogs.length === 0) {
-            activityLogsClient.getLatestActivityLogs().then(setLatestActivityLogs);
-        }
-    }, [latestActivityLogs, setLatestActivityLogs]);
+        activityLogsClient.getLatestActivityLogs().then(setLatestActivityLogs);
+    }, [setLatestActivityLogs]);
 
     useEffect(() => {
-        if (!bookings || bookings.length === 0) {
             bookingClient.getAllBookings(jwt).then(setBookings);
-        }
-    }, [bookings, jwt, setBookings]);
+    }, [setBookings]);
 
     useEffect(() => {
-        if (!latestBookings || latestBookings.length === 0) {
             bookingClient.getLatestBookings(jwt).then(setLatestBookings);
-        }
-    }, [latestBookings, jwt, setLatestBookings]);
+    }, [setLatestBookings]);
 
     useEffect(() => {
         if (!topicAtom || topicAtom.length === 0) {

@@ -45,7 +45,7 @@ export const UpdateView = () => {
                             disabled
                             value={user!.email}
                             required
-                            className="w-full px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
+                            className="w-full px-4 py-3 rounded-md text-white/10 border border-white/10 bg-textfield-grey/20 focus:outline-white"
                         />
                     </div>
 
@@ -74,7 +74,7 @@ export const UpdateView = () => {
                         <input
                             disabled
                             value={user!.createdAt}
-                            className="w-full px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
+                            className="w-full px-4 py-3 rounded-md text-white/10 border border-white/10 bg-textfield-grey/20 focus:outline-white"
                         />
                     </div>
 
@@ -83,7 +83,7 @@ export const UpdateView = () => {
                         <input
                             disabled
                             value={user!.updatedAt}
-                            className="w-full px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
+                            className="w-full px-4 py-3 rounded-md text-white/10 border border-white/10 bg-textfield-grey/20 focus:outline-white"
                         />
                     </div>
 
@@ -92,7 +92,7 @@ export const UpdateView = () => {
                         <input
                             disabled
                             value={user!.roleName}
-                            className="w-full px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"
+                            className="w-full px-4 py-3 rounded-md text-white/10 border border-white/10 bg-textfield-grey/20 focus:outline-white"
                         />
                     </div>
 

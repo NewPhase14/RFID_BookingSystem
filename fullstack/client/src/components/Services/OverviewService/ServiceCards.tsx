@@ -1,9 +1,11 @@
 import React from 'react'
 import {useAtom} from "jotai";
-import {ServicesAtom} from "../../../atoms/atoms.ts";
-import {FiTrash} from "react-icons/fi";
+import {ServiceAtom, ServicesAtom} from "../../../atoms/atoms.ts";
+import {FiEdit, FiTrash} from "react-icons/fi";
 import {serviceClient} from "../../../apiControllerClients.ts";
 import toast from "react-hot-toast";
+import {UpdateServiceRoute} from "../../../helpers/routeConstants.tsx";
+import {useNavigate} from "react-router";
 
 export const ServiceCards = () => {
     const [services] = useAtom(ServicesAtom);
@@ -21,6 +23,9 @@ const Card = ({id, title, description, img}: {
     img: string;
 }) => {
     const [services, setServices] = useAtom(ServicesAtom);
+    const [, setService] = useAtom(ServiceAtom);
+    const navigate = useNavigate();
+
 
     return (
         <div className="col-span-4">
@@ -30,7 +35,12 @@ const Card = ({id, title, description, img}: {
                         <div className="flex justify-between items-start">
                             <h2 className="card-title">{title}</h2>
                             <div className="flex space-x-2">
-                                <button className="btn btn-sm">edit</button>
+                                <button onClick={() => {
+                                    serviceClient.getServiceById(id).then((r) => {
+                                        setService(r);
+                                        navigate(UpdateServiceRoute);
+                                    })
+                                }} className="btn btn-sm"><FiEdit/></button>
                                 <button onClick={() => {
                                     serviceClient.deleteService(id).then(() => {
                                         toast.success("Service deleted successfully");

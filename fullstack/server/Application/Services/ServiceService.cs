@@ -11,8 +11,8 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
 {
     public async Task<ServiceResponseDto> CreateService(ServiceCreateRequestDto dto)
     {
-        string imageUrl = string.Empty;
-        string publicId = string.Empty;
+        var imageUrl = string.Empty;
+        var publicId = string.Empty;
         
         // This allows inserting a base64 string with the request for testing purposes,
         // This should be changed to a file upload in the future
@@ -81,15 +81,31 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
 
     public async Task<ServiceResponseDto> UpdateService(ServiceUpdateRequestDto dto)
     {
+        
+        var imageUrl = dto.ImageUrl;
+        var publicId = dto.PublicId;
+        if (!string.IsNullOrEmpty(dto.ImageUrl))
+        {
+            // Convert Base64 string to byte array
+            var imageBytes = Convert.FromBase64String(dto.ImageUrl);
+            // Create a memory stream from the image bytes
+            using var stream = new MemoryStream(imageBytes);
+            // Generate a unique filename for the image
+            // Upload the image stream to Cloudinary and get the image URL
+            var uploadResult = await cloudinaryImageService.UploadImageAsync(stream, dto.PublicId);
+            imageUrl = uploadResult.SecureUrl;
+            publicId = uploadResult.PublicId;
+        }
         var service = new Service()
         {
             Id = dto.Id,
             Name = dto.Name,
             Description = dto.Description,
-            ImageUrl = dto.ImageUrl,
-            PublicId = dto.PublicId,
+            ImageUrl = imageUrl,
+            PublicId = publicId,
             UpdatedAt = DateTime.Now
         };
+        
         var updatedService = await serviceRepository.UpdateService(service);
         return new ServiceResponseDto()
         {

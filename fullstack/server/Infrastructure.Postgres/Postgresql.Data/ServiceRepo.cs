@@ -36,7 +36,11 @@ public class ServiceRepo(MyDbContext ctx) : IServiceRepository
         }
         existingService.Name = service.Name;
         existingService.Description = service.Description;
-        existingService.ImageUrl = service.ImageUrl;
+        if (service.ImageUrl.Length != 0)
+        {
+            existingService.ImageUrl = service.ImageUrl;
+        }
+        existingService.PublicId = service.PublicId;
         existingService.UpdatedAt = DateTime.Now;
         var updatedService = ctx.Services.Update(existingService);
         await ctx.SaveChangesAsync();
