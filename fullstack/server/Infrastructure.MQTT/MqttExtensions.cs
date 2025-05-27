@@ -108,13 +108,12 @@ public static class MqttExtensions
                     handler.TopicFilter, handler.QoS);
 
                 builder.WithSubscription(
-                    new TopicFilter(handler.TopicFilter, handler.QoS),
-                    (sender, args) =>
+                    new TopicFilter(handler.TopicFilter, handler.QoS), async (sender, args) =>
                     {
                         using var messageScope = app.Services.CreateScope();
                         var messageHandler = (IMqttMessageHandler)messageScope.ServiceProvider
                             .GetRequiredService(handlerType);
-                        messageHandler.Handle(sender, args);
+                        await messageHandler.Handle(sender, args);
                     });
             }
 

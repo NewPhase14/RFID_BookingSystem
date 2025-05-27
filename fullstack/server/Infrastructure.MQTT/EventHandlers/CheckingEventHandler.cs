@@ -13,8 +13,9 @@ public class CheckingEventHandler(ICheckingService checkingService, IMqttPublish
     public string TopicFilter => "access";
     public QualityOfService QoS => QualityOfService.AtLeastOnceDelivery;
 
-    public async void Handle(object? sender, OnMessageReceivedEventArgs args)
+    public async Task Handle(object? sender, OnMessageReceivedEventArgs args)
     {
+        
         var dto = JsonSerializer.Deserialize<CheckBookingRequestDto>(args.PublishMessage.PayloadAsString,
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
