@@ -4,8 +4,19 @@ import 'package:mobile/services/services_cards.dart';
 import '../services/services_cubit.dart';
 import '../services/services_state.dart';
 
-class ServicesPage extends StatelessWidget {
+class ServicesPage extends StatefulWidget {
   const ServicesPage({super.key});
+
+  @override
+  State<ServicesPage> createState() => _ServicesPageState();
+}
+
+class _ServicesPageState extends State<ServicesPage> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ServicesCubit>().loadAllServices();
+  }
 
   @override
   Widget build(BuildContext context) {
