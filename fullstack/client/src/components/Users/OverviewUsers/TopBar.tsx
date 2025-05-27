@@ -2,8 +2,11 @@ import "../../styles.css";
 import {FiUserPlus} from "react-icons/fi";
 import {useNavigate} from "react-router";
 import {RegisterUserRoute} from "../../../helpers/routeConstants.tsx";
+import {useAtom} from "jotai";
+import {UsersAtom} from "../../../atoms/atoms.ts";
 
 export const TopBar = () => {
+    const [users] = useAtom(UsersAtom);
     const navigate = useNavigate();
     return (
         <div className="border-b px-4 mb-4 mt-2 pb-4 border-[--color-text-baby-blue]">
@@ -13,7 +16,7 @@ export const TopBar = () => {
                     Users
                     </span>
                     <span className="text-xs block">
-                    All Users
+                    Number of users: {users.length}
                     </span>
                 </div>
                 <button

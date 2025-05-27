@@ -2,7 +2,7 @@ import {AuthRegisterRequestDto} from "../../../models/generated-client.ts";
 import {useState} from "react";
 import {authClient} from "../../../apiControllerClients.ts";
 import {useAtom} from "jotai";
-import {UsersAtom} from "../../../atoms/atoms.ts";
+import {JwtAtom, UsersAtom} from "../../../atoms/atoms.ts";
 import toast from "react-hot-toast";
 import {UserRoute} from "../../../helpers/routeConstants.tsx";
 import {useNavigate} from "react-router";
@@ -14,6 +14,7 @@ const RegisterView = () => {
     const [rfid, setRfid] = useState("");
     const [role, setRole] = useState("");
     const [users, setUsers] = useAtom(UsersAtom);
+    const [jwt] = useAtom(JwtAtom);
     const navigate = useNavigate();
 
 
@@ -91,7 +92,7 @@ const RegisterView = () => {
                     <div>
                         <button
                             onClick={() => {
-                                authClient.register(registerRequestDto)
+                                authClient.register(registerRequestDto, jwt)
                                     .then(r => {
                                         toast.success("User created successfully");
                                         if (r.roleName !== "Admin") {

@@ -37,7 +37,7 @@ export const Table = () => {
                         <td>{user.createdAt}</td>
                         <td>{user.updatedAt}</td>
                         <td><button onClick={() => {
-                            userClient.getUserByEmail(user.email).then((user) => {
+                            userClient.getUserByEmail(user.email, jwt).then((user) => {
                                 setSelectedUser(user);
                                 navigate(UpdateUserRoute);
                             })

@@ -66,7 +66,7 @@ const SignIn = () => {
                     <button
                         onClick={() => authClient.login({email: email, password: password, clientId: randomUid}).then(r => {
                             const tempJwt = r.jwt;
-                            userClient.getUserByEmail(email).then(r => {
+                            userClient.getUserByEmail(email, tempJwt).then(r => {
                                 if (r.roleName == "Admin") {
                                     toast.success("You have been signed in");
                                     localStorage.setItem("jwt", tempJwt);
