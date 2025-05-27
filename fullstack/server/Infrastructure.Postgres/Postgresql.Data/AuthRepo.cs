@@ -60,11 +60,14 @@ public class AuthRepo(MyDbContext ctx) : IAuthRepository
 
     public async Task<VerifyInviteEmailResponseDto> VerifyInviteToken(VerifyInviteEmailRequestDto dto)
     {
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
+        
         var token = await ctx.InviteTokens
             .Include(e => e.User)
             .FirstOrDefaultAsync(e => e.Id == dto.TokenId);
 
-        if (token is null || token.ExpiresAt < DateTime.Now)
+        if (token is null || token.ExpiresAt < now)
             return new VerifyInviteEmailResponseDto
             {
                 IsExpired = true
@@ -85,11 +88,14 @@ public class AuthRepo(MyDbContext ctx) : IAuthRepository
 
     public async Task<VerifyPasswordTokenResponseDto> VerifyPasswordToken(VerifyPasswordTokenRequestDto dto)
     {
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
+        
         var token = await ctx.PasswordResetTokens
             .Include(u => u.User)
             .FirstOrDefaultAsync(e => e.Id == dto.TokenId);
 
-        if (token is null || token.ExpiresAt < DateTime.Now)
+        if (token is null || token.ExpiresAt < now)
             return new VerifyPasswordTokenResponseDto
             {
                 IsExpired = true

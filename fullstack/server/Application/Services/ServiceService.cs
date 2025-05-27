@@ -12,6 +12,9 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
     {
         var imageUrl = string.Empty;
         var publicId = string.Empty;
+        
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
 
         // This allows inserting a base64 string with the request for testing purposes,
         // This should be changed to a file upload in the future
@@ -37,8 +40,8 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
             Description = dto.Description,
             ImageUrl = imageUrl,
             PublicId = publicId,
-            CreatedAt = DateTime.Now,
-            UpdatedAt = DateTime.Now
+            CreatedAt = now,
+            UpdatedAt = now
         };
 
         var createdService = await serviceRepository.CreateService(service);
@@ -79,6 +82,10 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
     {
         var imageUrl = dto.ImageUrl;
         var publicId = dto.PublicId;
+        
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
+        
         if (!string.IsNullOrEmpty(dto.ImageUrl))
         {
             // Convert Base64 string to byte array
@@ -99,7 +106,7 @@ public class ServiceService(IServiceRepository serviceRepository, ICloudinaryIma
             Description = dto.Description,
             ImageUrl = imageUrl,
             PublicId = publicId,
-            UpdatedAt = DateTime.Now
+            UpdatedAt = now
         };
 
         var updatedService = await serviceRepository.UpdateService(service);

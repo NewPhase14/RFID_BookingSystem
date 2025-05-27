@@ -30,10 +30,13 @@ public class AvailabilityRepo(MyDbContext ctx) : IAvailabilityRepository
 
     public async Task<ServiceAvailability> UpdateAvailability(ServiceAvailability availability)
     {
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
+        
         var existingAvailability = await ctx.ServiceAvailabilities
             .FirstOrDefaultAsync(a => a.Id == availability.Id);
         if (existingAvailability == null) throw new InvalidOperationException("Availability not found");
-        existingAvailability.UpdatedAt = DateTime.Now;
+        existingAvailability.UpdatedAt = now;
         existingAvailability.DayOfWeek = availability.DayOfWeek;
         existingAvailability.AvailableFrom = availability.AvailableFrom;
         existingAvailability.AvailableTo = availability.AvailableTo;

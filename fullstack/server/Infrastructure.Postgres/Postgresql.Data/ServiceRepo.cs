@@ -26,13 +26,16 @@ public class ServiceRepo(MyDbContext ctx) : IServiceRepository
 
     public async Task<Service> UpdateService(Service service)
     {
+        var europeanTime = TimeZoneInfo.FindSystemTimeZoneById("Central European Standard Time");
+        var now = TimeZoneInfo.ConvertTimeFromUtc(DateTime.UtcNow, europeanTime);
+        
         var existingService = await ctx.Services.FirstOrDefaultAsync(s => s.Id == service.Id);
         if (existingService == null) throw new InvalidOperationException("Service not found");
         existingService.Name = service.Name;
         existingService.Description = service.Description;
         if (service.ImageUrl.Length != 0) existingService.ImageUrl = service.ImageUrl;
         existingService.PublicId = service.PublicId;
-        existingService.UpdatedAt = DateTime.Now;
+        existingService.UpdatedAt = now;
         var updatedService = ctx.Services.Update(existingService);
         await ctx.SaveChangesAsync();
         return updatedService.Entity;
