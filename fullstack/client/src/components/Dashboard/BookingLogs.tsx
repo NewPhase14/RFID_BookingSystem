@@ -27,7 +27,6 @@ const BookingLogs = () => {
                 unsubscribe();
             };
         } catch (e) {
-            console.error("Error in AllLogs: ", e);
             toast.error("Error in AllLogs: " + e);
         }
     });

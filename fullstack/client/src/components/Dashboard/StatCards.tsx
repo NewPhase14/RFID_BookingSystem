@@ -1,4 +1,3 @@
-import React from 'react'
 import {FiTrendingDown, FiTrendingUp} from "react-icons/fi";
 import {useAtom} from "jotai";
 import {ServicesAtom, UsersAtom} from "../../atoms/atoms.ts";

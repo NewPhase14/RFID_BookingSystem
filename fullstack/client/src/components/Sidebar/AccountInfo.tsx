@@ -1,11 +1,8 @@
 import React from 'react'
 import "../styles.css"
 import {BiCog} from "react-icons/bi";
-import {useAtom} from "jotai";
-import {AdminAtom} from "../../atoms/atoms.ts";
 
 export const AccountInfo = () => {
-    const [admin] = useAtom(AdminAtom);
     return (
         <div className="border-b mb-4 mt-2 pb-4 border-[--color-text-grey] ">
             <div className="flex p-0.5 relative gap-2 w-full items-center">

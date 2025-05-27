@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import {useAtom} from "jotai";
 import {JwtAtom, UserAtom, UsersAtom} from "../../../atoms/atoms.ts";
 import {userClient} from "../../../apiControllerClients.ts";
-import {AuthRegisterRequestDto, UserUpdateRequestDto} from "../../../models/generated-client.ts";
+import { UserUpdateRequestDto} from "../../../models/generated-client.ts";
 import toast from "react-hot-toast";
 import {useNavigate} from "react-router";
 import {UserRoute} from "../../../helpers/routeConstants.tsx";
@@ -108,7 +108,6 @@ export const UpdateView = () => {
                                     })
                                     .catch(() => {
                                         toast.error("User Update Failed");
-                                        console.log(userUpdateRequestDto);
                                     });
                             }}
                             className="w-full py-3 rounded-md text-[var(--color-background-black)] bg-[--color-button-grey] hover:bg-blue-500 hover:text-white"

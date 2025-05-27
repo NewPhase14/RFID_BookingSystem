@@ -74,8 +74,8 @@ export const UpdateView = () => {
                                     }
                                 };
 
-                                reader.onerror = error => {
-                                    console.log("Error: ", error);
+                                reader.onerror = () => {
+                                    toast.error("Error while loading image");
                                 };
                             }}
                             className="w-full px-4 py-3 rounded-md text-white border border-white/10 bg-textfield-grey focus:outline-white hover:border-white/30"

@@ -7,7 +7,7 @@ import {useNavigate} from "react-router";
 import {SignInRoute} from "../../helpers/routeConstants.tsx";
 
 export const Bottombar = () => {
-    const [jwt, setJwt] = useAtom(JwtAtom);
+    const [, setJwt] = useAtom(JwtAtom);
     const navigate = useNavigate();
     return (
         <div className="flex sticky top-[calc(100vh_-_48px_-_16px)]
